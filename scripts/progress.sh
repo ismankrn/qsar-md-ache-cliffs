@@ -79,7 +79,9 @@ if len(full):
 PYEOF_INNER
 
 echo
-FAILS=$(grep -c "FAIL" "$LOG" 2>/dev/null || echo 0)
+# grep -c exits 1 when the count is zero, so the fallback used to append
+# a second "0" and break the integer test below
+FAILS=$(grep -c "FAIL" "$LOG" 2>/dev/null) || FAILS=0
 echo " failures : $FAILS"
 [ "$FAILS" -gt 0 ] && grep "FAIL" "$LOG" | tail -3 | sed 's/^/   /'
 
