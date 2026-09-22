@@ -16,6 +16,10 @@ REMOTE=qsar
 RPATH=/root/qsar-md
 LPATH="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 
+# Compare by content, not timestamp: `git clone` gives the server fresh
+# mtimes, so a timestamp comparison reports every file as changed.
+RSYNC_OPTS=(--checksum)
+
 EXCLUDES=(
   --exclude '.git'
   --exclude '__pycache__'
@@ -27,21 +31,21 @@ EXCLUDES=(
 case "${1:-}" in
   pull)
     echo "server -> laptop"
-    rsync -avh --progress "${EXCLUDES[@]}" \
+    rsync -avh --progress "${RSYNC_OPTS[@]}" "${EXCLUDES[@]}" \
       "$REMOTE:$RPATH/" "$LPATH/"
     ;;
   push)
     echo "laptop -> server"
-    rsync -avh --progress "${EXCLUDES[@]}" \
+    rsync -avh --progress "${RSYNC_OPTS[@]}" "${EXCLUDES[@]}" \
       "$LPATH/" "$REMOTE:$RPATH/"
     ;;
   status)
     echo "differences (dry run, nothing is changed)"
     echo "--- would be pulled from the server ---"
-    rsync -an --itemize-changes "${EXCLUDES[@]}" \
+    rsync -an --itemize-changes "${RSYNC_OPTS[@]}" "${EXCLUDES[@]}" \
       "$REMOTE:$RPATH/" "$LPATH/" | grep -E '^[<>ch]' || echo "  (none)"
     echo "--- would be pushed to the server ---"
-    rsync -an --itemize-changes "${EXCLUDES[@]}" \
+    rsync -an --itemize-changes "${RSYNC_OPTS[@]}" "${EXCLUDES[@]}" \
       "$LPATH/" "$REMOTE:$RPATH/" | grep -E '^[<>ch]' || echo "  (none)"
     ;;
   *)
