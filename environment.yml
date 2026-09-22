@@ -1,0 +1,25 @@
+# Recreate with:  conda env create -f environment.yml
+# On a Linux/CUDA box conda-forge resolves the CUDA-enabled OpenMM build automatically.
+name: qsar-md
+channels:
+  - conda-forge
+dependencies:
+  - python=3.11
+  - openmm=8.6
+  - openmmforcefields=0.16
+  - openff-toolkit=0.18
+  - pdbfixer
+  - rdkit
+  - mdanalysis
+  - mdtraj
+  - numpy
+  - pandas
+  - scipy
+  - scikit-learn
+  - matplotlib
+  - seaborn
+  - jupyterlab
+  - propka
+  - py3dmol
+  - tqdm
+  - joblib
