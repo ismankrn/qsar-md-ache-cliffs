@@ -4,11 +4,18 @@ name: qsar-md
 channels:
   - conda-forge
 dependencies:
+  # --- simulation ---
   - python=3.11
   - openmm=8.6
   - openmmforcefields=0.16
   - openff-toolkit=0.18
   - pdbfixer
+  # --- docking ---
+  # meeko must be >=0.8: the 0.6 conda build ships without its params/ data
+  # directory and mk_prepare_receptor.py fails on a missing ad4_types.json
+  - vina=1.2.7
+  - meeko=0.8
+  # --- cheminformatics and analysis ---
   - rdkit
   - mdanalysis
   - mdtraj
@@ -18,8 +25,10 @@ dependencies:
   - scikit-learn
   - matplotlib
   - seaborn
-  - jupyterlab
   - propka
-  - py3dmol
+  - requests
   - tqdm
   - joblib
+  # --- optional, local work only ---
+  - jupyterlab
+  - py3dmol
