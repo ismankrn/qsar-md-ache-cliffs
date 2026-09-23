@@ -27,7 +27,10 @@ STRUCT = ROOT/"structures"
 STRUCT.mkdir(exist_ok=True)
 REF = "4ey7"
 N_PICK = int(sys.argv[1]) if len(sys.argv) > 1 else 8
-GORGE = [72, 74, 86, 121, 124, 286, 295, 297, 337, 338, 341]
+# Gly121 lines the oxyanion hole but is a glycine: no side chain, so it has
+# no rotamer freedom to cluster on, and selecting 'not backbone' returns zero
+# atoms, which rejected every structure.
+GORGE = [72, 74, 86, 124, 286, 295, 297, 337, 338, 341]
 
 def rcsb_search():
     q = {"query": {"type": "group", "logical_operator": "and", "nodes": [
