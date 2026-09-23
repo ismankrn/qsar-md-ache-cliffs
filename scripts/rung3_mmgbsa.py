@@ -145,9 +145,28 @@ for i, cid in enumerate(ligands, 1):
         mod = app.Modeller(rec_pdb.topology, rec_pdb.positions)
         mod.add(ltop, lx*unit.angstrom)
         sys_c = ff.createSystem(mod.topology, nonbondedMethod=app.NoCutoff)
+        # Relax ONLY the ligand hydrogens. AddHs places them at idealised
+        # geometry, which puts some of them 1.1 A from protein atoms and sends
+        # van der Waals energies positive. The docked pose itself is fine:
+        # the closest heavy-heavy contact is 3.08 A. Freezing everything else
+        # (mass 0) relieves the clash without moving the pose, and keeps the
+        # protein term constant.
+        n_prot = rec_pdb.topology.getNumAtoms()
+        lig_is_h = [a.element.symbol == "H" for a in ltop.atoms()]
+        for k in range(sys_c.getNumParticles()):
+            free = k >= n_prot and lig_is_h[k - n_prot]
+            if not free:
+                sys_c.setParticleMass(k, 0.0)
         ctx_c = openmm.Context(sys_c, openmm.VerletIntegrator(1*unit.femtosecond), CPU)
         ctx_c.setPositions(mod.positions)
-        E_cplx = ctx_c.getState(getEnergy=True).getPotentialEnergy().value_in_unit(KCAL)
+        openmm.LocalEnergyMinimizer.minimize(ctx_c, 1.0, 200)
+        st = ctx_c.getState(getEnergy=True, getPositions=True)
+        E_cplx = st.getPotentialEnergy().value_in_unit(KCAL)
+        # every downstream term uses these same relaxed coordinates
+        allx = np.array(st.getPositions().value_in_unit(unit.angstrom))
+        lx = allx[n_prot:]
+        ctx_l.setPositions(lx*unit.angstrom)
+        E_lig = ctx_l.getState(getEnergy=True).getPotentialEnergy().value_in_unit(KCAL)
 
         dG_mm_gb = E_cplx - E_PROT - E_lig
         ql, sl_, el = nb_params(sys_lig)
