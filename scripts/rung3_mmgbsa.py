@@ -90,7 +90,7 @@ def interaction(lig_xyz, ql, sl, el):
     return float(elec.sum()), float(vdw.sum()), per_res
 
 
-def sasa(xyz, radii, probe=1.4, n=120):
+def sasa(xyz, radii, probe=1.4, n=100):
     """Shrake-Rupley solvent accessible surface area."""
     g = np.arange(n) + 0.5
     phi = np.arccos(1 - 2*g/n); theta = np.pi*(1+5**0.5)*g
@@ -103,6 +103,26 @@ def sasa(xyz, radii, probe=1.4, n=120):
         d[:, i] = 1e9
         total += 4*np.pi*R[i]**2 * (d >= R[None]).all(axis=1).mean()
     return total
+
+
+def delta_sasa(lig_xyz, r_lig, cutoff=12.0):
+    """Buried surface, computed only on the interface neighbourhood.
+
+    Atoms far from the ligand have identical exposure with and without it, so
+    their contribution cancels exactly in complex - protein. Restricting the
+    calculation to protein atoms within `cutoff` turns an 8,000-atom problem
+    into a few-hundred-atom one. The cutoff is far beyond the ~6 A range over
+    which one atom can shield another, and any residual truncation error
+    appears in both terms and cancels.
+    """
+    near = (np.linalg.norm(rec_xyz[:, None] - lig_xyz[None], axis=2).min(axis=1)
+            <= cutoff)
+    px, pr = rec_xyz[near], R_PROT[near]
+    s_prot = sasa(px, pr)
+    s_cplx = sasa(np.vstack([px, lig_xyz]), np.concatenate([pr, r_lig]))
+    s_lig = sasa(lig_xyz, r_lig)
+    return s_cplx - s_prot - s_lig, int(near.sum())
+
 
 RAD = {"C":1.7,"N":1.55,"O":1.52,"S":1.8,"H":1.2,"F":1.47,"Cl":1.75,
        "Br":1.85,"I":1.98,"P":1.8}
@@ -163,16 +183,13 @@ for i, cid in enumerate(ligands, 1):
 
         lelem = [a.element.symbol for a in ltop.atoms()]
         r_lig = np.array([RAD.get(e, 1.7) for e in lelem])
-        sasa_l = sasa(lx, r_lig)
-        allx = np.vstack([rec_xyz, lx]); allr = np.concatenate([R_PROT, r_lig])
-        sasa_c = sasa(allx, allr)
-        sasa_p = sasa(rec_xyz, R_PROT)
-        dG_np = GAMMA * (sasa_c - sasa_p - sasa_l)
+        d_sasa, n_near = delta_sasa(lx, r_lig)
+        dG_np = GAMMA * d_sasa
 
         rows.append({"molecule_chembl_id": cid, "seed_used": seed,
                      "E_lig_internal": E_lig,
                      "dE_elec": elec, "dE_vdw": vdw, "dE_mm": elec + vdw,
-                     "dSASA": sasa_c - sasa_p - sasa_l, "dG_nonpolar": dG_np,
+                     "dSASA": d_sasa, "n_interface_atoms": n_near, "dG_nonpolar": dG_np,
                      "dG_total": elec + vdw + dG_np, **per_res})
         if len(rows) % 10 == 0:
             pd.DataFrame(rows).to_csv(out_csv, mode="a", index=False,
