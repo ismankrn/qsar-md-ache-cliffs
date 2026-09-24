@@ -11,3 +11,8 @@ figures/_*.png
 # Docking poses: 1,416 files, 16 MB, fully regenerable by run_docking.py
 # with the fixed seeds. Moved between machines with scripts/sync.sh.
 docking/poses/
+
+# Credentials and access notes — never commit
+references/
+*.pem
+*_credentials*
