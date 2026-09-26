@@ -8,11 +8,27 @@ __pycache__/
 # Scratch renders kept out of version control
 figures/_*.png
 
-# Docking poses: 1,416 files, 16 MB, fully regenerable by run_docking.py
-# with the fixed seeds. Moved between machines with scripts/sync.sh.
-docking/poses/
+# Docking poses are now tracked, both sets. They are the expensive artefacts: stage 07
+# took hours and stage 11's ensemble poses took 48 h, and neither can be downloaded from
+# anywhere. 16 MB + 37 MB is worth carrying so the repository is a real second copy.
+
+# Crystal structures are NOT tracked: 50 MB of public data, re-downloadable from RCSB by
+# scripts/select_ensemble.py. Keeping them out is what pays for carrying the poses.
+structures/*.pdb
 
 # Credentials and access notes — never commit
 references/
 *.pem
 *_credentials*
+
+# Export-validation intermediates: ~15 MB of .top/.gro/.npy regenerable by
+# scripts/validate_gmx_export.py. The findings live in
+# results/12_gmx_export_validation.md; the reference energies and the .mdp are kept.
+md/export_check/*.top
+md/export_check/*.gro
+md/export_check/*.trr
+md/export_check/*.npy
+
+# MDAnalysis offset caches
+.*_offsets.npz
+.*_offsets.lock

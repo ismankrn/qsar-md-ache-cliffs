@@ -1,0 +1,28 @@
+{
+  "ligand": "CHEMBL104387",
+  "seed": 2,
+  "n_atoms": 91381,
+  "alpha_per_nm": 2.628260884878466,
+  "grid": [
+    79,
+    79,
+    79
+  ],
+  "ewald_rtol": 0.0002016645187154008,
+  "terms": {
+    "HarmonicBondForce": 186008.68567674563,
+    "NonbondedForce": -873270.7866571356,
+    "PeriodicTorsionForce": 41781.72504022801,
+    "CMMotionRemover": 0.0,
+    "HarmonicAngleForce": 57099.47782808074
+  },
+  "total": -588380.9020183322,
+  "terms_trr_roundtrip": {
+    "HarmonicBondForce": 186008.74114789913,
+    "NonbondedForce": -873270.8342290232,
+    "PeriodicTorsionForce": 41781.71823303081,
+    "CMMotionRemover": 0.0,
+    "HarmonicAngleForce": 57099.476002020994
+  },
+  "total_trr_roundtrip": -588380.8988460714
+}

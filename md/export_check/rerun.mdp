@@ -1,0 +1,26 @@
+; single-point rerun, mirroring the OpenMM system exactly
+define                  = -DFLEXIBLE
+integrator              = md
+nsteps                  = 0
+cutoff-scheme           = Verlet
+nstlist                 = 1
+pbc                     = xyz
+verlet-buffer-tolerance = -1
+rlist                   = 1.0
+coulombtype             = PME
+rcoulomb                = 1.0
+coulomb-modifier        = none
+ewald-rtol              = 2.01664519e-04
+fourier-nx              = 79
+fourier-ny              = 79
+fourier-nz              = 79
+pme-order               = 5
+vdwtype                 = cutoff
+vdw-modifier            = none
+rvdw                    = 1.0
+DispCorr                = no
+constraints             = none
+continuation            = yes
+nstfout                 = 1
+nstxout                 = 1
+nstenergy               = 1

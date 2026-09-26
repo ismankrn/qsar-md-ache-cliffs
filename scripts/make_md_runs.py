@@ -1,0 +1,70 @@
+"""Stage 14 — lay out the 379 production runs and give each one a recorded velocity seed.
+
+One directory per trajectory, not per system: 217 systems yield 379 runs because the 81
+cliff-pair ligands get three replicates each. The system files are symlinked, not copied,
+so the replicates provably share one structure and 217 x ~9 MB is not written four times.
+
+Each replicate is equilibrated independently, with its own velocity seed at the NVT
+velocity-generation step, rather than branching three production runs off one equilibrated
+state. Equilibration is cheap (200 ps against 50 ns of production), and independent
+equilibration makes the replicates genuinely independent samples -- which is the whole
+point of running them.
+
+Seeds are derived deterministically from the ligand id, the replicate index and one base
+seed, then written into the manifest. A random `gen-seed = -1` would make the
+reproducibility test unreproducible, which defeats it.
+"""
+import hashlib, json
+from pathlib import Path
+import pandas as pd
+
+ROOT = Path(__file__).resolve().parent.parent
+RES, MD = ROOT/"results", ROOT/"md"
+SYS, RUNS, MDP = MD/"systems", MD/"runs", MD/"mdp"
+BASE_SEED = 20260902          # the project's frozen-split seed, reused for traceability
+
+manifest = pd.read_csv(RES/"13_md_ligands.csv")
+RUNS.mkdir(parents=True, exist_ok=True)
+
+def seed_for(cid, rep):
+    h = hashlib.sha256(f"{cid}|r{rep}|{BASE_SEED}".encode()).hexdigest()
+    return int(h[:8], 16) % (2**31 - 1)
+
+rows, missing = [], []
+for _, r in manifest.iterrows():
+    cid, nrep = r.molecule_chembl_id, int(r.n_replicates)
+    src = SYS/cid
+    if not (src/"system.top").exists() or not (src/"system.gro").exists():
+        missing.append(cid); continue
+    for rep in range(1, nrep+1):
+        name = f"{cid}_r{rep}"
+        d = RUNS/name
+        d.mkdir(exist_ok=True)
+        for f in ("system.top", "system.gro"):
+            link = d/f
+            if link.is_symlink() or link.exists():
+                link.unlink()
+            link.symlink_to(Path("../../systems")/cid/f)
+        seed = seed_for(cid, rep)
+        # only nvt.mdp differs per run; the rest are shared and symlinked
+        nvt = (MDP/"nvt.mdp").read_text().replace("gen-seed                = -1",
+                                                 f"gen-seed                = {seed}")
+        (d/"nvt.mdp").write_text(nvt)
+        for f in ("em.mdp", "npt.mdp", "prod.mdp"):
+            link = d/f
+            if link.is_symlink() or link.exists():
+                link.unlink()
+            link.symlink_to(Path("../../mdp")/f)   # from md/runs/<name>/, mdp is two levels up
+        rows.append({"run": name, "molecule_chembl_id": cid, "replicate": rep,
+                     "n_replicates": nrep, "gen_seed": seed,
+                     "in_cliff_pair": bool(r.in_cliff_pair)})
+
+df = pd.DataFrame(rows)
+df.to_csv(RES/"14_md_runs.csv", index=False)
+print(f"sistem hilang        : {len(missing)}" + (f"  {missing[:5]}" if missing else ""))
+print(f"direktori run dibuat : {len(df)}")
+print(f"  replika 1 saja     : {int((df.n_replicates==1).sum())}")
+print(f"  bagian dari 3      : {int((df.n_replicates==3).sum())}")
+print(f"ligan unik           : {df.molecule_chembl_id.nunique()}")
+print(f"seed unik            : {df.gen_seed.nunique()} / {len(df)}")
+print(f"ns total @ 50 ns     : {len(df)*50:,}")

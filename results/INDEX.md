@@ -15,6 +15,11 @@ logical pipeline order, not the order in which the work happened.
 | **08** Rung 2 — pose geometry | `rung2_descriptors.py`, `rung2_bridging.py`, `rung2_model.py` | `08_rung2_descriptors.csv`, `08_rung2_bridging.csv`, `08_rung2_bridging_pairs.csv`, `08_rung2_benchmark.csv` |
 | **09** Rung 3 — MM/GBSA | `rung3_mmgbsa.py`, `rung3_analyse.py` | `09_rung3_mmgbsa.csv`, `09_rung3_pair_analysis.csv` |
 | **10** Size-adjusted tests | `size_adjusted_tests.py` | `10_size_adjusted_tests.csv` |
+| **11** Ensemble docking (8 receptors) | `select_ensemble.py`, `prep_ensemble.py`, `run_ensemble_docking.py`, `analyse_ensemble.py` | `11_ensemble_docking.csv`, `11_ensemble_per_ligand.csv`, `11_ensemble_pair_analysis.csv` |
+| **12** OpenFF→GROMACS export validation | `validate_gmx_export.py` | `12_gmx_export_validation.md` |
+| **12b** Receptor chain breaks capped for MD | `prep_receptor_md.py` | `12b_receptor_chain_breaks.md` |
+| **13** MD system build (217 systems) | `build_md_systems.py` | `13_md_ligands.csv`, `13_md_system_build.md`, `13b_pose_clearance.csv` |
+| **14** MD run layout (379 trajectories) | `make_md_runs.py` | `14_md_runs.csv` |
 
 ## Notes
 

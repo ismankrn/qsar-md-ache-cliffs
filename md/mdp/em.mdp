@@ -1,0 +1,14 @@
+; Steepest-descent minimisation. Relieves the hydrogen-placement artefacts that come
+; with the crystal structure (geminal H pairs at ~1.5 A) and any strain left by solvation.
+integrator              = steep
+emtol                   = 100.0
+emstep                  = 0.01
+nsteps                  = 50000
+cutoff-scheme           = Verlet
+nstlist                 = 10
+coulombtype             = PME
+rcoulomb                = 1.0
+rvdw                    = 1.0
+DispCorr                = EnerPres
+pbc                     = xyz
+constraints             = none

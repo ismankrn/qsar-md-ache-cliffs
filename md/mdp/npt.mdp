@@ -1,0 +1,29 @@
+; 100 ps NPT to settle the box density. Restraints released: the pose has to be free
+; before production, otherwise the first nanoseconds of production are spent relaxing
+; what equilibration should already have relaxed.
+integrator              = md
+dt                      = 0.002
+nsteps                  = 50000
+cutoff-scheme           = Verlet
+nstlist                 = 20
+coulombtype             = PME
+rcoulomb                = 1.0
+rvdw                    = 1.0
+DispCorr                = EnerPres
+pbc                     = xyz
+constraints             = h-bonds
+constraint_algorithm    = lincs
+tcoupl                  = v-rescale
+tc-grps                 = System
+tau-t                   = 0.1
+ref-t                   = 300
+pcoupl                  = c-rescale
+pcoupltype              = isotropic
+tau-p                   = 2.0
+ref-p                   = 1.0
+compressibility         = 4.5e-5
+continuation            = yes
+gen-vel                 = no
+nstxout-compressed      = 5000
+nstlog                  = 5000
+nstenergy               = 5000

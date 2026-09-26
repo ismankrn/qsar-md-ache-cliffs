@@ -1,0 +1,26 @@
+# Environment for BRIN (system building + production MD).
+# Mirrors environment.yml minus the local-only viewers. ParmEd is listed explicitly
+# because the GROMACS export calls it directly rather than through openmmforcefields.
+# meeko stays in: the MD system builder reads the stage-07 poses from .pdbqt.
+name: qsar-md
+channels:
+  - conda-forge
+dependencies:
+  - python=3.11
+  - openmm=8.6
+  - openmmforcefields=0.16
+  - openff-toolkit=0.18
+  - pdbfixer
+  - parmed
+  - meeko=0.8
+  - rdkit=2026.03.1
+  - mdanalysis
+  - mdtraj
+  - numpy
+  - pandas
+  - scipy
+  - scikit-learn
+  - matplotlib
+  - requests
+  - tqdm
+  - joblib

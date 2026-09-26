@@ -1,0 +1,43 @@
+; 50 ns production. FLEXIBLE is deliberately NOT defined: water is rigid via the
+; [ settles ] block ParmEd writes, and with h-bond constraints that is what permits
+; dt = 2 fs. Defining it would force ~0.5 fs and quadruple the cost for nothing.
+; See results/12_gmx_export_validation.md.
+integrator              = md
+dt                      = 0.002
+nsteps                  = 25000000          ; 50 ns
+cutoff-scheme           = Verlet
+nstlist                 = 20
+coulombtype             = PME
+rcoulomb                = 1.0
+rvdw                    = 1.0
+DispCorr                = EnerPres
+pbc                     = xyz
+constraints             = h-bonds
+constraint_algorithm    = lincs
+lincs-iter              = 1
+lincs-order             = 4
+; One coupling group, deliberately. The conventional split into Protein /
+; Water_and_ions guards against the hot-solvent/cold-solute artefact, which is largely
+; a Berendsen problem; v-rescale is a proper canonical thermostat and does not need it.
+; A split would also require the ligand's group to be named correctly in every one of
+; 379 grompp calls, and a wrong group name there fails late and silently.
+tcoupl                  = v-rescale
+tc-grps                 = System
+tau-t                   = 0.1
+ref-t                   = 300
+pcoupl                  = c-rescale
+pcoupltype              = isotropic
+tau-p                   = 2.0
+ref-p                   = 1.0
+compressibility         = 4.5e-5
+continuation            = yes
+gen-vel                 = no
+; The WHOLE system, water included, every 10 ps. Selecting a subset would need
+; compressed-x-grps and therefore a per-system index file -- one more thing to get
+; wrong across 379 runs -- and storage is not a constraint here (GPFS has 13 PB free;
+; this comes to roughly 2 GB per trajectory, ~760 GB in total). Keeping water also
+; leaves the door open for AChE bridging-water analysis, which unsaved frames would
+; close permanently. Strip it later with trjconv if analysis I/O becomes the problem.
+nstxout-compressed      = 5000              ; 10 ps
+nstlog                  = 50000
+nstenergy               = 5000
