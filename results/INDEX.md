@@ -20,6 +20,7 @@ logical pipeline order, not the order in which the work happened.
 | **12b** Receptor chain breaks capped for MD | `prep_receptor_md.py` | `12b_receptor_chain_breaks.md` |
 | **13** MD system build (217 systems) | `build_md_systems.py` | `13_md_ligands.csv`, `13_md_system_build.md`, `13b_pose_clearance.csv` |
 | **14** MD run layout (379 trajectories) | `make_md_runs.py` | `14_md_runs.csv` |
+| **15** Rung 2 on ensemble poses + bootstrap | `rung2_ensemble.py`, `rung2_ensemble_control.py`, `rung2_ensemble_model.py`, `rung2_ensemble_bootstrap.py` | `15_rung2_ensemble.md`, `15_rung2_ensemble_*.csv`, `15b_rung2_ensemble_median_fixed4ey7.csv` |
 
 ## Notes
 
