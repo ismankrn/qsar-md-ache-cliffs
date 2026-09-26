@@ -69,9 +69,13 @@ same defect.
 
 CHEMBL4204913 sits 6.9 s.d. above the median at −806,983 kJ/mol. Its ligand is clean after
 relaxation and its receptor contacts are normal, but it has **31 water–water pairs closer
-than 1.5 Å** (O···O is normally ~2.8 Å) from `addSolvent`'s lattice placement. Water moves
-freely, so minimisation should absorb this — but that is reasoning, not measurement. The
-claim is to be checked by a post-equilibration audit across all 217 systems, not asserted.
+than 1.5 Å** (O···O is normally ~2.8 Å) from `addSolvent`'s lattice placement.
+
+**Checked, not assumed** (`results/14b_npt_audit.csv`, all 379 runs after equilibration):
+minimisation and equilibration absorb it completely. CHEMBL4204913 ends up **0.18 s.d.** from
+the median, and across every run the potential-energy spread falls from 50,841 kJ/mol to
+2,210 (s.d. 5,890 → 396), with temperature inside 0.34 K of 300 and density inside 2.35
+kg/m³. Zero physics deviations, zero outliers beyond 5 s.d.
 
 Produced by `scripts/build_md_systems.py`; manifest `results/13_md_ligands.csv`;
 per-system provenance in `md/systems/<CID>/build.json`.
