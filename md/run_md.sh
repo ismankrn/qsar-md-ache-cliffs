@@ -31,7 +31,13 @@ if [ -z "$GROMPP" ]; then
 fi
 echo "grompp memakai: $GROMPP"
 
-mapfile -t ALL < <(tail -n +2 "$ROOT/results/14_md_runs.csv" | cut -d, -f1)
+# MANIFEST selects which runs this job covers. Phase 1 is replicate 1 only (217 runs);
+# the 162 replicate trajectories are deferred until phase 1 shows a signal, because a null
+# result needs no reproducibility check. Their systems are already equilibrated and waiting.
+MANIFEST=${MANIFEST:-$ROOT/results/14_md_runs_phase1.csv}
+if [ ! -f "$MANIFEST" ]; then echo "FATAL: manifest tidak ada: $MANIFEST"; exit 1; fi
+echo "manifest: $(basename $MANIFEST) ($(( $(wc -l < "$MANIFEST") - 1 )) run)"
+mapfile -t ALL < <(tail -n +2 "$MANIFEST" | cut -d, -f1)
 DIRS=()
 for i in $(seq $BATCH $NBATCH $((${#ALL[@]}-1))); do
   DIRS+=("$RUNS/${ALL[$i]}")
