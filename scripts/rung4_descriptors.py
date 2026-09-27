@@ -255,12 +255,32 @@ ap.add_argument("--only", type=str, default=None)
 ap.add_argument("--traj", type=str, default="prod", help="prod | npt | nvt (untuk uji)")
 ap.add_argument("--equil-ns", type=float, default=EQUIL_NS)
 ap.add_argument("--min-frames", type=int, default=100)
+ap.add_argument("--runs-dir", type=str, default=None,
+                help="direktori berisi direktori run (default: md/runs di repositori)")
+ap.add_argument("--receptor", type=str, default=None,
+                help="PDB reseptor untuk pemetaan indeks atom")
+ap.add_argument("--out", type=str, default=None, help="direktori keluaran JSON")
+ap.add_argument("--manifest", type=str, default=None,
+                help="CSV manifest; tidak diperlukan kalau --only dipakai")
 ap.add_argument("--smoke", action="store_true",
                 help="uji pada trajektori pendek: tulis ke JSON bersufiks, jangan timpa hasil")
 a = ap.parse_args()
 
-allruns = runs_of(RES/"14_md_runs.csv")
-sel = [a.only] if a.only else allruns[a.index::a.total]
+# Paths are overridable so this runs standalone on a rented GPU instance, where the
+# repository layout does not exist -- only the tpr, the receptor and a work directory.
+if a.runs_dir: RUNS = Path(a.runs_dir)
+if a.receptor: RECEPTOR = Path(a.receptor)
+if a.out:      OUT = Path(a.out)
+
+# The manifest is only needed to enumerate runs; with --only there is nothing to enumerate,
+# and requiring it would make the script depend on a file the instance has no reason to hold.
+if a.only:
+    sel = [a.only]
+else:
+    manifest = Path(a.manifest) if a.manifest else RES/"14_md_runs.csv"
+    if not manifest.exists():
+        sys.exit(f"FATAL: manifest tidak ada: {manifest} (pakai --only atau --manifest)")
+    sel = runs_of(manifest)[a.index::a.total]
 OUT.mkdir(parents=True, exist_ok=True)
 print(f"tugas {a.index}/{a.total}: {len(sel)} run", flush=True)
 
