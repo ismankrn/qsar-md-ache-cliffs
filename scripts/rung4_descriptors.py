@@ -73,6 +73,7 @@ CONTACT = 4.5          # A, same cutoff as rung 2 so the two are comparable
 EQUIL_NS = 5.0         # discard the first 5 ns of production
 ESCAPE_A = 12.0        # A from the starting COM counts as leaving the gorge
 BURIAL_STRIDE = 10     # whole-protein terms every 100 ps instead of every 10 ps
+WINDOWS = (5.0, 10.0, 20.0, 30.0)   # ns of ANALYSED trajectory for the duration ablation
 WATER_HB = 3.5         # A, heavy-atom donor/acceptor distance for a water bridge
 SITES = {"cas": 86, "pas": 286, "gate": 337}
 LINING = [72, 74, 86, 121, 124, 203, 286, 295, 297, 334, 337, 338, 341, 447]
@@ -299,8 +300,11 @@ def analyse(run_dir: Path, traj: str = "prod", equil_ns: float = EQUIL_NS,
         quads = []
     quads = quads[:40]
 
-    occ = {k: 0 for k in ("cas", "pas", "bridge")}
-    occ_res = {r: 0 for r in LINING}
+    # Per-frame series rather than running counters, so every descriptor can be recomputed on
+    # a prefix of the trajectory without reading it again. That is what makes the duration
+    # ablation free: a reviewer asking whether 50 ns is necessary gets a curve, not an argument.
+    cas_ser, pas_ser = [], []
+    occ_res = {r: [] for r in LINING}
     rmsd, depth, chi1, dih, nburial, nwat = [], [], [], [], [], []
     gcoords = []
     bridge_series = []
@@ -317,11 +321,12 @@ def analyse(run_dir: Path, traj: str = "prod", equil_ns: float = EQUIL_NS,
         # independently, so a neighbour can be an image away without minimum-image.
         d_cas = distance_array(lx, site["cas"].positions, box=box).min()
         d_pas = distance_array(lx, site["pas"].positions, box=box).min()
-        c, p = d_cas <= CONTACT, d_pas <= CONTACT
-        occ["cas"] += c; occ["pas"] += p; occ["bridge"] += (c and p)
-        bridge_series.append(bool(c and p))
+        c, p = bool(d_cas <= CONTACT), bool(d_pas <= CONTACT)
+        cas_ser.append(c); pas_ser.append(p)
+        bridge_series.append(c and p)
         for r, sel in lin.items():
-            occ_res[r] += distance_array(lx, sel.positions, box=box).min() <= CONTACT
+            occ_res[r].append(bool(distance_array(lx, sel.positions,
+                                                  box=box).min() <= CONTACT))
 
         # Depth needs no superposition: taking the axis from the same frame it measures
         # makes it invariant to the protein's tumbling by construction. The old code froze
@@ -368,45 +373,75 @@ def analyse(run_dir: Path, traj: str = "prod", equil_ns: float = EQUIL_NS,
         raise RuntimeError(f"RMSD Ca setelah superposisi mencapai {ca_rmsd.max():.1f} A -- "
                            f"reseptor tidak utuh atau superposisi gagal")
 
-    C = np.array(coords)
-    rmsf_lig = float(np.sqrt(((C - C.mean(0))**2).sum(-1).mean(0)).mean())
-    G = np.array(gcoords)
-    rmsf_gorge = float(np.sqrt(((G - G.mean(0))**2).sum(-1).mean(0)).mean())
-    bs = np.array(bridge_series)
-    runs_ = int(((bs[1:].astype(int) - bs[:-1].astype(int)) == 1).sum() + (1 if bs[0] else 0))
-    longest = 0; cur = 0
-    for b in bs:
-        cur = cur + 1 if b else 0
-        longest = max(longest, cur)
-    ns_used = nf * dt_ps / 1000.0
+    C = np.array(coords); G = np.array(gcoords)
     chi1 = np.array(chi1)
-    # Wrap the DIFFERENCE, not the angle. Wrapping chi1 itself leaves 179 -> -179 looking
-    # like a 358 degree jump, which reported 18 flips/ns for a dihedral whose spread was
-    # 11.5 degrees -- an arithmetic impossibility that the smoke test exposed.
-    dchi = np.diff(chi1)
-    dchi = (dchi + 180.0) % 360.0 - 180.0
-    flips = int((np.abs(dchi) > 60).sum())
+    dih_a = np.array(dih) if dih else None
+    cas_a, pas_a = np.array(cas_ser), np.array(pas_ser)
+    bs_a = np.array(bridge_series)
+    res_a = {r: np.array(v) for r, v in occ_res.items()}
 
-    d = {
-        "run": run_dir.name, "n_frames": nf, "ns_analysed": ns_used, "dt_ps": dt_ps,
-        "occ_cas": occ["cas"]/nf, "occ_pas": occ["pas"]/nf, "occ_bridge": occ["bridge"]/nf,
-        "bridge_runs_per_ns": runs_/ns_used if ns_used else np.nan,
-        "bridge_longest_ns": longest*dt_ps/1000.0,
-        "rmsd_mean": float(np.mean(rmsd)), "rmsd_max": float(np.max(rmsd)),
-        "escaped": int(np.max([np.linalg.norm(c.mean(0) - ref_com) for c in C]) > ESCAPE_A),
-        "depth_mean": float(np.mean(depth)), "depth_sd": float(np.std(depth)),
-        "rmsf_lig": rmsf_lig, "rmsf_gorge": rmsf_gorge,
-        "gate_chi1_sd": circ_sd(chi1), "gate_flips_per_ns": flips/ns_used if ns_used else np.nan,
-        "lig_dihedral_sd": float(np.mean([circ_sd(np.array(dih)[:, j])
-                                          for j in range(np.array(dih).shape[1])]))
-                           if dih else np.nan,
-        "frac_lig_buried_mean": float(np.mean(nburial)) if nburial else np.nan,
-        "n_bridge_water": float(np.mean(nwat)) if nwat else np.nan,
-        "n_heavy": lig.n_atoms,
-        "ca_rmsd_mean": float(ca_rmsd.mean()),
-    }
-    for r in LINING:
-        d[f"occ_{r}"] = occ_res[r]/nf
+    def summarise(n: int) -> dict:
+        """Every descriptor, computed on the first n frames.
+
+        Called once with the whole trajectory and once per ablation window. Slicing is the
+        only difference between them, so a window can never be computed by a different rule
+        than the full result it is compared against.
+        """
+        ns_used = n * dt_ps / 1000.0
+        Cn, Gn, bs = C[:n], G[:n], bs_a[:n]
+        runs_ = int(((bs[1:].astype(int) - bs[:-1].astype(int)) == 1).sum() + (1 if bs[0] else 0))
+        longest = 0; cur = 0
+        for b in bs:
+            cur = cur + 1 if b else 0
+            longest = max(longest, cur)
+        # Wrap the DIFFERENCE, not the angle. Wrapping chi1 itself leaves 179 -> -179 looking
+        # like a 358 degree jump, which reported 18 flips/ns for a dihedral whose spread was
+        # 11.5 degrees -- an arithmetic impossibility that the smoke test exposed.
+        dchi = np.diff(chi1[:n])
+        dchi = (dchi + 180.0) % 360.0 - 180.0
+        flips = int((np.abs(dchi) > 60).sum())
+        # nburial/nwat are sampled every BURIAL_STRIDE-th frame, so a window of n frames holds
+        # ceil(n / BURIAL_STRIDE) of them -- not n.
+        nb = (n + BURIAL_STRIDE - 1) // BURIAL_STRIDE
+        out = {
+            "n_frames": n, "ns_analysed": ns_used, "dt_ps": dt_ps,
+            "occ_cas": float(cas_a[:n].mean()), "occ_pas": float(pas_a[:n].mean()),
+            "occ_bridge": float(bs.mean()),
+            "bridge_runs_per_ns": runs_/ns_used if ns_used else np.nan,
+            "bridge_longest_ns": longest*dt_ps/1000.0,
+            "rmsd_mean": float(np.mean(rmsd[:n])), "rmsd_max": float(np.max(rmsd[:n])),
+            "escaped": int(np.max([np.linalg.norm(c.mean(0) - ref_com) for c in Cn]) > ESCAPE_A),
+            "depth_mean": float(np.mean(depth[:n])), "depth_sd": float(np.std(depth[:n])),
+            "rmsf_lig": float(np.sqrt(((Cn - Cn.mean(0))**2).sum(-1).mean(0)).mean()),
+            "rmsf_gorge": float(np.sqrt(((Gn - Gn.mean(0))**2).sum(-1).mean(0)).mean()),
+            "gate_chi1_sd": circ_sd(chi1[:n]),
+            "gate_flips_per_ns": flips/ns_used if ns_used else np.nan,
+            "lig_dihedral_sd": float(np.mean([circ_sd(dih_a[:n, j])
+                                              for j in range(dih_a.shape[1])]))
+                               if dih_a is not None else np.nan,
+            "frac_lig_buried_mean": float(np.mean(nburial[:nb])) if nburial else np.nan,
+            "n_bridge_water": float(np.mean(nwat[:nb])) if nwat else np.nan,
+            "n_heavy": lig.n_atoms,
+            "ca_rmsd_mean": float(ca_rmsd[:n].mean()),
+        }
+        for r in LINING:
+            out[f"occ_{r}"] = float(res_a[r][:n].mean())
+        return out
+
+    d = summarise(nf)
+    d["run"] = run_dir.name
+
+    # Duration ablation. The expensive part of rung 4 is the trajectory, not the analysis, so
+    # the question a reviewer will ask -- is 50 ns actually necessary? -- is answerable only
+    # while the trajectory still exists. Computing it later is impossible: the full xtc is
+    # deleted after extraction and the reduced archive is too coarse for the rate descriptors.
+    # Windows are in ns of ANALYSED trajectory; the simulation they imply is EQUIL_NS longer.
+    d["windows"] = {}
+    for w in WINDOWS:
+        n_w = int(round(w * 1000 / dt_ps))
+        if n_w < 2 or n_w >= nf:
+            continue
+        d["windows"][f"{w:g}"] = summarise(n_w)
     return d
 
 # Guarded so the geometry helpers above can be imported by the QC plot script. A QC plot

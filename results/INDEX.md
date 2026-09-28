@@ -24,6 +24,7 @@ logical pipeline order, not the order in which the work happened.
 | **16** Rung 4 dynamic descriptors (running) | `rung4_descriptors.py` | `16_rung4_per_run/*.json` |
 | **16b** PBC + superposition defect in stage 16, and its repair | `rung4_descriptors.py` | `16b_rung4_pbc_fix.md` |
 | **16c** Rung 4 QC plots and threshold flags | `rung4_qc_plots.py` | `16c_qc_summary.png`, `16c_qc_flags.csv`, `16c_qc/<run>.png` (untracked) |
+| **16d** Duration ablation: R² against simulated time | `rung4_descriptors.py` | `16d_duration_ablation.md`, `windows` key in each run JSON |
 | **17** Power analysis and noise ceiling | `power_and_ceiling.py`, `power_proper.py` | `17_power_analysis.md` |
 
 ## Notes
