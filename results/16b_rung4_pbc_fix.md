@@ -153,3 +153,20 @@ CHEMBL1084093_r1: EXTRACTION: gorge RMSF 11.6 A is non-physical; ...
 The panels themselves, recomputed from the archives with the repaired geometry, agree with
 `analyse()` to two decimals on an independent accumulation path: Cα RMSD 1.35 and 1.21 Å,
 ligand RMSD 2.49 and 1.36 Å.
+
+## Requeued, and quarantined in the meantime
+
+Both ligands were put back on the rented instance's queue on 2026-09-28: their JSONs and
+reduced archives were deleted there and their names appended to the end of `slice.txt`, so
+they are re-run at full 10 ps fidelity after the other 28. Appending to a file that a running
+`while read ... done < file` loop is part-way through was verified on that instance's own bash
+before doing it, not assumed.
+
+Their defective results are kept here but renamed to `*.json.stale` and `*.xtc.stale`. The
+rename is the point: a scoring script globbing `16_rung4_per_run/*.json` would otherwise ingest
+two wrong rows among 217 without anything stopping it, which is the same class of silent
+failure this record exists to document. `--update` in `pull_vast.sh` will drop the corrected
+files in alongside them; the `.stale` copies can be deleted once that has happened.
+
+Any future scoring of rung 4 should require `ca_rmsd_mean` to be present and below 3 Å per run.
+Its absence identifies a pre-16b extraction exactly, and no other field does.
