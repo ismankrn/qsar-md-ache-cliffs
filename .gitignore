@@ -32,3 +32,14 @@ md/export_check/*.npy
 # MDAnalysis offset caches
 .*_offsets.npz
 .*_offsets.lock
+
+# Reduced MD trajectories: ~16 MB per run, ~3.5 GB at 217 runs. They exist so a trajectory
+# can be revisited after the 2 GB original is deleted, and they are backed by the rented
+# instances until those are released -- but they are regenerable output, not findings.
+# The descriptors extracted from them (results/16_rung4_per_run/) ARE tracked.
+md/reduced/
+
+# Per-run QC panels: one ~200 KB page per run, 217 of them, regenerable in seconds by
+# scripts/rung4_qc_plots.py from the reduced archives. The fleet summary and the flag
+# table are small and are tracked.
+results/16c_qc/

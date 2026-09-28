@@ -21,6 +21,10 @@ logical pipeline order, not the order in which the work happened.
 | **13** MD system build (217 systems) | `build_md_systems.py` | `13_md_ligands.csv`, `13_md_system_build.md`, `13b_pose_clearance.csv` |
 | **14** MD run layout (379 trajectories) | `make_md_runs.py` | `14_md_runs.csv` |
 | **15** Rung 2 on ensemble poses + bootstrap | `rung2_ensemble.py`, `rung2_ensemble_control.py`, `rung2_ensemble_model.py`, `rung2_ensemble_bootstrap.py` | `15_rung2_ensemble.md`, `15_rung2_ensemble_*.csv`, `15b_rung2_ensemble_median_fixed4ey7.csv` |
+| **16** Rung 4 dynamic descriptors (running) | `rung4_descriptors.py` | `16_rung4_per_run/*.json` |
+| **16b** PBC + superposition defect in stage 16, and its repair | `rung4_descriptors.py` | `16b_rung4_pbc_fix.md` |
+| **16c** Rung 4 QC plots and threshold flags | `rung4_qc_plots.py` | `16c_qc_summary.png`, `16c_qc_flags.csv`, `16c_qc/<run>.png` (untracked) |
+| **17** Power analysis and noise ceiling | `power_and_ceiling.py`, `power_proper.py` | `17_power_analysis.md` |
 
 ## Notes
 
