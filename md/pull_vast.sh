@@ -38,3 +38,21 @@ echo "  ---"
 echo "  JSON di laptop : $(ls "$DEST_JSON"/*.json 2>/dev/null | wc -l | tr -d ' ') / 217"
 echo "  arsip          : $(ls "$DEST_RED"/*.xtc 2>/dev/null | wc -l | tr -d ' ')  ($(du -sh "$DEST_RED" 2>/dev/null | cut -f1))"
 echo "  baru kali ini  : $total_new"
+
+# QC on every pull. A defective run used to be discoverable only by someone deciding to look,
+# which is how two of them reached the repository; now nothing arrives without being checked.
+# --new-only keeps this cheap: panels are re-rendered only where the archive is newer than the
+# page, so a pull that brought nothing new costs a few seconds of reading JSONs.
+#
+# QC never fails the pull. Getting the data off a rented instance that can be reclaimed at any
+# time is the job; reporting on it is secondary, and a missing matplotlib must not stop it.
+PY=${QSAR_PYTHON:-/opt/anaconda3/envs/qsar-md/bin/python}
+[ -x "$PY" ] || PY=$(command -v python3)
+if [ -n "$PY" ] && "$PY" -c "import MDAnalysis, matplotlib" 2>/dev/null; then
+  echo "  ---"
+  "$PY" "$ROOT/scripts/rung4_qc_plots.py" --new-only 2>&1 | grep -v "^JSON records\|^panels already"
+  rc=${PIPESTATUS[0]}
+  [ "$rc" = "2" ] && echo "  >>> PERIKSA: ada run dengan cacat ekstraksi, lihat results/16c_qc_flags.csv"
+else
+  echo "  (QC dilewati: python dengan MDAnalysis+matplotlib tidak ditemukan)"
+fi

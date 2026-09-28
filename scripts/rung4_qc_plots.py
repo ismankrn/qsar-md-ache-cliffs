@@ -327,6 +327,9 @@ if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("--only", type=str, default=None, help="one run name")
     ap.add_argument("--fleet-only", action="store_true", help="skip the per-run panels")
+    ap.add_argument("--new-only", action="store_true",
+                    help="only render panels whose archive is newer than the existing page; "
+                         "this is what makes the check cheap enough to run on every pull")
     ap.add_argument("--reduced", type=str, default=None)
     ap.add_argument("--jsons", type=str, default=None)
     a = ap.parse_args()
@@ -349,6 +352,16 @@ if __name__ == "__main__":
 
     if not a.fleet_only:
         runs = [a.only] if a.only else sorted(p.stem for p in REDUCED.glob("*.xtc"))
+        if a.new_only:
+            fresh = []
+            for run in runs:
+                png, xtc = OUTDIR/f"{run}.png", REDUCED/f"{run}.xtc"
+                if not png.exists() or png.stat().st_mtime < xtc.stat().st_mtime:
+                    fresh.append(run)
+            skipped = len(runs) - len(fresh)
+            runs = fresh
+            if skipped:
+                print(f"panels already current: {skipped}")
         by_run = {d.get("run"): d for d in records}
         ok = 0
         for run in runs:
@@ -363,3 +376,15 @@ if __name__ == "__main__":
             except Exception as e:
                 print(f"  {run}: FAILED {type(e).__name__}: {e}")
         print(f"per-run panels: {ok} / {len(runs)}")
+
+    # Printed last and kept to one line, because the caller that matters is the periodic pull
+    # monitor, which only shows the tail of this output. A defect has to be in that tail.
+    bad = [d for d in records if any(f.startswith("EXTRACTION") for f in check(d))]
+    if bad:
+        print(f"QC: *** {len(bad)} / {len(records)} runs have an EXTRACTION defect: "
+              + ", ".join(d.get("run", "?") for d in bad[:5])
+              + (" ..." if len(bad) > 5 else ""))
+        sys.exit(2)
+    warn = [d for d in records if check(d)]
+    print(f"QC: {len(records) - len(warn)} / {len(records)} clean"
+          + (f", {len(warn)} flagged (simulation, not extraction)" if warn else ""))

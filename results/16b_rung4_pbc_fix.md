@@ -37,19 +37,61 @@ rmsd_mean  = 44.7 Å      for a ligand contacting Trp86 in 99.9% of frames
 The defect splits the descriptor set exactly along one line: whether the quantity is measured
 *between* atoms in the same frame, or *against* a frozen reference.
 
-| | Affected | Why |
-|---|---|---|
-| `rmsd_mean`, `rmsd_max` | yes | compared to a frozen reference |
-| `rmsf_lig`, `rmsf_gorge` | yes | fluctuation about a lab-frame mean |
-| `depth_mean`, `depth_sd` | yes | axis and origin frozen at frame 0 |
-| `escaped` | yes | threshold on the same displacement |
-| `occ_*`, `occ_cas/pas/bridge` | no | inter-atomic distances, rotation-invariant |
-| `bridge_runs_per_ns`, `bridge_longest_ns` | no | derived from those contacts |
-| `gate_chi1_sd`, `gate_flips_per_ns`, `lig_dihedral_sd` | no | internal dihedrals |
-| `n_bridge_water`, `frac_lig_buried_mean` | no | inter-atomic distances |
+**This section was wrong when first written; the correction follows it.** The original claim
+was that only quantities compared against a frozen reference could be affected — seven of
+roughly thirty — because everything else measures distances or angles between atoms in the
+same frame and is therefore invariant to the protein's rotation.
 
-Seven of roughly thirty descriptors. The contact and dihedral descriptors — which carry the
-CAS–PAS bridging hypothesis, the actual scientific content of rung 4 — were never affected.
+That reasoning is sound for rotation and silent about the second mechanism. Distances between
+atoms in the same frame are rotation-invariant but they are **not** periodic-image-safe, and an
+angle among four atoms of one residue is meaningless if a box face happens to cut between them.
+
+It was believed because it held on the only two trajectories then available. Both had already
+been deleted, so the test was made on their reduced archives — and `trjconv -pbc mol` had
+already made those whole, so the archives could not show an effect that had been present in the
+raw data. Measuring it needed a raw trajectory with its water still in it, which existed again
+only while the next run was in flight.
+
+### The measurement (28.95 ns, 29,287 waters, 96,239 atoms, identical frames)
+
+| descriptor | old | new | change |
+|---|---:|---:|---:|
+| `rmsd_mean` | 26.70 | 3.14 | −23.55 |
+| `rmsf_gorge` | 37.09 | 0.93 | −36.16 |
+| `rmsf_lig` | 35.60 | 1.18 | −34.43 |
+| `depth_sd` | 14.31 | 0.60 | −13.70 |
+| `lig_dihedral_sd` | 21.72 | 6.57 | **−15.15** |
+| `gate_chi1_sd` | 11.18 | 8.97 | **−2.21** |
+| `gate_flips_per_ns` | 0.414 | 0.000 | **−0.414** |
+| `n_bridge_water` | 1.969 | 2.121 | **+0.152** |
+| `occ_447` | 0.506 | 0.585 | **+0.079** |
+| `occ_121` | 0.818 | 0.876 | **+0.058** |
+| `occ_74`, `occ_341`, `occ_124`, `occ_337` | | | +0.031, +0.027, +0.002, +0.000 |
+| `frac_lig_buried_mean` | 0.977 | 0.986 | +0.008 |
+
+Nineteen descriptors differ, not seven. Thirteen are bit-identical, among them `occ_cas`,
+`occ_pas`, `occ_bridge`, `bridge_runs_per_ns` and `bridge_longest_ns`.
+
+Three things the original table got wrong:
+
+- **Contact occupancies are affected.** Six of the fourteen lining residues moved, every one of
+  them *upward*. A contact whose partner was written an image away is a contact that was
+  missed, so the error is a systematic undercount and never an overcount. Trp86 and Trp286
+  happen to be unaffected here, which is the only reason the bridging quantities are identical
+  — luck of where the box faces fall relative to those residues, not a property that holds by
+  construction.
+- **`n_bridge_water` is affected, by about 8%.** A water hydrogen-bonded to both ligand and
+  protein but written into a neighbouring image is simply not counted. This is the one
+  descriptor that no other test could have reached: the reduced archives contain no water.
+- **The dihedral spreads are affected, `lig_dihedral_sd` by a factor of three.** A molecule
+  straddling a box face has its halves written a box vector apart, so a torsion computed across
+  the cut is meaningless. The ligand is its own moleculetype and straddles like any other.
+
+The defensible statement is therefore much narrower than the original one: **only the
+quantities that came back bit-identical are demonstrably safe, and only on this trajectory.**
+Which descriptors a given run corrupts depends on where its box faces fall relative to its
+molecules, so it varies from run to run and cannot be predicted from another run. That is the
+reason the two completed runs are being redone rather than patched.
 
 ## The repair
 
@@ -115,16 +157,20 @@ difference 4.03×10⁻⁷.
 
 ## Consequences for the two completed runs
 
-Their production JSONs carry the seven bad values. The structural ones can be recomputed from
+Their production JSONs carry the bad values, and the water A/B above shows that is nineteen
+descriptors rather than the seven first believed. The structural ones can be recomputed from
 the reduced archives — validated above — but the archives are 100 ps and hold no water, so
 `gate_flips_per_ns`, `bridge_runs_per_ns`, `n_bridge_water` and `lig_dihedral_sd` cannot be
-recovered from them (`gate_flips_per_ns` reads 0.00 at 100 ps against 1.02 at 10 ps). Mixing
-fidelities across 217 runs is not worth the saving: both ligands should simply be run again,
-which costs about 14 GPU-hours, roughly $2.20.
+recovered from them (`gate_flips_per_ns` reads 0.00 at 100 ps against 1.02 at 10 ps). Both
+ligands are simply run again instead, at about 14 GPU-hours and roughly $2.20.
 
-`CHEMBL1084093_r1` is the less urgent of the two — its contact descriptors are provably
-unaffected. `CHEMBL104553_r1` had real image jumps, so its `occ_*` cannot be trusted to better
-than a few hundredths.
+Neither of them can be cleared by inspection. It was briefly claimed here that
+`CHEMBL1084093_r1` was the safer of the two because its contact occupancies came back
+unchanged; that was read off six residues whose occupancy was saturated at exactly 1.000, where
+an undercount is the only error possible and none had occurred. It says nothing about the other
+eight, and nothing at all about its water bridges, which the archive cannot hold. Which
+descriptors a run loses depends on where its own box faces fell, and for a deleted trajectory
+that is no longer answerable.
 
 ## The QC that should have existed first (stage 16c)
 
