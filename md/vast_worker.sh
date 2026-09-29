@@ -88,6 +88,14 @@ while read -r RUN; do
             -dump 0 -n "$W/sel.ndx" -pbc mol <<< "$GRP" > /dev/null 2>&1 || true
       fi
     fi
+    # The final checkpoint, always -- 2.3 MB against the 2 GB trajectory it replaces. It is
+    # what keeps a shortened run reversible: with the tpr (kept on BRIN) a run can be picked
+    # up later by
+    #     gmx convert-tpr -s prod.tpr -extend <ps> -o next.tpr
+    #     gmx mdrun -s next.tpr -cpi prod.cpt
+    # so a decision to simulate 25 ns instead of 50 stops being a decision that cannot be
+    # undone once the trajectory is gone. Without this, cutting the duration is a one-way bet.
+    [ -f "$W/prod.cpt" ] && cp "$W/prod.cpt" "$ROOT/reduced/$RUN.cpt"
     rm -rf "$W"
     done_n=$((done_n+1))
     echo "  $RUN: selesai ${el}s, deskriptor OK, trajektori dihapus"
