@@ -18,6 +18,12 @@
 ROOT=/root/qsar
 SLICE=${SLICE:-$ROOT/slice.txt}
 NTOMP=${NTOMP:-4}          # measured optimum: 4 threads beat 8 and 11 on this GPU
+# mdrun refuses to start when OMP_NUM_THREADS is set to anything other than -ntomp:
+# "Environment variable OMP_NUM_THREADS and the number of threads requested on the
+# command line have different values." Some Vast images set it in /etc/environment to
+# nproc, some leave it unset, so the same command that ran for days on one instance
+# failed all 12 runs in 40 seconds on the next. Export it rather than hope.
+export OMP_NUM_THREADS=$NTOMP
 KEEP_REDUCED=${KEEP_REDUCED:-1}
 # NSTEPS overrides the tpr's 25,000,000 (50 ns). Used only to prove the pipeline end to end
 # on a short run: finding a bug in the extraction step after 6.3 h of mdrun is an expensive
