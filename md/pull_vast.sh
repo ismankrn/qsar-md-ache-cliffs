@@ -35,7 +35,11 @@ for H in "$@"; do
   total_new=$((total_new + fresh))
 done
 echo "  ---"
-echo "  JSON di laptop : $(ls "$DEST_JSON"/*.json 2>/dev/null | wc -l | tr -d ' ') / 217"
+# 217 phase-1 runs plus whatever replicates are in flight; counting the manifests beats a
+# hard-coded 217 now that replicate JSONs land in the same directory.
+WANT=$(( $(tail -n +2 "$ROOT/results/14_md_runs_phase1.csv" 2>/dev/null | grep -c .) \
+       + $(tail -n +2 "$ROOT/results/14c_md_runs_repl_pilot.csv" 2>/dev/null | grep -c .) ))
+echo "  JSON di laptop : $(ls "$DEST_JSON"/*.json 2>/dev/null | wc -l | tr -d ' ') / ${WANT:-217}"
 echo "  arsip          : $(ls "$DEST_RED"/*.xtc 2>/dev/null | wc -l | tr -d ' ')  ($(du -sh "$DEST_RED" 2>/dev/null | cut -f1))"
 echo "  baru kali ini  : $total_new"
 
