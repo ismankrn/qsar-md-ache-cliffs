@@ -69,19 +69,28 @@ def spreads(df: pd.DataFrame, min_reps: int) -> pd.DataFrame:
         if rep_part.ligand.nunique() < 2:
             continue
         for c in desc:
-            v = pd.to_numeric(rep_part[c], errors="coerce")
-            if v.isna().all():
+            # The two spreads come from different populations on purpose. Seed noise can only
+            # be measured where replicates exist -- six ligands at most. Between-ligand spread
+            # needs variety, not replication, so it uses EVERY ligand with a result: six would
+            # give a hopeless estimate of it, and the main slice is producing dozens.
+            vr = pd.to_numeric(rep_part[c], errors="coerce")
+            va = pd.to_numeric(dw[c], errors="coerce")
+            if vr.isna().all() or va.isna().all():
                 continue
-            g = v.groupby(rep_part.ligand)
+            gr = vr.groupby(rep_part.ligand)
             # Pooled within-ligand SD: the average variance across ligands, not the average
             # SD. Averaging SDs would underweight the ligands that actually vary.
-            var_within = g.var(ddof=1).dropna()
+            var_within = gr.var(ddof=1).dropna()
             if var_within.empty:
                 continue
             sd_rep = float(np.sqrt(var_within.mean()))
-            sd_lig = float(g.mean().std(ddof=1))
+            lig_means = va.groupby(dw.ligand).mean()
+            if lig_means.size < 2:
+                continue
+            sd_lig = float(lig_means.std(ddof=1))
             out.append({"window": w, "descriptor": c,
-                        "n_ligands": int(len(keep)), "sd_rep": sd_rep, "sd_lig": sd_lig,
+                        "n_lig_rep": int(len(keep)), "n_lig_all": int(lig_means.size),
+                        "sd_rep": sd_rep, "sd_lig": sd_lig,
                         "ratio": (sd_lig/sd_rep) if sd_rep > 0 else np.inf,
                         "usable": bool(sd_rep > 0 and sd_lig/sd_rep >= RATIO_USABLE)})
     return pd.DataFrame(out)
@@ -122,8 +131,8 @@ if __name__ == "__main__":
         sys.exit("no rung-4 JSONs found")
     reps = df[df.window == "45"].groupby("ligand").replicate.nunique()
     ready = reps[reps >= a.min_reps]
-    print(f"ligands with results : {len(reps)}")
-    print(f"with >= {a.min_reps} replicates : {len(ready)}  {list(ready.index)}")
+    print(f"ligands with results : {len(reps)}  (these set sd_lig)")
+    print(f"with >= {a.min_reps} replicates : {len(ready)}  {list(ready.index)}  (these set sd_rep)")
     if len(ready) < 2:
         sys.exit("need at least two ligands with replicates before this says anything")
 
