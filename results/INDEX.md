@@ -40,6 +40,19 @@ logical pipeline order, not the order in which the work happened.
 - **Stage 03 is frozen.** Seed 20260902. Every descriptor rung must be scored on
   these folds, or the comparison between rungs is meaningless.
 - **The test split is sealed** and has not been scored by any model.
+- **OPEN AT DRAFTING: the rung-4 descriptors have no citations yet.** They were
+  assembled from the AChE CAS/PAS bridging hypothesis plus standard MD analysis
+  practice, not from a literature survey. Most are established observables --
+  contact occupancy (the structural-interaction-fingerprint family, extended to
+  trajectories), ligand RMSD from the docked pose, RMSF, water-mediated bridges,
+  chi1 rotamer analysis -- and CAS-PAS bridging is a long-standing theme in AChE
+  pharmacology. `depth_mean`/`depth_sd`, the projection on the CAS->PAS axis, is
+  our own construction, as is the design rule that every descriptor must be a
+  persistence, a fluctuation or an event count rather than a frame-averaged rung-2
+  quantity. A Methods section introducing 35 descriptors with no references will be
+  read as invented ones. Two things to settle before submission: verified citations
+  per descriptor group, and whether anyone has already used MD descriptors on
+  activity cliffs -- that determines how the novelty claim must be worded.
 
 ## Where the ladder stands
 
