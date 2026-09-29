@@ -26,6 +26,7 @@ logical pipeline order, not the order in which the work happened.
 | **16c** Rung 4 QC plots and threshold flags | `rung4_qc_plots.py` | `16c_qc_summary.png`, `16c_qc_flags.csv`, `16c_qc/<run>.png` (untracked) |
 | **16d** Duration ablation: R² against simulated time | `rung4_descriptors.py` | `16d_duration_ablation.md`, `windows` key in each run JSON |
 | **17** Power analysis and noise ceiling | `power_and_ceiling.py`, `power_proper.py` | `17_power_analysis.md` |
+| **18** Replicate pilot: ligand signal vs seed noise | `replicate_pilot.py` | `18_replicate_pilot.md` (pre-registered), `14c_md_runs_repl_pilot.csv`, `14d_prod_ld_seeds.csv`, `18_replicate_pilot.csv` |
 
 ## Notes
 
