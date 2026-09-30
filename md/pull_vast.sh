@@ -14,6 +14,7 @@ mkdir -p "$DEST_JSON" "$DEST_RED"
 [ $# -eq 0 ] && { echo "pakai: bash md/pull_vast.sh vast1 [vast2 ...]"; exit 1; }
 
 total_new=0
+FAILED=0
 for H in "$@"; do
   n_remote=$(ssh -n -o BatchMode=yes -o ConnectTimeout=20 "$H" \
     'ls /root/qsar/out/*.json 2>/dev/null | wc -l' 2>/dev/null)
@@ -24,14 +25,33 @@ for H in "$@"; do
   # produces a JSON of the same name that must replace the stale one. --ignore-existing would
   # silently keep the bad file forever. --update still refuses to go backwards in time, so a
   # corrected local file is never clobbered by an older remote one.
-  moved_j=$(rsync -a --update -i -e ssh "$H:/root/qsar/out/" "$DEST_JSON/" 2>/dev/null \
-            | grep -c '^[<>]')
-  rsync -a --update -e ssh "$H:/root/qsar/reduced/" "$DEST_RED/" 2>/dev/null
+  # Never silence rsync. This is the only step that gets results off an instance that can be
+  # reclaimed without warning, and it has already failed quietly once: three archives sat on
+  # vast1 while the summary printed "0 baru" and looked like there was nothing to fetch. Vast
+  # rate-limits rapid successive SSH connections, so a pull can fail for reasons that clear on
+  # their own -- which is exactly why it must retry and then say so rather than shrug.
+  pull_dir () {   # remote_subdir  local_dest  -> prints number of files transferred
+    local sub=$1 dest=$2 try=0 rc=1 out=""
+    while [ $try -lt 3 ]; do
+      out=$(rsync -a --update -i -e ssh "$H:/root/qsar/$sub/" "$dest/" 2>&1); rc=$?
+      [ $rc -eq 0 ] && break
+      try=$((try+1)); sleep 5
+    done
+    if [ $rc -ne 0 ]; then
+      echo "  !! $H:$sub GAGAL setelah 3 percobaan (rc=$rc)" >&2
+      echo "$out" | tail -3 | sed 's/^/     /' >&2
+      FAILED=$((FAILED+1))
+      echo 0; return
+    fi
+    echo "$out" | grep -c '^[<>]'
+  }
+  moved_j=$(pull_dir out "$DEST_JSON")
+  moved_r=$(pull_dir reduced "$DEST_RED")
   after=$(ls "$DEST_JSON"/*.json 2>/dev/null | wc -l | tr -d ' ')
   fresh=$((after-before)); upd=$((moved_j-fresh)); [ $upd -lt 0 ] && upd=0
   slice=$(ssh -n -o BatchMode=yes "$H" 'wc -l < /root/qsar/slice.txt' 2>/dev/null)
-  printf "  %-8s instance %s/%s selesai, +%s baru, %s diperbarui\n" \
-    "$H:" "$n_remote" "${slice:-?}" "$fresh" "$upd"
+  printf "  %-8s instance %s/%s selesai, +%s baru, %s diperbarui, %s berkas arsip\n" \
+    "$H:" "$n_remote" "${slice:-?}" "$fresh" "$upd" "$moved_r"
   total_new=$((total_new + fresh))
 done
 echo "  ---"
@@ -42,6 +62,10 @@ WANT=$(( $(tail -n +2 "$ROOT/results/14_md_runs_phase1.csv" 2>/dev/null | grep -
 echo "  JSON di laptop : $(ls "$DEST_JSON"/*.json 2>/dev/null | wc -l | tr -d ' ') / ${WANT:-217}"
 echo "  arsip          : $(ls "$DEST_RED"/*.xtc 2>/dev/null | wc -l | tr -d ' ')  ($(du -sh "$DEST_RED" 2>/dev/null | cut -f1))"
 echo "  baru kali ini  : $total_new"
+# A pull that failed must not be readable as a pull that found nothing.
+if [ "${FAILED:-0}" -gt 0 ]; then
+  echo "  !! $FAILED transfer GAGAL -- hasil mungkin masih tertinggal di instance"
+fi
 
 # QC on every pull. A defective run used to be discoverable only by someone deciding to look,
 # which is how two of them reached the repository; now nothing arrives without being checked.

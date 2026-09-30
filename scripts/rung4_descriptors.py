@@ -276,7 +276,15 @@ def analyse(run_dir: Path, traj: str = "prod", equil_ns: float = EQUIL_NS,
     for i, ix in enumerate(mols[:-1]):
         grew = (np.ptp(u.atoms[ix].positions, axis=0)
                 - np.ptp(rec.atoms[ix].positions, axis=0))
-        if (grew > 15.0).any():
+        # 30 A, not 15. The threshold has to sit between what a folded domain does on its own
+        # and what a box face does to it, and 15 was inside the first: measured over one 45 ns
+        # run, legitimate breathing of a segment reached 17.1 A in a single dimension and
+        # crossed 15 A in 1302 of 4501 frames, while the Ca RMSD after superposition never
+        # left 1.15-1.31 A -- an intact receptor throughout. A genuinely split molecule spans
+        # roughly (box - extent) = 99 - 60 = 39 A more, so 30 A separates the two cleanly.
+        # This guard is a fast, specific proxy; the ca_rmsd check at the end of the loop is
+        # the one that actually decides, and it would have caught a split on its own.
+        if (grew > 30.0).any():
             raise RuntimeError(f"molekul reseptor {i} masih terbentang {grew.round(1)} A lebih "
                                f"dari di PDB setelah unwrap"
                                + ("" if has_bonds else
