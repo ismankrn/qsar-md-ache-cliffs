@@ -88,11 +88,32 @@ def spreads(df: pd.DataFrame, min_reps: int) -> pd.DataFrame:
             if lig_means.size < 2:
                 continue
             sd_lig = float(lig_means.std(ddof=1))
+            # sd_rep = 0 is not one case but three, and the rule as written called all of
+            # them unusable -- including the best possible outcome.
+            #   both zero          the descriptor never varies at all: no information
+            #   sd_rep 0, few      almost every run returns the same value (usually 0) and
+            #     distinct values  the within-ligand variance is zero by sparsity, not by
+            #                      reproducibility. gate_flips_per_ns is this: about one
+            #                      rotamer jump per three trajectories, so most runs read 0.
+            #   sd_rep 0, varied   genuinely reproducible to the digit, and discriminating
+            nz = float((va.abs() > 1e-12).mean())
+            distinct = int(va.round(10).nunique())
+            if sd_lig == 0 and sd_rep == 0:
+                verdict = "constant"
+            elif sd_rep == 0 and (nz < 0.25 or distinct <= 3):
+                verdict = "sparse"
+            elif sd_rep == 0:
+                verdict = "usable"
+            elif sd_lig/sd_rep >= RATIO_USABLE:
+                verdict = "usable"
+            else:
+                verdict = "seed-dominated"
             out.append({"window": w, "descriptor": c,
                         "n_lig_rep": int(len(keep)), "n_lig_all": int(lig_means.size),
+                        "frac_nonzero": nz, "n_distinct": distinct,
                         "sd_rep": sd_rep, "sd_lig": sd_lig,
                         "ratio": (sd_lig/sd_rep) if sd_rep > 0 else np.inf,
-                        "usable": bool(sd_rep > 0 and sd_lig/sd_rep >= RATIO_USABLE)})
+                        "verdict": verdict, "usable": verdict == "usable"})
     return pd.DataFrame(out)
 
 
@@ -141,9 +162,11 @@ if __name__ == "__main__":
     full = sp[sp.window == "45"].sort_values("ratio", ascending=False)
     print(f"\n  {'descriptor':24s} {'sd_rep':>9s} {'sd_lig':>9s} {'ratio':>7s}  verdict")
     for _, r in full.iterrows():
-        print(f"  {r.descriptor:24s} {r.sd_rep:9.4f} {r.sd_lig:9.4f} {r.ratio:7.2f}"
-              f"  {'usable' if r.usable else 'DOMINATED BY SEED'}")
-    print(f"\n  usable at 45 ns: {int(full.usable.sum())} / {len(full)}  -> {OUT_CSV.name}")
+        rat = "   inf" if not np.isfinite(r.ratio) else f"{r.ratio:7.2f}"
+        print(f"  {r.descriptor:24s} {r.sd_rep:9.4f} {r.sd_lig:9.4f} {rat}  {r.verdict}")
+    counts = full.verdict.value_counts().to_dict()
+    print(f"\n  45 ns: " + ", ".join(f"{k} {v}" for k, v in sorted(counts.items()))
+          + f"  -> {OUT_CSV.name}")
 
     pc = pair_check(df, sp)
     if not pc.empty:
