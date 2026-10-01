@@ -40,6 +40,13 @@ logical pipeline order, not the order in which the work happened.
 - **Stage 03 is frozen.** Seed 20260902. Every descriptor rung must be scored on
   these folds, or the comparison between rungs is meaningless.
 - **The test split is sealed** and has not been scored by any model.
+- **Who owns which runs.** The hosts share no filesystem and there is no lock, so two of
+  them on one run directory would corrupt both. The assignment is: `14_md_runs_phase1.csv`
+  stride 0 of 8 belongs to vast1; stride 0 of 3 (73 runs) was claimed by BRIN job 551933;
+  `14f_md_runs_brin_block.csv` (32 runs, taken from the END of what neither had touched)
+  belongs to BRIN jobs 553833/553834; `14c_md_runs_repl_pilot.csv` (12 replicates) belongs
+  to vast2. Any new Vast instance must be staged from the START of what is left, never the
+  end. Two runs were already computed twice before this was written down.
 - **OPEN AT DRAFTING: the rung-4 descriptors have no citations yet.** They were
   assembled from the AChE CAS/PAS bridging hypothesis plus standard MD analysis
   practice, not from a literature survey. Most are established observables --
