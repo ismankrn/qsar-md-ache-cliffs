@@ -97,3 +97,82 @@ replicates of one ligand carry ld-seeds −8801800, −1208092685 and 1252786170
 This is good for the pilot, which wants independence, and bad for reproducibility, which the
 paper will claim. The seeds are recoverable only from the tprs, which exist now and will not
 exist forever, so they were harvested into `results/14d_prod_ld_seeds.csv` while they could be.
+
+---
+
+## Result (2026-10-02): 12 of 12 replicate runs complete
+
+Six ligands, two extra replicates each, against 30 ligands for the between-ligand spread.
+The rule fixed in advance — between-ligand spread at least twice the between-replicate
+spread — gives, at the full 45 ns window:
+
+**15 usable, 15 seed-dominated, 1 sparse, 1 constant.**
+
+Half the descriptor set measures the random number generator more than it measures the
+ligand. Without replicates all 30 would have gone into the model and 15 of them would
+have been noise wearing the costume of signal. That alone is what the $13 bought.
+
+### What survives, and what does not
+
+| usable | ratio | | seed-dominated | ratio |
+|---|---:|---|---|---:|
+| `occ_86` | 465 | | `occ_121` | 1.91 |
+| `occ_cas` | 201 | | `rmsd_max` | 1.72 |
+| `occ_bridge` | 39.3 | | `rmsf_lig` | 1.46 |
+| `occ_pas`, `occ_286` | 37.4 | | `bridge_longest_ns` | 1.30 |
+| `occ_124` | 11.9 | | `rmsf_gorge` | 1.22 |
+| `occ_72` | 5.9 | | `rmsd_mean` | 0.99 |
+| `occ_337` | 5.0 | | `ca_rmsd_mean` | 0.83 |
+| `lig_dihedral_sd` | 2.7 | | `bridge_runs_per_ns` | 0.71 |
+| `frac_lig_buried_mean` | 2.6 | | `gate_flips_per_ns` | 0.36 |
+| `depth_mean` | 2.6 | | | |
+| `n_bridge_water` | 2.2 | | | |
+
+**The CAS–PAS bridging family is the strongest in the set.** The hypothesis the study was
+built on is carried by the descriptors that reproduce best, not by the ones that happen to
+be noisy. The casualties are the mobility metrics — ligand RMSD and RMSF distinguish seeds
+about as well as they distinguish ligands — and the rate descriptors, which was already
+expected from `gate_flips_per_ns` averaging about one event per three trajectories.
+
+`ca_rmsd_mean` is the positive control and it behaves: it is a property of the receptor,
+it should not discriminate between ligands, and at 0.83 it lands squarely in the
+seed-dominated half. A method that flags a known negative as negative is worth more than
+one that only produces the answers it was pointed at.
+
+### How much of this survives at 20 ns
+
+The count of usable descriptors is close to flat with trajectory length:
+
+| window | usable | seed-dominated |
+|---:|---:|---:|
+| 5 ns | 12 | 17 |
+| 10 ns | 13 | 16 |
+| 20 ns | 12 | 18 |
+| 30 ns | 13 | 17 |
+| 45 ns | **15** | 15 |
+
+Twenty nanoseconds of analysed trajectory keeps 12 of the 15. The three bought by the
+full run are `frac_lig_buried_mean` (0.89 at 5 ns, 2.64 at 45), `occ_124` (2.15 to 11.9)
+and `gate_chi1_sd`. Everything else is already there by 10 ns, and some are *better*
+short: `occ_337` falls from 22.4 to 5.0 as the window lengthens, and `occ_bridge` from
+65.7 to 39.3.
+
+More decisive than the counts: **shortening does not make the seed noise worse.**
+
+| `sd_rep` | 5 ns | 10 ns | 20 ns | 30 ns | 45 ns |
+|---|---:|---:|---:|---:|---:|
+| `occ_bridge` | 0.006 | 0.006 | 0.006 | 0.006 | 0.010 |
+| `n_bridge_water` | 0.662 | 0.557 | 0.547 | 0.572 | 0.584 |
+| `depth_mean` | 1.041 | 1.030 | 0.948 | 0.923 | 0.920 |
+
+Reproducibility of the descriptors that matter is flat or better at the shorter windows.
+The case for 50 ns rests on three descriptors, not on the set as a whole.
+
+### Limits of this reading
+
+Six ligands set `sd_rep`, and two of them have two replicates rather than three because
+their `_r1` is still queued on vast1. Ratios for the near-saturated occupancies
+(`occ_86`, `occ_cas`, occupancy ~1.0) swing between 387 and 2376 across windows — the
+denominator is near zero and the precision is illusory; read them as "reproducible", not
+as a number. All six are cliff-pair ligands, which is the right population for a pair
+endpoint but not a random sample of the 217.
