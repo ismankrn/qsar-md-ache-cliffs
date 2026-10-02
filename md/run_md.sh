@@ -34,6 +34,17 @@ echo "grompp memakai: $GROMPP"
 # MANIFEST selects which runs this job covers. Phase 1 is replicate 1 only (217 runs);
 # the 162 replicate trajectories are deferred until phase 1 shows a signal, because a null
 # result needs no reproducibility check. Their systems are already equilibrated and waiting.
+# Production length. Read from a FILE, not only the environment, because the jobs that need
+# it are already PENDING in the queue and their exported environment cannot be changed
+# without cancelling and resubmitting -- which would throw away a queue position that took
+# 82 hours to earn. Empty or absent means "whatever the tpr says", i.e. 50 ns.
+#
+# The tpr is deliberately left at its original 25,000,000 steps. Overriding with -nsteps
+# rather than rewriting the tpr means extending a run later needs no convert-tpr at all:
+# drop the override and resume with -cpi, and it continues to the 50 ns the tpr already
+# specifies.
+NSTEPS=${NSTEPS:-$(cat "$ROOT/md/NSTEPS_PROD" 2>/dev/null || true)}
+NSTEPS=$(echo "$NSTEPS" | tr -dc '0-9')
 MANIFEST=${MANIFEST:-$ROOT/results/14_md_runs_phase1.csv}
 if [ ! -f "$MANIFEST" ]; then echo "FATAL: manifest tidak ada: $MANIFEST"; exit 1; fi
 echo "manifest: $(basename $MANIFEST) ($(( $(wc -l < "$MANIFEST") - 1 )) run)"
@@ -140,7 +151,12 @@ if [ "${STOP_AFTER:-prod}" = "npt" ]; then
 else
   echo "== produksi 50 ns =="
   prep prod npt.gro -t npt.cpt || exit 1
-  run  prod -cpi prod.cpt
+  NS_ARG=()
+  if [ -n "$NSTEPS" ]; then
+    NS_ARG=(-nsteps "$NSTEPS")
+    echo "   panjang produksi dibatasi ke $NSTEPS langkah ($(awk -v n="$NSTEPS" 'BEGIN{printf "%.0f", n*0.002/1000}') ns)"
+  fi
+  run  prod -cpi prod.cpt "${NS_ARG[@]}"
 fi
 
 echo

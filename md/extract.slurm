@@ -55,8 +55,17 @@ one () {
 
 export -f one; export OUT RED RUNS ROOT GMX
 n=0
+# Gate on the trajectory, not on prod.gro. A run stopped by -maxh at the walltime boundary
+# exits cleanly but there is no guarantee of a confout, and BRIN's in-flight runs are already
+# past 25 ns -- long enough to analyse and too expensive to discard over a missing file. The
+# extraction's own min-frames check is the real floor; this only avoids opening empty runs.
+MIN_XTC_MB=${MIN_XTC_MB:-400}
 for d in "$RUNS"/*/; do
-  [ -f "$d/prod.gro" ] || continue
+  [ -f "$d/prod.xtc" ] || continue
+  if [ ! -f "$d/prod.gro" ]; then
+    sz=$(du -m "$d/prod.xtc" 2>/dev/null | cut -f1)
+    [ "${sz:-0}" -lt "$MIN_XTC_MB" ] && continue
+  fi
   R=$(basename "$d"); [ -f "$OUT/$R.json" ] && continue
   one "$d" &
   n=$((n+1))

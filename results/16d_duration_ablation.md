@@ -64,3 +64,33 @@ outcomes, all publishable:
 One caution against over-reading a single run: a ligand that never leaves its pose will look
 converged at 5 ns for every descriptor, and says nothing about one that does. The ablation is
 only interpretable across the 217 runs, on the same frozen folds as the main analysis.
+
+---
+
+## Decision (2026-10-02): production is 25 ns from here on
+
+Twenty nanoseconds of analysed trajectory, five discarded, so 25 ns simulated. The evidence
+is in the replicate pilot rather than here: 12 of the 15 usable descriptors survive at the
+20 ns window, and seed noise does not grow as the window shortens — `occ_bridge` has
+`sd_rep` 0.006 from 5 to 30 ns against 0.010 at 45. The three descriptors lost are
+`frac_lig_buried_mean`, `occ_124` and `gate_chi1_sd`.
+
+What makes this reversible rather than a bet: the tpr is left at its original 25,000,000
+steps and the length is imposed with `mdrun -nsteps`, so extending a run needs no
+`convert-tpr` at all. Drop the override, resume with `-cpi`, and it continues to the 50 ns
+the tpr already specifies. Checkpoints are kept for exactly this.
+
+What is NOT concluded: that 20 ns is enough to *predict*. The pilot measured reproducibility,
+not predictive value. With 6 complete cliff pairs of the 145 needed, a correlation estimate
+spans [-0.52, +0.93] and settles nothing. The window comparison on the real endpoint becomes
+readable at roughly 125 ligands / 48 pairs.
+
+Applied to: vast1 and vast2 from 2026-10-02 (`NSTEPS=12500000`), and BRIN jobs 553833/553834
+through `md/NSTEPS_PROD`, which `run_md.sh` reads at runtime — those jobs were already PENDING
+and their exported environment could not be changed without discarding a queue position that
+took 82 hours to earn.
+
+Not applied to: the 28 phase-1 runs and 12 replicates already finished at 50 ns. They need no
+adjustment. Every JSON carries the 5/10/20/30 ns windows, so the primary table is built on the
+common 20 ns window for every run regardless of how long it was simulated, and the 50 ns
+subset remains available as a robustness check.
