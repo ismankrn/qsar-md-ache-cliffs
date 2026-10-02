@@ -176,3 +176,32 @@ their `_r1` is still queued on vast1. Ratios for the near-saturated occupancies
 denominator is near zero and the precision is illusory; read them as "reproducible", not
 as a number. All six are cliff-pair ligands, which is the right population for a pair
 endpoint but not a random sample of the 217.
+
+### Robustness: restricting to the four ligands with all three replicates
+
+Dropping to `--min-reps 3` removes the two ligands whose `_r1` is still queued, leaving
+four to set `sd_rep`. The verdict count moves from 15 usable to 13, and the useful
+question is which descriptors move with it.
+
+**Stable** — same order of magnitude, same verdict, on either subset: the whole CAS–PAS
+family (`occ_cas` 398 vs 201, `occ_86` 380 vs 465, `occ_bridge` 33 vs 39, `occ_pas` 31 vs
+37), `frac_lig_buried_mean` (2.61 vs 2.64), `lig_dihedral_sd` (2.60 vs 2.72), `depth_mean`
+(2.28 vs 2.59), and every descriptor already far below the line (`bridge_runs_per_ns`,
+`occ_338`, `ca_rmsd_mean`).
+
+**Unstable** — flips across the threshold depending on the subset:
+
+| | 4 ligands | 6 ligands |
+|---|---:|---:|
+| `n_bridge_water` | 1.85 seed-dominated | 2.16 usable |
+| `depth_sd` | 1.82 seed-dominated | 2.09 usable |
+| `rmsf_lig` | 1.99 seed-dominated | 1.46 seed-dominated |
+
+So the threshold of 2.0 is doing real work only for descriptors that sit near it, and for
+those three the pilot does not settle the question — six ligands is not enough to place a
+ratio to better than about ±0.3. `n_bridge_water` matters most of the three, being the
+one genuinely novel physical quantity in the set, and its status should be treated as
+open rather than decided.
+
+What the pilot does settle is the two ends: the bridging occupancies are reproducible by
+a wide margin, and the mobility and rate descriptors are not, on either subset.
