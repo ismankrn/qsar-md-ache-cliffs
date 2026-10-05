@@ -74,6 +74,12 @@ fi
 #
 # QC never fails the pull. Getting the data off a rented instance that can be reclaimed at any
 # time is the job; reporting on it is secondary, and a missing matplotlib must not stop it.
+# QC only when something actually arrived. A pull that finds nothing is two seconds of
+# rsync; re-running QC over 80+ JSONs on top of that is what would make a 10-minute poll
+# expensive. QC_ALWAYS=1 forces it.
+if [ "${QC_ALWAYS:-0}" != "1" ] && [ "$total_new" -eq 0 ]; then
+  exit 0
+fi
 PY=${QSAR_PYTHON:-/opt/anaconda3/envs/qsar-md/bin/python}
 [ -x "$PY" ] || PY=$(command -v python3)
 if [ -n "$PY" ] && "$PY" -c "import MDAnalysis, matplotlib" 2>/dev/null; then
