@@ -57,7 +57,11 @@ RMSF_GORGE_BROKEN = 5.0    # A -- buried sidechains cannot do this
 # These are judgements about the simulation, not about the code.
 CA_RMSD_HIGH = 3.0         # A -- receptor drifting further than AChE should
 LIG_RMSD_HIGH = 5.0        # A -- ligand no longer in the pose it was docked in
-NS_MIN = 40.0              # ns of the expected 45 after discarding equilibration
+NS_MIN = 18.0              # production is 25 ns from 2026-10-02, so 20 ns analysed.
+                           # This was 40.0, written when every run was 45 ns, and it
+                           # flagged 40 perfectly good runs the day the protocol
+                           # changed. A threshold tied to one protocol version is a
+                           # false alarm generator the moment the protocol moves.
 
 
 def series_from_archive(run: str):
