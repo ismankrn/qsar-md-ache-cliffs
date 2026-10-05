@@ -43,3 +43,7 @@ md/reduced/
 # scripts/rung4_qc_plots.py from the reduced archives. The fleet summary and the flag
 # table are small and are tracked.
 results/16c_qc/
+
+# Monitor log: grows while the pull loop runs on the user's own terminal, and says nothing
+# that the results themselves do not.
+md/watch.log
