@@ -33,7 +33,13 @@ for H in "$@"; do
   pull_dir () {   # remote_subdir  local_dest  -> prints number of files transferred
     local sub=$1 dest=$2 try=0 rc=1 out=""
     while [ $try -lt 3 ]; do
-      out=$(rsync -a --update -i -e ssh "$H:/root/qsar/$sub/" "$dest/" 2>&1); rc=$?
+      # --timeout and ConnectTimeout, because a hung transfer is worse than a failed one:
+      # rsync with no I/O timeout blocks forever, and the monitor loop around it stops
+      # dead. That is what silently froze the 10-minute poll for seventeen hours on
+      # 2026-10-05 while its process stayed alive and looked healthy.
+      out=$(rsync -a --update -i --timeout=120 \
+            -e "ssh -o BatchMode=yes -o ConnectTimeout=25 -o ServerAliveInterval=15 -o ServerAliveCountMax=4" \
+            "$H:/root/qsar/$sub/" "$dest/" 2>&1); rc=$?
       [ $rc -eq 0 ] && break
       try=$((try+1)); sleep 5
     done

@@ -38,8 +38,13 @@ while :; do
       RUNNING) alive=$((alive+1)) ;;
       UNREACHABLE) unreach=$((unreach+1)); echo "   $H: tidak terjangkau" ;;
       STOPPED)
-        n=$(ssh -n -o BatchMode=yes -o ConnectTimeout=25 "$H" 'ls /root/qsar/out/*.json 2>/dev/null | wc -l' 2>/dev/null)
-        s=$(ssh -n -o BatchMode=yes -o ConnectTimeout=25 "$H" 'wc -l < /root/qsar/slice.txt' 2>/dev/null)
+        # Count how many of THIS slice's runs have a result, not how many JSONs exist. out/
+        # accumulates across slices -- vast2 held 45 after two slices and a replicate pilot
+        # against a 28-line slice, so the old test read 45 >= 28 as "finished" and left a
+        # dead worker alone for sixteen hours.
+        n=$(ssh -n -o BatchMode=yes -o ConnectTimeout=25 "$H" \
+            'c=0; while read -r r; do [ -n "$r" ] && [ -f "/root/qsar/out/$r.json" ] && c=$((c+1)); done < /root/qsar/slice.txt; echo $c' 2>/dev/null)
+        s=$(ssh -n -o BatchMode=yes -o ConnectTimeout=25 "$H" 'grep -c . /root/qsar/slice.txt' 2>/dev/null)
         df=$(ssh -n -o BatchMode=yes -o ConnectTimeout=25 "$H" 'df -h / | tail -1 | awk "{print \$4}"' 2>/dev/null)
         # Never act on numbers that did not arrive: a failed ssh must not look like "no work done".
         if [ -z "$n" ] || [ -z "$s" ]; then

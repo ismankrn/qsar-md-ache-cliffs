@@ -42,7 +42,7 @@ echo "slice    : $(wc -l < "$SLICE") run, $NTOMP thread"
 echo "mulai    : $(date)"
 echo
 
-done_n=0; skip=0; fail=0
+done_n=0; skip=0; fail=0; consec=0
 while read -r RUN; do
   [ -z "$RUN" ] && continue
   if [ -f "$ROOT/out/$RUN.json" ]; then skip=$((skip+1)); continue; fi
@@ -61,8 +61,23 @@ while read -r RUN; do
       -nb gpu -pme gpu -bonded gpu -update gpu -cpi prod.cpt -noconfout $NS_ARG \
       > mdrun.log 2>&1 )
   if [ ! -f "$W/prod.gro" ] && [ ! -f "$W/prod.xtc" ]; then
-    echo "  $RUN: MDRUN GAGAL"; tail -6 "$W/prod.log" 2>/dev/null; fail=$((fail+1)); continue
+    echo "  $RUN: MDRUN GAGAL"; tail -6 "$W/prod.log" 2>/dev/null
+    fail=$((fail+1)); consec=$((consec+1))
+    # A transient fault burns the whole slice in seconds otherwise. On 2026-10-05 the GPU
+    # briefly stopped being visible to mdrun -- "Compatible GPUs must have been found" --
+    # and 23 runs failed back to back in minutes, each one instantly, leaving the worker
+    # finished with a slice it had never actually run. Three in a row is not bad luck; it
+    # is the machine, and the right response is to stop so the runs stay retryable rather
+    # than racing through them.
+    if [ "$consec" -ge 3 ]; then
+      echo "  BERHENTI: $consec kegagalan mdrun berturut-turut -- kemungkinan GPU atau disk,"
+      echo "            bukan ligan. Run yang belum dikerjakan tetap utuh untuk diulang."
+      nvidia-smi --query-gpu=name,memory.used --format=csv,noheader 2>&1 | sed 's/^/            /'
+      break
+    fi
+    continue
   fi
+  consec=0
   el=$((SECONDS-t0))
 
   # descriptors, then the full trajectory can go
