@@ -1,0 +1,49 @@
+==========================================================================
+RUNG 4 — jendela 20 ns
+==========================================================================
+  ligan dev dengan MD   : 156 / 217
+  replika per ligan     : {1: 150, 3: 6}
+  pasangan dev lengkap  : 85 / 145
+  deskriptor tersedia   : 33
+  lolos saringan replika: 12
+  rung4 (tersaring)   (170 baris, 12 fitur)
+  algoritma                    R2      rho      MAE
+  Ridge (linear)           -1.292   +0.429    1.773
+  PLS                      -2.081   +0.433    1.868
+  k-NN (k=5)                0.317   +0.536    1.343
+  SVM (RBF)                 0.282   +0.516    1.393
+  Random Forest             0.026   +0.275    1.565
+  Gradient Boosting        -0.234   +0.117    1.748
+  rung4 (semua deskriptor)   (170 baris, 33 fitur)
+  algoritma                    R2      rho      MAE
+  Ridge (linear)           -1.041   +0.387    2.022
+  PLS                      -0.793   +0.416    1.979
+  k-NN (k=5)                0.127   +0.371    1.460
+  SVM (RBF)                 0.226   +0.476    1.484
+  Random Forest            -0.055   +0.220    1.621
+  Gradient Boosting        -0.176   +0.124    1.778
+  rung1 2D (pasangan yang sama)   (170 baris, 2265 fitur)
+  algoritma                    R2      rho      MAE
+  Ridge (linear)        -619408627917581532643027058688.000   -0.178258090151659839.094
+  PLS                   -106470211157826221682779488256.000   -0.013107003224525351.672
+  k-NN (k=5)               -0.557   -0.028    1.867
+  SVM (RBF)                -0.298   -0.045    1.755
+  Random Forest             0.152   +0.386    1.435
+  Gradient Boosting         0.321   +0.501    1.278
+==========================================================================
+RINGKASAN — framing B, 85 pasangan, jendela 20 ns
+==========================================================================
+  rung4 (tersaring)              R2 = +0.317   (k-NN (k=5))
+  rung4 (semua deskriptor)       R2 = +0.226   (SVM (RBF))
+  rung1 2D (pasangan yang sama)  R2 = +0.321   (Gradient Boosting)
+  selisih rung4 - rung1 : -0.004
+  (analisis daya stage 17: studi ini memisahkan R2 yang berjarak ~0,30;
+   selisih di bawah itu tidak bisa dibedakan dari nol pada jumlah pasangan penuh,
+   apalagi pada 85)
+  bootstrap atas pasangan, 300 replika, algoritma dipilih ulang
+  di dalam setiap replika:
+    rung4     median +0.298   95% CI [+0.058, +0.514]
+    rung1 2D  median +0.267   95% CI [-0.078, +0.539]
+    selisih   median +0.032   95% CI [-0.271, +0.393]
+  -> selang masih memuat nol -- pada jumlah pasangan ini studi tidak bisa memisahkan keduanya
+  -> results/19_rung4_benchmark_w20.csv

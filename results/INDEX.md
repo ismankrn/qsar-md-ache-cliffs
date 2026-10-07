@@ -111,3 +111,5 @@ differences in the residuals.
 |---|---|---|
 | 11 | Ensemble docking — tests whether wrong poses explain the failure | free, ~6 days |
 | 12 | MD, 16 ligands — tests whether dynamics explains it | ~$43 |
+
+- [`19b_rung4_85pairs.md`](19b_rung4_85pairs.md) — **rung 4 at 85 pairs: the gap is +0.032, 95% CI [-0.271, +0.393]. The preliminary +0.478 does not survive. `bootstrap_gap` had never run.** Projection says even 145 pairs will not clear zero; see the note there on size bias in the covered subset.

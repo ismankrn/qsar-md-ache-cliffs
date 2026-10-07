@@ -26,7 +26,13 @@ exactly the pairs rung 4 can see, and that is the number to compare against.
 Usage:  python scripts/rung4_model.py [--window 20] [--min-pairs 30]
 """
 from __future__ import annotations
-import argparse, glob, json, os, re, sys
+import argparse, glob, json, os, re, sys, warnings
+
+# sklearn raises this from inside its own parallel helper, once per joblib task. A 300-replicate
+# bootstrap over six algorithms emitted it 100,000+ times: 2.37 million lines, a 355 MB log that
+# GitHub refused, and 49 lines of actual output buried in it. Silencing it loses nothing -- it
+# reports an internal call convention, not anything about the fit.
+warnings.filterwarnings("ignore", message=r".*sklearn\.utils\.parallel\.delayed.*")
 from pathlib import Path
 import warnings; warnings.filterwarnings("ignore")
 import numpy as np, pandas as pd
@@ -145,10 +151,56 @@ def score(tag, X, y, f, rows_out):
     return best
 
 
+# This lived below the __main__ block until 2026-10-08, which meant it was never defined
+# while main ran and never called from anywhere -- the one function that answers the study's
+# actual question, "is the gap's lower bound above zero", was dead code through the whole
+# preliminary reading. A function placed after the block that uses it is not a late
+# definition, it is an absent one.
+
+def bootstrap_gap(md, keep, ids, y, dpair, X1, n_boot=300, seed=SEED):
+    """CI on the rung4 - rung1 gap, resampling PAIRS with replacement.
+
+    Two things this does deliberately. It resamples pairs, not rows, because the two
+    antisymmetric rows of a pair are one observation. And it re-selects the best algorithm
+    inside every replicate for both rungs, because picking the best of six is part of the
+    procedure being measured -- fixing the winner chosen on the full sample would report a
+    CI for a procedure nobody ran.
+    """
+    rng = np.random.default_rng(seed)
+    Xm = md.loc[ids, keep].to_numpy(float)
+    idx = {c: i for i, c in enumerate(ids)}
+    have = set(ids)
+    cov = dpair[dpair.ligand_a.isin(have) & dpair.ligand_b.isin(have)].reset_index(drop=True)
+    gaps, r4s, r1s = [], [], []
+    for _ in range(n_boot):
+        take = cov.iloc[rng.integers(0, len(cov), len(cov))]
+        best = []
+        for X in (Xm, X1):
+            xs, ys, fs = [], [], []
+            for _, r in take.iterrows():
+                a, b = idx[r.ligand_a], idx[r.ligand_b]
+                xs += [X[a]-X[b], X[b]-X[a]]
+                ys += [y[a]-y[b], y[b]-y[a]]
+                fs += [r.cv_fold]*2
+            Xp, yp, fp = np.array(xs), np.array(ys), np.array(fs)
+            r2s = []
+            for mk in REG.values():
+                try:
+                    r2s.append(r2_score(yp, cv(Xp, yp, fp, mk)))
+                except Exception:
+                    r2s.append(-np.inf)
+            best.append(max(r2s))
+        r4s.append(best[0]); r1s.append(best[1]); gaps.append(best[0]-best[1])
+    q = lambda v: np.percentile(v, [2.5, 50, 97.5])
+    return q(r4s), q(r1s), q(gaps)
+
+
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("--window", default="20", help="ablation window in ns (default 20)")
     ap.add_argument("--min-pairs", type=int, default=30)
+    ap.add_argument("--n-boot", type=int, default=300,
+                    help="bootstrap replicates for the gap CI; 0 skips")
     a = ap.parse_args()
 
     sl = pd.read_csv(RES/f"03_splits_ligands_{TARGET}.csv")
@@ -194,6 +246,7 @@ if __name__ == "__main__":
         results[tag] = score(tag, Xp, yp, fp, rows)
 
     # ---- matched rung-1 baseline, on exactly these pairs ----
+    X1 = None
     # Comparing rung 4 on a subset against rung 1's published 0.200 over 145 pairs would be
     # comparing two different problems. The baseline is recomputed on the same pairs.
     try:
@@ -228,42 +281,27 @@ if __name__ == "__main__":
         print(f"  (analisis daya stage 17: studi ini memisahkan R2 yang berjarak ~0,30;")
         print(f"   selisih di bawah itu tidak bisa dibedakan dari nol pada jumlah pasangan penuh,")
         print(f"   apalagi pada {len(covered)})")
+        if a.n_boot and keep and X1 is not None:
+            print(f"\n  bootstrap atas pasangan, {a.n_boot} replika, algoritma dipilih ulang")
+            print("  di dalam setiap replika:")
+            q4, q1, qg = bootstrap_gap(md, keep, ids, y, dpair, X1,
+                                       n_boot=a.n_boot, seed=SEED)
+            for nm, q in (("rung4", q4), ("rung1 2D", q1), ("selisih", qg)):
+                print(f"    {nm:9s} median {q[1]:+.3f}   95% CI [{q[0]:+.3f}, {q[2]:+.3f}]")
+            lo, hi = qg[0], qg[2]
+            if lo > 0:
+                verdict = "batas bawah DI ATAS nol -- rung 4 menambah sesuatu"
+            elif hi < 0:
+                verdict = "batas atas DI BAWAH nol -- rung 4 lebih buruk"
+            else:
+                verdict = ("selang masih memuat nol -- pada jumlah pasangan ini studi tidak "
+                           "bisa memisahkan keduanya")
+            print(f"\n  -> {verdict}")
+            pd.DataFrame({"quantity": ["rung4", "rung1_2d", "gap"],
+                          "lo2.5": [q4[0], q1[0], qg[0]],
+                          "median": [q4[1], q1[1], qg[1]],
+                          "hi97.5": [q4[2], q1[2], qg[2]],
+                          "n_pairs": len(covered), "n_boot": a.n_boot,
+                          "window_ns": a.window}).to_csv(
+                RES/f"19_rung4_gap_ci_w{a.window}.csv", index=False)
     print(f"\n  -> {RES.name}/19_rung4_benchmark_w{a.window}.csv")
-
-
-def bootstrap_gap(md, keep, ids, y, dpair, X1, n_boot=300, seed=SEED):
-    """CI on the rung4 - rung1 gap, resampling PAIRS with replacement.
-
-    Two things this does deliberately. It resamples pairs, not rows, because the two
-    antisymmetric rows of a pair are one observation. And it re-selects the best algorithm
-    inside every replicate for both rungs, because picking the best of six is part of the
-    procedure being measured -- fixing the winner chosen on the full sample would report a
-    CI for a procedure nobody ran.
-    """
-    rng = np.random.default_rng(seed)
-    Xm = md.loc[ids, keep].to_numpy(float)
-    idx = {c: i for i, c in enumerate(ids)}
-    have = set(ids)
-    cov = dpair[dpair.ligand_a.isin(have) & dpair.ligand_b.isin(have)].reset_index(drop=True)
-    gaps, r4s, r1s = [], [], []
-    for _ in range(n_boot):
-        take = cov.iloc[rng.integers(0, len(cov), len(cov))]
-        best = []
-        for X in (Xm, X1):
-            xs, ys, fs = [], [], []
-            for _, r in take.iterrows():
-                a, b = idx[r.ligand_a], idx[r.ligand_b]
-                xs += [X[a]-X[b], X[b]-X[a]]
-                ys += [y[a]-y[b], y[b]-y[a]]
-                fs += [r.cv_fold]*2
-            Xp, yp, fp = np.array(xs), np.array(ys), np.array(fs)
-            r2s = []
-            for mk in REG.values():
-                try:
-                    r2s.append(r2_score(yp, cv(Xp, yp, fp, mk)))
-                except Exception:
-                    r2s.append(-np.inf)
-            best.append(max(r2s))
-        r4s.append(best[0]); r1s.append(best[1]); gaps.append(best[0]-best[1])
-    q = lambda v: np.percentile(v, [2.5, 50, 97.5])
-    return q(r4s), q(r1s), q(gaps)

@@ -69,13 +69,29 @@ echo "gerbang: step >= $MIN_STEPS, atau prod.gro ada"
 for d in "$RUNS"/*/; do
   [ -f "$d/prod.xtc" ] || continue
   R=$(basename "$d"); [ -f "$OUT/$R.json" ] && continue
-  # prod.gro means mdrun wrote its final structure, so the run finished; nothing more to test.
-  if [ ! -f "$d/prod.gro" ]; then
-    # The last "Step Time" block in the log. A run cut short by -maxh falls below the floor and
-    # is skipped, which is what we want: it is resumable with -cpi and worth resuming.
-    st=$(grep -A1 -E '^ *Step *Time' "$d/prod.log" 2>/dev/null | grep -oE '^ *[0-9]+' | tail -1 | tr -d ' ')
-    [ -z "$st" ] && continue
-    [ "$st" -lt "$MIN_STEPS" ] && { echo "  $R: $st step, belum $MIN_STEPS -- dilewati"; continue; }
+  # Two conditions, and both are needed.
+  #
+  # Far enough: the last "Step Time" block in the log must be at or past the floor. A run cut
+  # short by -maxh below the floor is skipped, which is what we want -- it is resumable with
+  # -cpi and worth resuming rather than analysing short.
+  st=$(grep -A1 -E '^ *Step *Time' "$d/prod.log" 2>/dev/null | grep -oE '^ *[0-9]+' | tail -1 | tr -d ' ')
+  [ -z "$st" ] && continue
+  [ "$st" -lt "$MIN_STEPS" ] && { echo "  $R: $st step, belum $MIN_STEPS -- dilewati"; continue; }
+  #
+  # And finished writing: mdrun has either written its final structure or logged that it is
+  # done. The step count alone is not enough. A run that has just reached the target is still
+  # flushing its trajectory, and reading it then yields a short file that looks like a real
+  # result -- the same silent, permanent failure the step floor was introduced to prevent,
+  # arriving by a different route. Measured on job 555988: at 12,450,000 of 12,500,000 steps a
+  # run had neither marker; at 12,500,000 it had both, with prod.xtc at 846 MB.
+  #
+  # prod.gro and the log line are not redundant. mdrun writes confout only when it runs the
+  # full nsteps, so a -maxh stop leaves no prod.gro at all -- all sixteen of the 50 ns runs
+  # cut at the walltime boundary lack one, and all sixteen logged "Finished mdrun". Testing
+  # only for prod.gro would silently drop every one of them.
+  if [ ! -f "$d/prod.gro" ] && ! grep -q "Finished mdrun" "$d/prod.log" 2>/dev/null; then
+    echo "  $R: $st step tapi mdrun belum tuntas menulis -- dilewati"
+    continue
   fi
   one "$d" &
   n=$((n+1))
