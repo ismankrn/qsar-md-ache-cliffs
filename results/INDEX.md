@@ -41,12 +41,20 @@ logical pipeline order, not the order in which the work happened.
   these folds, or the comparison between rungs is meaningless.
 - **The test split is sealed** and has not been scored by any model.
 - **Who owns which runs.** The hosts share no filesystem and there is no lock, so two of
-  them on one run directory would corrupt both. The assignment is: `14_md_runs_phase1.csv`
-  stride 0 of 8 belongs to vast1; stride 0 of 3 (73 runs) was claimed by BRIN job 551933;
-  `14f_md_runs_brin_block.csv` (32 runs, taken from the END of what neither had touched)
-  belongs to BRIN jobs 553833/553834; `14c_md_runs_repl_pilot.csv` (12 replicates) belongs
-  to vast2. Any new Vast instance must be staged from the START of what is left, never the
-  end. Two runs were already computed twice before this was written down.
+  them on one run directory would corrupt both, and two runs were already computed twice
+  before this was written down. Any new host must be staged from the START of what is left,
+  never the end. The assignment as of 2026-10-07, after vast1 and vast2 were released:
+  `14i_md_runs_vast1b.csv` (28) belongs to vast3, extended in place on 2026-10-07 with
+  `14l_md_runs_vast3_tail.csv` (12) -- the last phase-1 runs that had no host, appended to
+  the instance's live `slice.txt`, so vast3's slice is 40 lines;
+  `14j_md_runs_vast3.csv` (28) belongs to vast4 and `14k_md_runs_vast5.csv` (28) to vast5
+  (both files are named for the instance that *staged* them, not the one that runs them);
+  `14f_md_runs_brin_block.csv` (32, taken from the END of what the rented machines had not
+  touched) belongs to BRIN jobs 555988/555989, which replaced 553833/553834 after those hung
+  for 37 hours on trembesi[75-78] and were cancelled. Slices retired with their machines:
+  `14g`/`14h` (vast2, 14h's 23 unfinished runs were folded into 14i/14j/14k),
+  `14c_md_runs_repl_pilot.csv` (12 replicates, vast2). With `14l` placed, all 217 phase-1
+  runs have a host.
 - **OPEN AT DRAFTING: the rung-4 descriptors have no citations yet.** They were
   assembled from the AChE CAS/PAS bridging hypothesis plus standard MD analysis
   practice, not from a literature survey. Most are established observables --
