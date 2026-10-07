@@ -55,18 +55,28 @@ one () {
 
 export -f one; export OUT RED RUNS ROOT GMX
 n=0
-# Gate on the trajectory, not on prod.gro. A run stopped by -maxh at the walltime boundary
-# exits cleanly but there is no guarantee of a confout, and BRIN's in-flight runs are already
-# past 25 ns -- long enough to analyse and too expensive to discard over a missing file. The
-# extraction's own min-frames check is the real floor; this only avoids opening empty runs.
-MIN_XTC_MB=${MIN_XTC_MB:-400}
+# Gate on the step the run actually reached, read from prod.log, not on the trajectory's size.
+# The old floor was MIN_XTC_MB=400, written when BRIN's tpr files were 50 ns and the in-flight
+# runs were already past 25 ns, so "400 MB" then meant "well beyond the length we need". The
+# 25 ns decision inverted that reasoning without anyone editing the number: a complete 25 ns
+# prod.xtc here is about 890 MB (measured on job 555988, 146 MB per 4.1 ns), so 400 MB now
+# means "accept at 11 ns". Extracting early is worse than skipping, because every later pass
+# skips a run that already has a JSON -- a half-length result would become permanent, and
+# silent except for a QC flag that is easy to read as a simulation problem.
+MIN_STEPS=${MIN_STEPS:-$(cat "$ROOT/md/NSTEPS_PROD" 2>/dev/null || echo 12500000)}
+MIN_STEPS=$(echo "$MIN_STEPS" | tr -dc '0-9')
+echo "gerbang: step >= $MIN_STEPS, atau prod.gro ada"
 for d in "$RUNS"/*/; do
   [ -f "$d/prod.xtc" ] || continue
-  if [ ! -f "$d/prod.gro" ]; then
-    sz=$(du -m "$d/prod.xtc" 2>/dev/null | cut -f1)
-    [ "${sz:-0}" -lt "$MIN_XTC_MB" ] && continue
-  fi
   R=$(basename "$d"); [ -f "$OUT/$R.json" ] && continue
+  # prod.gro means mdrun wrote its final structure, so the run finished; nothing more to test.
+  if [ ! -f "$d/prod.gro" ]; then
+    # The last "Step Time" block in the log. A run cut short by -maxh falls below the floor and
+    # is skipped, which is what we want: it is resumable with -cpi and worth resuming.
+    st=$(grep -A1 -E '^ *Step *Time' "$d/prod.log" 2>/dev/null | grep -oE '^ *[0-9]+' | tail -1 | tr -d ' ')
+    [ -z "$st" ] && continue
+    [ "$st" -lt "$MIN_STEPS" ] && { echo "  $R: $st step, belum $MIN_STEPS -- dilewati"; continue; }
+  fi
   one "$d" &
   n=$((n+1))
   [ $((n % NPAR)) -eq 0 ] && wait
