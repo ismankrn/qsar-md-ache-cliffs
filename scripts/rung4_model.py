@@ -28,11 +28,20 @@ Usage:  python scripts/rung4_model.py [--window 20] [--min-pairs 30]
 from __future__ import annotations
 import argparse, glob, json, os, re, sys, warnings
 
-# sklearn raises this from inside its own parallel helper, once per joblib task. A 300-replicate
-# bootstrap over six algorithms emitted it 100,000+ times: 2.37 million lines, a 355 MB log that
-# GitHub refused, and 49 lines of actual output buried in it. Silencing it loses nothing -- it
-# reports an internal call convention, not anything about the fit.
-warnings.filterwarnings("ignore", message=r".*sklearn\.utils\.parallel\.delayed.*")
+# The 300-replicate bootstrap on 2026-10-08 wrote 2.37 million lines, 355 MB, of which 2.34
+# million were one repeated sklearn UserWarning about sklearn.utils.parallel.delayed, and 49
+# were the output. GitHub refused the push.
+#
+# I first added a message-specific filter here and said in the commit that it fixed this. It
+# does not. Running 3 replicates with and without it gives 57 lines either way, because the
+# blanket filterwarnings("ignore") a few lines below was already in force during the run that
+# produced the 355 MB -- so the filter was never what was missing, and the warnings escaped it
+# by a route I have not identified. Most likely they come from joblib worker processes, which do
+# not inherit the parent's filters, but PYTHONWARNINGS=ignore changed nothing either, so that
+# is a guess and not a finding.
+#
+# The protection is therefore not a filter: results/19_rung4_w20_*.log is gitignored, and the
+# reading itself is recorded in 19b_rung4_85pairs.md. Check a log's size before adding it.
 from pathlib import Path
 import warnings; warnings.filterwarnings("ignore")
 import numpy as np, pandas as pd
@@ -44,8 +53,14 @@ from sklearn.linear_model import Ridge
 from sklearn.cross_decomposition import PLSRegression
 from sklearn.neighbors import KNeighborsRegressor
 from sklearn.svm import SVR
-from sklearn.ensemble import RandomForestRegressor, HistGradientBoostingRegressor
-from sklearn.metrics import r2_score, mean_absolute_error
+from sklearn.ensemble import (RandomForestRegressor, HistGradientBoostingRegressor,
+                              RandomForestClassifier, HistGradientBoostingClassifier)
+from sklearn.linear_model import LogisticRegression
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.svm import SVC
+from sklearn.metrics import (r2_score, mean_absolute_error, roc_auc_score,
+                             average_precision_score, matthews_corrcoef,
+                             balanced_accuracy_score)
 from scipy.stats import spearmanr
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -70,6 +85,18 @@ REG = {
  "Random Forest":     lambda: pipe(RandomForestRegressor(n_estimators=500,
                                     random_state=SEED, n_jobs=-1), False),
  "Gradient Boosting": lambda: pipe(HistGradientBoostingRegressor(random_state=SEED), False),
+}
+
+# Copied from rung2_model.py rather than re-chosen, so framing C at rung 4 is comparable with
+# rung 2 by construction and not only by intention. Five families, not six: there is no
+# classification counterpart to PLS in the rung-2 table either.
+CLF = {
+ "Logistic regression": lambda: pipe(LogisticRegression(max_iter=3000)),
+ "k-NN (k=5)":          lambda: pipe(KNeighborsClassifier(n_neighbors=5)),
+ "SVM (RBF)":           lambda: pipe(SVC(C=10.0, probability=True, random_state=SEED)),
+ "Random Forest":       lambda: pipe(RandomForestClassifier(n_estimators=500,
+                            random_state=SEED, n_jobs=-1), False),
+ "Gradient Boosting":   lambda: pipe(HistGradientBoostingClassifier(random_state=SEED), False),
 }
 
 
@@ -124,15 +151,108 @@ def pair_rows(X, y, _unused, ids, dpair):
     return np.array(xs), np.array(ys), np.array(fs), used
 
 
-def cv(X, y, f, make):
+def cv(X, y, f, make, clf=False):
     out = np.zeros(len(y))
     for k in range(NF):
         tr, te = f != k, f == k
         if te.sum() == 0 or tr.sum() == 0:
             continue
+        if clf and len(np.unique(y[tr])) < 2:
+            continue                      # a fold with one class cannot be fitted
         m = make(); m.fit(X[tr], y[tr])
-        out[te] = np.asarray(m.predict(X[te])).ravel()
+        out[te] = (m.predict_proba(X[te])[:, 1] if clf
+                   else np.asarray(m.predict(X[te])).ravel())
     return out
+
+
+def sym_pairs(X, ids, dpair):
+    """Framing C rows: order-invariant pair features and the cliff label.
+
+    [da+db, |da-db|] is the rung-2 construction, kept verbatim. It has to be symmetric --
+    "is this pair a cliff" does not depend on which ligand is written first, and the
+    antisymmetric rows used for framing B would make the label ambiguous.
+    """
+    idx = {c: i for i, c in enumerate(ids)}
+    xs, ys, fs = [], [], []
+    for _, r in dpair.iterrows():
+        if r.ligand_a not in idx or r.ligand_b not in idx:
+            continue
+        da, db = X[idx[r.ligand_a]], X[idx[r.ligand_b]]
+        xs.append(np.concatenate([da + db, np.abs(da - db)]))
+        ys.append(1 if r.group == "cliff" else 0)
+        fs.append(r.cv_fold)
+    return np.array(xs), np.array(ys), np.array(fs)
+
+
+def score_clf(tag, X, y, f, rows_out, framing="C"):
+    best = None
+    print(f"\n  {tag}   ({X.shape[0]} baris, {X.shape[1]} fitur, "
+          f"{int(y.sum())} cliff / {len(y)-int(y.sum())} kontrol)")
+    print(f"  {'algoritma':22s}{'AUC':>9s}{'AP':>9s}{'MCC':>9s}{'bal.acc':>9s}")
+    for a, mk in CLF.items():
+        pr = cv(X, y, f, mk, clf=True)
+        hard = (pr >= 0.5).astype(int)
+        auc = roc_auc_score(y, pr); ap = average_precision_score(y, pr)
+        mcc = matthews_corrcoef(y, hard); ba = balanced_accuracy_score(y, hard)
+        print(f"  {a:22s}{auc:9.3f}{ap:9.3f}{mcc:+9.3f}{ba:9.3f}")
+        rows_out.append(dict(framing=framing, descriptors=tag, algorithm=a, auc_roc=auc,
+                             auc_pr=ap, mcc=mcc, bal_acc=ba,
+                             n_rows=X.shape[0], n_features=X.shape[1]))
+        if best is None or auc > best[1]:
+            best = (a, auc)
+    return best
+
+
+def score_reg_A(tag, X, y, f, rows_out):
+    best = None
+    print(f"\n  {tag}   ({X.shape[0]} ligan, {X.shape[1]} fitur)")
+    print(f"  {'algoritma':22s}{'R2':>9s}{'rho':>9s}{'MAE':>9s}")
+    for a, mk in REG.items():
+        p = cv(X, y, f, mk)
+        r2 = r2_score(y, p); rho = spearmanr(y, p).statistic
+        mae = mean_absolute_error(y, p)
+        print(f"  {a:22s}{r2:9.3f}{rho:+9.3f}{mae:9.3f}")
+        rows_out.append(dict(framing="A", descriptors=tag, algorithm=a, r2=r2, rho=rho,
+                             mae=mae, n_rows=X.shape[0], n_features=X.shape[1]))
+        if best is None or r2 > best[1]:
+            best = (a, r2)
+    return best
+
+
+def boot_gap(unit_rows, build, metric, n_units, n_boot, seed, clf=False):
+    """CI on a best-of-family gap, resampling whole units with replacement.
+
+    `unit_rows` maps a unit index to the row indices it owns, so a pair contributes both of
+    its antisymmetric rows together and a ligand contributes its single row. `build` returns
+    (X, y, fold) for a list of row indices, for each of the two rungs in turn.
+
+    One limitation, stated rather than hidden: resampling observations and then running the
+    frozen 5-fold CV over the resample puts duplicated units on both sides of the train/test
+    boundary, which inflates the absolute scores. It is applied identically to both rungs, so
+    the gap -- the quantity actually read -- is far less affected than the levels. The levels
+    reported from a bootstrap median should not be quoted as the study's performance; the
+    point estimates from the unresampled fit are those.
+    """
+    rng = np.random.default_rng(seed)
+    out = {"a": [], "b": [], "gap": []}
+    for _ in range(n_boot):
+        take = rng.integers(0, n_units, n_units)
+        rows = np.concatenate([unit_rows[u] for u in take])
+        best = []
+        for which in (0, 1):
+            X, y, f = build(which, rows)
+            vals = []
+            for mk in (CLF if clf else REG).values():
+                try:
+                    p = cv(X, y, f, mk, clf=clf)
+                    vals.append(metric(y, p))
+                except Exception:
+                    vals.append(-np.inf)
+            best.append(max(vals))
+        out["a"].append(best[0]); out["b"].append(best[1])
+        out["gap"].append(best[0] - best[1])
+    q = lambda v: np.percentile(v, [2.5, 50, 97.5])
+    return q(out["a"]), q(out["b"]), q(out["gap"])
 
 
 def score(tag, X, y, f, rows_out):
@@ -201,8 +321,11 @@ if __name__ == "__main__":
     ap.add_argument("--min-pairs", type=int, default=30)
     ap.add_argument("--n-boot", type=int, default=300,
                     help="bootstrap replicates for the gap CI; 0 skips")
+    ap.add_argument("--framings", default="ABC",
+                    help="which framings to score, e.g. B or AC (default ABC)")
     a = ap.parse_args()
 
+    CI_ROWS = []
     sl = pd.read_csv(RES/f"03_splits_ligands_{TARGET}.csv")
     pairs = pd.read_csv(RES/f"03_splits_pairs_{TARGET}.csv")
     lig = pd.read_csv(RES/f"02_ligand_set_{TARGET}.csv")
@@ -305,3 +428,80 @@ if __name__ == "__main__":
                           "window_ns": a.window}).to_csv(
                 RES/f"19_rung4_gap_ci_w{a.window}.csv", index=False)
     print(f"\n  -> {RES.name}/19_rung4_benchmark_w{a.window}.csv")
+    # ================================================================================
+    # Framings A and C. Until 2026-10-08 rung 4 had only ever been scored on framing B,
+    # the signed per-pair difference -- which is both the primary endpoint and the hardest
+    # of the three. A null on B is not a null on A or C, and reporting it as one would be
+    # a straightforwardly false claim about what was tested.
+    # ================================================================================
+    fold = dev.cv_fold.to_numpy()
+    md_keep = md.loc[ids, keep].to_numpy(float) if keep else None
+    md_all = md.loc[ids, allcols].to_numpy(float)
+
+    if "A" in a.framings.upper():
+        print("\n" + "=" * 74)
+        print(f"FRAMING A — regresi per ligan, {len(ids)} ligan, jendela {a.window} ns")
+        print("=" * 74)
+        rowsA, resA = [], {}
+        if md_keep is not None:
+            resA["rung4 (tersaring)"] = score_reg_A("rung4 (tersaring)", md_keep, y, fold, rowsA)
+        resA["rung4 (semua deskriptor)"] = score_reg_A("rung4 (semua deskriptor)",
+                                                      md_all, y, fold, rowsA)
+        if X1 is not None:
+            resA["rung1 2D (ligan yang sama)"] = score_reg_A("rung1 2D (ligan yang sama)",
+                                                            X1, y, fold, rowsA)
+        pd.DataFrame(rowsA).to_csv(RES/f"19_rung4_framingA_w{a.window}.csv", index=False)
+        print("\n  ringkasan framing A")
+        for tag, (alg, v) in resA.items():
+            print(f"    {tag:30s} R2 = {v:+.3f}   ({alg})")
+        if md_keep is not None and X1 is not None:
+            gap = resA["rung4 (tersaring)"][1] - resA["rung1 2D (ligan yang sama)"][1]
+            print(f"    selisih rung4 - rung1 : {gap:+.3f}")
+            if a.n_boot:
+                units = [np.array([i]) for i in range(len(ids))]
+                mats = (md_keep, X1)
+                qa, qb, qg = boot_gap(units,
+                                      lambda w, r: (mats[w][r], y[r], fold[r]),
+                                      r2_score, len(units), a.n_boot, SEED)
+                for nm, q in (("rung4", qa), ("rung1 2D", qb), ("selisih", qg)):
+                    print(f"    {nm:9s} median {q[1]:+.3f}   95% CI [{q[0]:+.3f}, {q[2]:+.3f}]")
+                CI_ROWS.append(dict(framing="A", metric="r2", n_units=len(units),
+                                    gap_lo=qg[0], gap_med=qg[1], gap_hi=qg[2],
+                                    rung4_med=qa[1], rung1_med=qb[1]))
+
+    if "C" in a.framings.upper() and X1 is not None:
+        print("\n" + "=" * 74)
+        print(f"FRAMING C — klasifikasi cliff per pasangan, jendela {a.window} ns")
+        print("=" * 74)
+        rowsC, resC = [], {}
+        if md_keep is not None:
+            Xc, yc, fc = sym_pairs(md_keep, ids, dpair)
+            resC["rung4 (tersaring)"] = score_clf("rung4 (tersaring)", Xc, yc, fc, rowsC)
+        Xca, yca, fca = sym_pairs(md_all, ids, dpair)
+        resC["rung4 (semua deskriptor)"] = score_clf("rung4 (semua deskriptor)",
+                                                    Xca, yca, fca, rowsC)
+        Xc1, yc1, fc1 = sym_pairs(X1, ids, dpair)
+        resC["rung1 2D (pasangan yang sama)"] = score_clf("rung1 2D (pasangan yang sama)",
+                                                         Xc1, yc1, fc1, rowsC)
+        pd.DataFrame(rowsC).to_csv(RES/f"19_rung4_framingC_w{a.window}.csv", index=False)
+        print("\n  ringkasan framing C")
+        for tag, (alg, v) in resC.items():
+            print(f"    {tag:30s} AUC = {v:.3f}   ({alg})")
+        if md_keep is not None:
+            gap = resC["rung4 (tersaring)"][1] - resC["rung1 2D (pasangan yang sama)"][1]
+            print(f"    selisih AUC rung4 - rung1 : {gap:+.3f}")
+            if a.n_boot:
+                units = [np.array([i]) for i in range(len(yc))]
+                mats = (Xc, Xc1)
+                qa, qb, qg = boot_gap(units,
+                                      lambda w, r: (mats[w][r], yc[r], fc[r]),
+                                      roc_auc_score, len(units), a.n_boot, SEED, clf=True)
+                for nm, q in (("rung4", qa), ("rung1 2D", qb), ("selisih", qg)):
+                    print(f"    {nm:9s} median {q[1]:+.3f}   95% CI [{q[0]:+.3f}, {q[2]:+.3f}]")
+                CI_ROWS.append(dict(framing="C", metric="auc_roc", n_units=len(units),
+                                    gap_lo=qg[0], gap_med=qg[1], gap_hi=qg[2],
+                                    rung4_med=qa[1], rung1_med=qb[1]))
+
+    if CI_ROWS:
+        pd.DataFrame(CI_ROWS).to_csv(RES/f"19_rung4_gap_ci_all_w{a.window}.csv", index=False)
+        print(f"\n  -> {RES.name}/19_rung4_gap_ci_all_w{a.window}.csv")
