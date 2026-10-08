@@ -28,7 +28,14 @@ KEEP_REDUCED=${KEEP_REDUCED:-1}
 # NSTEPS overrides the tpr's 25,000,000 (50 ns). Used only to prove the pipeline end to end
 # on a short run: finding a bug in the extraction step after 6.3 h of mdrun is an expensive
 # way to learn about it.
-NSTEPS=${NSTEPS:-}
+# Read the env first, then fall back to the file, exactly as run_md.sh does on BRIN. The file
+# matters because watch_vast.sh restarts a dead worker with only NTOMP set -- so before this,
+# any monitor restart would have silently run the tpr's full 25,000,000 steps (50 ns) instead
+# of the 25 ns the project settled on, and the run would have looked fine, just twice as long
+# and not comparable with the rest. No restart had happened yet (restart-kumulatif stayed 0),
+# so nothing is known to be wrong; this closes it before the first one.
+NSTEPS=${NSTEPS:-$(cat "$ROOT/NSTEPS_PROD" 2>/dev/null || true)}
+NSTEPS=$(echo "$NSTEPS" | tr -dc '0-9')
 EXTRA_EXTRACT=${EXTRA_EXTRACT:-}
 
 source /root/miniforge3/etc/profile.d/conda.sh
