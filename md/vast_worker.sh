@@ -125,6 +125,22 @@ while read -r RUN; do
     echo "  $RUN: EKSTRAKSI GAGAL -- trajektori DIPERTAHANKAN untuk diperiksa"
     tail -4 "$ROOT/logs/extract.log"; fail=$((fail+1))
   fi
+# EDITING THIS FILE WHILE THE LOOP RUNS DOES NOT WORK RELIABLY. On 2026-10-07 appending to a
+# 674-byte slice on vast3 was picked up, and I concluded that a file redirect lets bash see
+# later writes -- true only when bash has not already buffered them. On 2026-10-09 I truncated
+# vast5's 467-byte slice and the worker went on to run two of the removed names from its
+# buffer, duplicating runs that were already finished elsewhere: about $1.5 of GPU and, worse,
+# five hours of delay to the two runs that actually remained. My own commit had claimed the
+# worst case was meeting EOF at the new end. It is not; the worst case is the loop working
+# from content that no longer exists on disk.
+#
+# To change a machine's work: edit slice.txt, then STOP and RESTART the worker. A restart
+# re-reads the file from the top and skips every run that already has a JSON, so it costs only
+# the run in flight. Kill the loop before the mdrun, never the other way round -- the loop
+# treats an existing prod.xtc as success and would extract a half-length trajectory into a
+# JSON that then permanently blocks the real one. And find the loop by lineage before killing:
+# the obvious pid may be a wrapper, and killing it leaves the real loop reparented to init and
+# still going, which is exactly what happened here.
 done < "$SLICE"
 
 echo
