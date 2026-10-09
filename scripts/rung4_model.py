@@ -47,7 +47,8 @@ import warnings; warnings.filterwarnings("ignore")
 import numpy as np, pandas as pd
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
-from sklearn.feature_selection import VarianceThreshold
+from sklearn.feature_selection import (VarianceThreshold, SelectKBest,
+                                       f_regression, f_classif)
 from sklearn.impute import SimpleImputer
 from sklearn.linear_model import Ridge
 from sklearn.cross_decomposition import PLSRegression
@@ -71,11 +72,48 @@ SIZE = "n_heavy"
 META = {"run", "n_frames", "ns_analysed", "dt_ps", "windows"}
 
 
-def pipe(est, scale=True):
+def pipe(est, scale=True, k=None, clf=False):
+    """Preprocessing plus the estimator. `k` adds in-fold selection down to k features.
+
+    The selector lives inside the Pipeline on purpose. cv() fits the pipeline separately on
+    every training fold, so the k features are chosen from training data only. Selecting on
+    the full matrix first and then cross-validating would leak the held-out fold into the
+    choice and inflate the score -- the most common way a dimensionality-matched comparison
+    is made to look fair while being anything but.
+    """
     steps = [("imp", SimpleImputer(strategy="median")), ("vt", VarianceThreshold())]
     if scale: steps.append(("sc", StandardScaler()))
+    if k is not None:
+        steps.append(("sel", SelectKBest(f_classif if clf else f_regression, k=k)))
     steps.append(("est", est))
     return Pipeline(steps)
+
+
+def reg_at(k):
+    """REG, but every member first cuts the matrix to its k best training-fold features."""
+    return {
+     "Ridge (linear)":    lambda: pipe(Ridge(alpha=10.0), k=k),
+     "PLS":               lambda: pipe(PLSRegression(n_components=min(5, k)), k=k),
+     "k-NN (k=5)":        lambda: pipe(KNeighborsRegressor(5), k=k),
+     "SVM (RBF)":         lambda: pipe(SVR(C=10.0, gamma="scale"), k=k),
+     "Random Forest":     lambda: pipe(RandomForestRegressor(n_estimators=500,
+                                        random_state=SEED, n_jobs=-1), False, k=k),
+     "Gradient Boosting": lambda: pipe(HistGradientBoostingRegressor(random_state=SEED),
+                                       False, k=k),
+    }
+
+
+def clf_at(k):
+    return {
+     "Logistic regression": lambda: pipe(LogisticRegression(max_iter=3000), k=k, clf=True),
+     "k-NN (k=5)":          lambda: pipe(KNeighborsClassifier(n_neighbors=5), k=k, clf=True),
+     "SVM (RBF)":           lambda: pipe(SVC(C=10.0, probability=True, random_state=SEED),
+                                         k=k, clf=True),
+     "Random Forest":       lambda: pipe(RandomForestClassifier(n_estimators=500,
+                                random_state=SEED, n_jobs=-1), False, k=k, clf=True),
+     "Gradient Boosting":   lambda: pipe(HistGradientBoostingClassifier(random_state=SEED),
+                                         False, k=k, clf=True),
+    }
 
 REG = {
  "Ridge (linear)":    lambda: pipe(Ridge(alpha=10.0)),
@@ -184,12 +222,12 @@ def sym_pairs(X, ids, dpair):
     return np.array(xs), np.array(ys), np.array(fs)
 
 
-def score_clf(tag, X, y, f, rows_out, framing="C"):
+def score_clf(tag, X, y, f, rows_out, framing="C", fams=None):
     best = None
     print(f"\n  {tag}   ({X.shape[0]} baris, {X.shape[1]} fitur, "
           f"{int(y.sum())} cliff / {len(y)-int(y.sum())} kontrol)")
     print(f"  {'algoritma':22s}{'AUC':>9s}{'AP':>9s}{'MCC':>9s}{'bal.acc':>9s}")
-    for a, mk in CLF.items():
+    for a, mk in (fams or CLF).items():
         pr = cv(X, y, f, mk, clf=True)
         hard = (pr >= 0.5).astype(int)
         auc = roc_auc_score(y, pr); ap = average_precision_score(y, pr)
@@ -203,11 +241,11 @@ def score_clf(tag, X, y, f, rows_out, framing="C"):
     return best
 
 
-def score_reg_A(tag, X, y, f, rows_out):
+def score_reg_A(tag, X, y, f, rows_out, fams=None):
     best = None
     print(f"\n  {tag}   ({X.shape[0]} ligan, {X.shape[1]} fitur)")
     print(f"  {'algoritma':22s}{'R2':>9s}{'rho':>9s}{'MAE':>9s}")
-    for a, mk in REG.items():
+    for a, mk in (fams or REG).items():
         p = cv(X, y, f, mk)
         r2 = r2_score(y, p); rho = spearmanr(y, p).statistic
         mae = mean_absolute_error(y, p)
@@ -255,11 +293,11 @@ def boot_gap(unit_rows, build, metric, n_units, n_boot, seed, clf=False):
     return q(out["a"]), q(out["b"]), q(out["gap"])
 
 
-def score(tag, X, y, f, rows_out):
+def score(tag, X, y, f, rows_out, fams=None):
     best = None
     print(f"\n  {tag}   ({X.shape[0]} baris, {X.shape[1]} fitur)")
     print(f"  {'algoritma':22s}{'R2':>9s}{'rho':>9s}{'MAE':>9s}")
-    for a, mk in REG.items():
+    for a, mk in (fams or REG).items():
         p = cv(X, y, f, mk)
         r2 = r2_score(y, p); rho = spearmanr(y, p).statistic
         mae = mean_absolute_error(y, p)
@@ -388,6 +426,15 @@ if __name__ == "__main__":
         Xp1, yp1, fp1, _ = pair_rows(X1, y, None, ids, dpair)
         results["rung1 2D (pasangan yang sama)"] = score(
             "rung1 2D (pasangan yang sama)", Xp1, yp1, fp1, rows)
+        # Dimensionality-matched arm. The headline comparison gives rung 1 2265 features and
+        # rung 4 twelve, which is the comparison a practitioner faces but is also the first
+        # thing a reviewer will object to. This cuts rung 1 to the same count, chosen inside
+        # each training fold. Declared as a robustness check on an already-reported result,
+        # not as a replacement endpoint.
+        if keep:
+            results[f"rung1 2D (k={len(keep)}, dipilih dalam fold)"] = score(
+                f"rung1 2D (k={len(keep)}, dipilih dalam fold)", Xp1, yp1, fp1, rows,
+                fams=reg_at(len(keep)))
     except Exception as e:
         print(f"\n  baseline rung 1 dilewati: {type(e).__name__}: {e}")
 
@@ -450,6 +497,11 @@ if __name__ == "__main__":
         if X1 is not None:
             resA["rung1 2D (ligan yang sama)"] = score_reg_A("rung1 2D (ligan yang sama)",
                                                             X1, y, fold, rowsA)
+            if md_keep is not None:
+                kk = md_keep.shape[1]
+                resA[f"rung1 2D (k={kk}, dipilih dalam fold)"] = score_reg_A(
+                    f"rung1 2D (k={kk}, dipilih dalam fold)", X1, y, fold, rowsA,
+                    fams=reg_at(kk))
         pd.DataFrame(rowsA).to_csv(RES/f"19_rung4_framingA_w{a.window}.csv", index=False)
         print("\n  ringkasan framing A")
         for tag, (alg, v) in resA.items():
@@ -483,6 +535,11 @@ if __name__ == "__main__":
         Xc1, yc1, fc1 = sym_pairs(X1, ids, dpair)
         resC["rung1 2D (pasangan yang sama)"] = score_clf("rung1 2D (pasangan yang sama)",
                                                          Xc1, yc1, fc1, rowsC)
+        if md_keep is not None:
+            kk = Xc.shape[1]          # sym_pairs doubles the width, so match the doubled count
+            resC[f"rung1 2D (k={kk}, dipilih dalam fold)"] = score_clf(
+                f"rung1 2D (k={kk}, dipilih dalam fold)", Xc1, yc1, fc1, rowsC,
+                fams=clf_at(kk))
         pd.DataFrame(rowsC).to_csv(RES/f"19_rung4_framingC_w{a.window}.csv", index=False)
         print("\n  ringkasan framing C")
         for tag, (alg, v) in resC.items():
