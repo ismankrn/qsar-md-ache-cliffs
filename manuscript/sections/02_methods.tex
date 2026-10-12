@@ -5,13 +5,34 @@
   potency thresholds; 1{,}911 similar pairs; cliff/control definition.}
 \NOTE{Source: results/01\_*, 02\_pairs\_CHEMBL220.csv, 02\_cliff\_similarity\_audit.csv}
 
-\subsection{Stereochemical cliffs are an artefact of stereo-blind fingerprints}
-\TODO{Enantiomer pairs reach Tanimoto 1.0 under ECFP and are counted as cliffs
-  that no 2D method can resolve by construction, while 3D methods resolve them
-  trivially. Report how many, and how they are handled here.}
-\NOTE{This biases cliff benchmarks toward 3D methods -- the opposite direction to
-  the subset artefact in Section~\ref{sec:subset}. Having both measured in one
-  study is the point.}
+\subsection{Two fingerprint artefacts, at two different stages}
+\TODO{Keep these separate -- an earlier draft of this subsection merged them and
+  attributed the wrong one to the AChE set.}
+
+\paragraph{At target screening: stereochemical cliffs.} Enantiomer and
+diastereomer pairs reach Tanimoto 1.0 under ECFP, which does not encode
+stereochemistry, and a naive similarity-plus-potency criterion counts them as
+maximal-similarity cliffs. No stereo-blind fingerprint can resolve such a pair by
+construction while any 3D method resolves it trivially, so a benchmark dominated by
+them is biased toward structure before a model is fitted. This is what disqualified
+four of the six targets screened: BACE1 returned 101 stereochemical cliffs against
+5 constitutional. Acetylcholinesterase inverts that, 100 against 10, and
+\textbf{every pair in the final set is constitutional} -- \texttt{same\_formula} is
+false for all 97 and the minimum heavy-atom difference is 1.
+
+\paragraph{At pair selection: binary saturation.} A separate problem affects the
+pairs that do enter. Binary ECFP4 reports Tanimoto exactly 1.000 for 49 of the 97
+constitutional cliff pairs, molecules a median of four and up to eight heavy atoms
+apart; count-based ECFP4 separates the same pairs at a median of 0.878. Folding
+counts to bits discards the multiplicity that distinguishes them.
+\TODO{State that the selection criterion is itself the binary fingerprint --
+  verified bit-identical to the audit's t\_bit column -- so the measure that chose
+  these pairs is the one that cannot tell them apart.}
+
+\NOTE{Direction matters and is worth saying explicitly: the stereochemical artefact
+  biases cliff benchmarks \emph{toward} structure-based methods, while the subset
+  artefact in Section~\ref{sec:subset} biases a partial expensive descriptor set
+  \emph{toward} itself. Having both measured in one study is the point.}
 
 \subsection{Splits}
 \TODO{Connected-component splits over the similarity graph, seed 20260902, five
