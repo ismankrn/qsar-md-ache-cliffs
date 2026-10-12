@@ -115,3 +115,5 @@ differences in the residuals.
 - [`19b_rung4_85pairs.md`](19b_rung4_85pairs.md) — **rung 4 at 85 pairs: the gap is +0.032, 95% CI [-0.271, +0.393]. The preliminary +0.478 does not survive. `bootstrap_gap` had never run.** Projection says even 145 pairs will not clear zero; see the note there on size bias in the covered subset.
 
 - [`19c_rung4_three_framings.md`](19c_rung4_three_framings.md) — **framing A gap CI [-0.508, -0.071] excludes zero: rung 4 is significantly WORSE than 2D on potency. B and C undecided.** First interval in the project to exclude zero. The 2D baseline is not a subset artefact here (+0.380 full-dev vs +0.413 subset).
+
+- [`21_subset_inflation.md`](21_subset_inflation.md) — **Table 3: the +0.478 at 59 pairs was an artefact worth +0.277, reconstructed from real completion order.** Random subsets of the same size show none of it; matching the baseline removes only a third.
