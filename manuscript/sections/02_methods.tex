@@ -127,6 +127,29 @@ counts to bits discards the multiplicity that distinguishes them.
   created fabricated bonds worth 90\% of the bond energy; MD uses the capped
   4ey7\_rec\_md.pdb. Source: results/12b\_receptor\_chain\_breaks.md}
 
+\begin{figure}[tb]
+  \centering
+  \includegraphics[width=\textwidth]{fig_md_stability.pdf}
+  \caption{\textbf{Structural stability across all 229 production runs.}
+    (a)~Receptor C$\alpha$ RMSD and (b)~ligand RMSD from the equilibrated pose,
+    median and interquartile band across runs, split by the 25~ns and 50~ns
+    production designs. (c)~Per-residue C$\alpha$ fluctuation computed after the
+    first 5~ns; the fourteen gorge-lining residues are marked and none is unusually
+    mobile, the largest excursions being surface loops. Across the campaign the
+    receptor C$\alpha$ RMSD is 1.42~\AA{} at the median and 2.20~\AA{} at worst, and
+    the ligand RMSD 2.99~\AA{} at the median.}
+  \label{fig:stability}
+\end{figure}
+
+\TODO{Prose.}
+\NOTE{Worth a sentence in the text: the reduced archives are written with
+  \texttt{trjconv -pbc mol}, which places each molecule independently, and this
+  receptor is three chains after capping. A naive RMSD over the archive returns
+  25.8~\AA{} for the receptor and up to 99~\AA{} for the ligand. The figure applies
+  the same unwrap, no-jump and superposition used for the descriptors, which is
+  what turns those numbers into 1.3 and 4.2~\AA{}. It is the same defect stage 16b
+  found in the descriptor pipeline, and the archive still carries it.}
+
 \subsection{MD-derived descriptors}
 \TODO{33 descriptors, three design classes -- persistence, fluctuation, event
   count -- deliberately not frame-averaged rung-2 quantities. Table of
