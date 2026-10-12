@@ -19,13 +19,14 @@ first, not hidden.
 | Figure 2 (ladder) | `../figures/fig2_ladder.pdf` | `scripts/fig_ladder.py` |
 | Figure 3 (power) | `../figures/fig3_power.pdf` | `scripts/fig_power.py` |
 | Figure 5 (duration) | `../figures/fig5_duration.pdf` | `scripts/fig_duration.py` |
+| Figure 4 (reliability) | `../figures/fig4_reliability.pdf` | `scripts/fig_reliability.py` |
+| Table 2 (benchmark) | `../results/22_benchmark_main.tex` | `scripts/table_benchmark.py` |
+| Tables S1, S2 | `../results/22_benchmark_si_{reg,clf}.tex` | `scripts/table_benchmark.py` |
 | Table 3 (subset) | `../results/21_subset_inflation.tex` | `scripts/table_subset_inflation.py` |
 
 ## Not yet built
 
 - Figure 1 — dataset, stereochemical-cliff audit, size confound
-- Figure 4 — MD descriptor reliability by window
 - Table 1 — dataset composition
-- Table 2 — full benchmark, rung × framing × algorithm
 - Figure 2 intervals — rerun `fig_ladder.py --n-boot 300`
 - `refs.bib` — every entry is an unverified stub

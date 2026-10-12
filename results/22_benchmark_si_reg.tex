@@ -1,0 +1,55 @@
+\begin{tabular}{lllrr}
+\toprule
+Rung & Descriptor arm & Algorithm & \framingA{} $R^2$ & \framingB{} $R^2$ \\
+\midrule
+Rung 1 2D & binary ECFP4 & Ridge (linear) & +0.175 & +0.106 \\
+ &  & PLS & +0.386 & +0.100 \\
+ &  & k-NN (k=5) & +0.104 & +0.099 \\
+ &  & SVM (RBF) & +0.383 & +0.124 \\
+ &  & Random Forest & +0.329 & +0.184 \\
+ &  & Gradient Boosting & +0.375 & +0.200 \\
+\addlinespace
+Rung 1 2D & count ECFP4 + RDKit2D & Ridge (linear) & +0.077 & -513.621 \\
+ &  & PLS & +0.357 & -687.740 \\
+ &  & k-NN (k=5) & +0.081 & -0.637 \\
+ &  & SVM (RBF) & +0.380 & -0.519 \\
+ &  & Random Forest & +0.359 & -0.328 \\
+ &  & Gradient Boosting & +0.336 & -0.007 \\
+\addlinespace
+Rung 2 pose & 4EY7 + bridging & Ridge (linear) & +0.045 & -0.186 \\
+ &  & PLS & +0.046 & -0.120 \\
+ &  & k-NN (k=5) & -0.074 & -0.075 \\
+ &  & SVM (RBF) & -0.213 & +0.167 \\
+ &  & Random Forest & +0.031 & +0.063 \\
+ &  & Gradient Boosting & -0.058 & +0.024 \\
+\addlinespace
+Rung 2 ensemble & ensemble median & Ridge (linear) & +0.183 & -0.029 \\
+ &  & PLS & +0.131 & -0.018 \\
+ &  & k-NN (k=5) & +0.155 & +0.134 \\
+ &  & SVM (RBF) & +0.201 & +0.274 \\
+ &  & Random Forest & +0.215 & +0.043 \\
+ &  & Gradient Boosting & +0.182 & +0.190 \\
+\addlinespace
+Rung 3 MM/GBSA & MM/GBSA & Ridge (linear) & +0.034 & -0.183 \\
+ &  & PLS & +0.026 & -0.259 \\
+ &  & k-NN (k=5) & -0.045 & -0.239 \\
+ &  & SVM (RBF) & -0.045 & -0.228 \\
+ &  & Random Forest & +0.118 & -0.056 \\
+ &  & Gradient Boosting & +0.041 & -0.110 \\
+\addlinespace
+Rung 4 MD & replicate-filtered (12) & Ridge (linear) & +0.013 & +0.084 \\
+ &  & PLS & -0.028 & +0.072 \\
+ &  & k-NN (k=5) & -0.153 & +0.012 \\
+ &  & SVM (RBF) & -0.067 & +0.124 \\
+ &  & Random Forest & +0.056 & -0.084 \\
+ &  & Gradient Boosting & -0.028 & -0.104 \\
+\addlinespace
+Rung 4 MD & all descriptors (33) & Ridge (linear) & -0.186 & -0.148 \\
+ &  & PLS & -0.279 & -0.054 \\
+ &  & k-NN (k=5) & +0.014 & -0.060 \\
+ &  & SVM (RBF) & -0.307 & -0.108 \\
+ &  & Random Forest & +0.068 & -0.073 \\
+ &  & Gradient Boosting & -0.110 & -0.166 \\
+\addlinespace
+\bottomrule
+\end{tabular}

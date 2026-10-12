@@ -1,0 +1,48 @@
+\begin{tabular}{lllr}
+\toprule
+Rung & Descriptor arm & Algorithm & \framingC{} ROC AUC \\
+\midrule
+Rung 1 2D & binary ECFP4 & Logistic regression & 0.597 \\
+ &  & k-NN (k=5) & 0.590 \\
+ &  & SVM (RBF) & 0.657 \\
+ &  & Random Forest & 0.648 \\
+ &  & Gradient Boosting & 0.520 \\
+\addlinespace
+Rung 1 2D & count ECFP4 + RDKit2D & Logistic regression & 0.609 \\
+ &  & k-NN (k=5) & 0.683 \\
+ &  & SVM (RBF) & 0.606 \\
+ &  & Random Forest & 0.805 \\
+ &  & Gradient Boosting & 0.575 \\
+\addlinespace
+Rung 2 pose & 4EY7 + bridging & Logistic regression & 0.574 \\
+ &  & k-NN (k=5) & 0.614 \\
+ &  & SVM (RBF) & 0.555 \\
+ &  & Random Forest & 0.602 \\
+ &  & Gradient Boosting & 0.684 \\
+\addlinespace
+Rung 2 ensemble & ensemble median & Logistic regression & 0.639 \\
+ &  & k-NN (k=5) & 0.681 \\
+ &  & SVM (RBF) & 0.635 \\
+ &  & Random Forest & 0.705 \\
+ &  & Gradient Boosting & 0.673 \\
+\addlinespace
+Rung 3 MM/GBSA & MM/GBSA & Logistic regression & 0.689 \\
+ &  & k-NN (k=5) & 0.698 \\
+ &  & SVM (RBF) & 0.630 \\
+ &  & Random Forest & 0.753 \\
+ &  & Gradient Boosting & 0.655 \\
+\addlinespace
+Rung 4 MD & replicate-filtered (12) & Logistic regression & 0.749 \\
+ &  & k-NN (k=5) & 0.737 \\
+ &  & SVM (RBF) & 0.741 \\
+ &  & Random Forest & 0.793 \\
+ &  & Gradient Boosting & 0.785 \\
+\addlinespace
+Rung 4 MD & all descriptors (33) & Logistic regression & 0.627 \\
+ &  & k-NN (k=5) & 0.587 \\
+ &  & SVM (RBF) & 0.535 \\
+ &  & Random Forest & 0.721 \\
+ &  & Gradient Boosting & 0.700 \\
+\addlinespace
+\bottomrule
+\end{tabular}

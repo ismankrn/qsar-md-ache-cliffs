@@ -24,7 +24,17 @@
   \label{fig:ladder}
 \end{figure}
 
-\TODO{Prose. The numbers, from results/20\_ladder.csv:}
+\begin{table}[tb]
+  \centering
+  \caption{\textbf{Best score per rung on each framing}, over the rung's descriptor
+    arms and the algorithm families, on 217 development ligands and 145 development
+    pairs. The winning family is named in parentheses. The full grid is
+    Tables~S1 and~S2.}
+  \label{tab:benchmark}
+  \input{../results/22_benchmark_main.tex}
+\end{table}
+
+\TODO{Prose. The numbers, from results/20\_ladder.csv and Table~\ref{tab:benchmark}:}
 \NOTE{\framingA{}: rung 1 $+0.386$, rung 2 $+0.046$, rung 2e $+0.215$, rung 3
   $+0.118$, rung 4 $+0.056$. \framingB{}: $+0.200$, $+0.167$, $+0.274$, $-0.056$,
   $+0.124$. \framingC{}: $0.805$, $0.684$, $0.705$, $0.753$, $0.793$.
@@ -67,10 +77,23 @@
 
 % ---------------------------------------------------------------------------
 \subsection{Descriptor reliability}
-\TODO{Figure 4: per-descriptor reliability by window; 81 of 160 combinations are
-  seed-dominated; 8 of the 11 survivors are contact occupancies, so of the three
-  design classes only persistence survives.}
-\NOTE{Figure 4 script not written yet. Data: 18\_replicate\_pilot.csv}
+\begin{figure}[tb]
+  \centering
+  \includegraphics[width=\textwidth]{fig4_reliability.pdf}
+  \caption{\textbf{Of three descriptor design classes, only persistence survives a
+    replicate test.} (a)~Ratio of the spread across ligands to the spread across
+    replicates of the same ligand, for each descriptor at each analysis window;
+    the threshold of 2 was fixed before the pilot ran. (b)~Verdict composition by
+    window. Not one of the 20 event-count descriptor--window combinations is
+    usable at any length, against 57 of 100 for persistence.}
+  \label{fig:reliability}
+\end{figure}
+
+\TODO{Prose. The counts: 81 of 160 combinations seed-dominated; by design class,
+  persistence 57/100 usable, fluctuation 6/35, event \textbf{0/20}. At the 20~ns
+  window 11 survive and 8 of them are contact occupancies.}
+\NOTE{The zero is the quotable number. How long a contact persists reproduces
+  across seeds; how fast something fluctuates, at this length, largely does not.}
 
 \TODO{Show that the filter earns its place: \framingB{} $+0.124$ filtered against
   $-0.054$ unfiltered; \framingC{} $0.793$ against $0.721$.}
@@ -122,3 +145,23 @@
   ligands are smaller (median 31 vs 35 heavy atoms, $p=0.0005$, decaying to
   $p=0.54$ by 196 ligands), they hold every multi-replicate run, and they average
   28.8 ns of analysed trajectory against 20.0. 217 ligands cannot separate them.}
+
+% ---------------------------------------------------------------------------
+\subsection*{Supplementary tables}
+\TODO{Move to the SI document when one exists.}
+
+\begin{table}[tb]
+  \centering
+  \caption{\textbf{Table S1.} Every rung, descriptor arm and regression family on
+    \framingA{} and \framingB{}.}
+  \input{../results/22_benchmark_si_reg.tex}
+\end{table}
+
+\begin{table}[tb]
+  \centering
+  \caption{\textbf{Table S2.} Every rung, descriptor arm and classification family
+    on \framingC{}. The families differ from Table~S1 because \framingC{} is a
+    classification; Ridge and PLS have no counterpart here and are absent rather
+    than failed.}
+  \input{../results/22_benchmark_si_clf.tex}
+\end{table}
