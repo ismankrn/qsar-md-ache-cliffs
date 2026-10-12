@@ -127,6 +127,46 @@ counts to bits discards the multiplicity that distinguishes them.
   created fabricated bonds worth 90\% of the bond energy; MD uses the capped
   4ey7\_rec\_md.pdb. Source: results/12b\_receptor\_chain\_breaks.md}
 
+\begin{table}[tb]
+  \centering
+  \caption{\textbf{Simulated system composition}, over all 217 built systems. Ranges
+    are the minimum and maximum across systems; a single value means every system
+    shares it.}
+  \label{tab:system}
+  \input{../results/27_system_composition.tex}
+\end{table}
+
+\TODO{Prose. Two numbers belong in the text rather than only in the table: every
+  system is electroneutral to $2.8\times10^{-13}\,e$, and the receptor--ligand
+  minimum distance at build time runs from 1.67 to 2.64 \AA{}. The lower end is
+  tight, and should be stated rather than glossed -- the systems were minimised and
+  equilibrated afterwards and ran stably, which is the evidence that it resolved.}
+
+\begin{figure}[tb]
+  \centering
+  \includegraphics[width=\textwidth]{fig_thermo.pdf}
+  \caption{\textbf{Production ensembles ran at the intended thermodynamic state.}
+    Temperature, density, potential energy and the running mean of the pressure,
+    median and 5--95 percentile band across runs. Mean temperature is
+    \SI{300.00}{\kelvin} with a run-to-run spread of \SI{0.02}{\kelvin}, density
+    \SI{1018.9}{\kilo\gram\per\metre\cubed} with a spread of
+    \SI{0.12}{\kilo\gram\per\metre\cubed}, and the pressure running mean ends at
+    \SI{1.00}{\bar} with a 5--95 band of $[-1.67, +3.57]$. Potential-energy drift is
+    \SI{-10.5}{\kilo\joule\per\mole\per\nano\second} at the median against a total
+    near $-1.3\times10^{6}$, so about two parts in $10^{5}$ per nanosecond.}
+  \label{fig:thermo}
+\end{figure}
+
+\TODO{Prose.}
+\NOTE{Energy files survive for 64 usable runs of 229: the trajectories were deleted
+  after extraction and only the cluster block kept its \texttt{prod.edr}. A further
+  16 energy files exist but cover 0.4 ns -- the jobs that hung on trembesi[75-78]
+  and were cancelled -- and are excluded as abandoned rather than short. Say the
+  subset out loud; it is not used to compare descriptor sets, only to show the
+  simulations were well behaved.}
+\NOTE{Instantaneous pressure in a box this size has a spread near 89 bar and means
+  nothing frame by frame, which is why panel (d) is a running mean.}
+
 \begin{figure}[tb]
   \centering
   \includegraphics[width=\textwidth]{fig_md_stability.pdf}

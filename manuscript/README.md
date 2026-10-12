@@ -21,6 +21,9 @@ first, not hidden.
 | Figure 8 (duration) | `../figures/fig5_duration.pdf` | `scripts/fig_duration.py` |
 | Figure 1 (hAChE structure) | `../figures/Figure1_hAChE_structure.pdf` | `figures/fig1a.pml`, `fig1b.pml` + `scripts/compose_figures.py` |
 | Figure 2 (redocking) | `../figures/Figure2_redocking_validation.pdf` | `figures/fig2*.pml` + `scripts/compose_figures.py` |
+| Table 2 (system composition) | `../results/27_system_composition.tex` | `scripts/table_system_composition.py` |
+| Figure 4 (thermodynamics) | `../figures/fig_thermo.pdf` | `scripts/fig_thermo.py` |
+| Figure 5 (MD stability) | `../figures/fig_md_stability.pdf` | `scripts/fig_md_stability.py` |
 | Figure 3 (interactions) | `../figures/fig_interactions.pdf` | `scripts/fig_interactions.py` |
 | Figure 4 (dataset) | `../figures/fig1_dataset.pdf` | `scripts/fig_dataset.py` |
 | Table 1 (composition) | `../results/23_dataset_composition.tex` | `scripts/fig_dataset.py` |
@@ -45,3 +48,18 @@ scripts; the LaTeX numbering is by order of appearance, not by file name.
 `prolif` was added to the environment for Figure 3 (additive: prolif, dill,
 multiprocess; nothing downgraded). PLIP was not used because its visual output needs
 PyMOL, which is not installed here.
+
+## Data pulled from the cluster for these figures
+
+`table_system_composition.py` and `fig_thermo.py` read files that live only on BRIN
+and are not in this repository:
+
+* 217 `md/systems/*/build.json` — system composition. Pull with
+  `ssh mahameru 'cd qsar-md && tar cf - md/systems/*/build.json' > builds.tar`.
+* 64 usable `md/runs/*/prod.edr` — thermodynamic terms, extracted on the cluster
+  with `gmx energy` selecting Potential, Temperature, Pressure and Density **by
+  name**, because the term numbers differ between systems. 16 further energy files
+  cover 0.4 ns and are the cancelled trembesi[75-78] jobs, not production runs.
+
+The extracted `.xvg` files are 15 MB and are not committed; regenerate them with the
+recipe above if the figure needs rebuilding.
