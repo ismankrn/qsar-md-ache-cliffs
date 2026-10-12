@@ -85,8 +85,9 @@ def main() -> None:
     ax = axes[1]
     ax.plot(x, pw.ci_width.to_numpy(float), "s-", color="#762a83", ms=5, lw=1.3)
     ax.axhline(float(pw.ci_width.mean()), color="0.6", lw=0.9, ls=":")
-    ax.text(x.mean(), float(pw.ci_width.mean()), f"  mean {pw.ci_width.mean():.2f}",
-            fontsize=7.5, color="0.4", va="bottom", ha="center")
+    ax.text(0.98, float(pw.ci_width.mean()), f"mean {pw.ci_width.mean():.2f} ",
+            transform=ax.get_yaxis_transform(), fontsize=7.5, color="0.4",
+            va="bottom", ha="right")
     ax.set_xlabel("Candidate descriptor set, true $R^2$", fontsize=8.5)
     ax.set_ylabel("95% interval width on the gap", fontsize=8.5)
     ax.set_title("(b) Resolution is ~0.30 across the range", fontsize=9)
@@ -107,8 +108,9 @@ def main() -> None:
         xs = np.arange(len(b))
         ax.bar(xs, b.value.to_numpy(float), color="#2166ac", width=0.6)
         ax.set_xticks(xs)
-        ax.set_xticklabels([s.split()[1] if len(s.split()) > 1 else s
-                            for s in b.rung], fontsize=7)
+        # "Rung 2 pose" and "Rung 2 ensemble" both start "Rung 2", so keep the qualifier
+        ax.set_xticklabels([s.replace("Rung ", "R").replace(" ", "\n", 1) for s in b.rung],
+                           fontsize=6.8)
         ax.set_xlabel("Rung (framing B)", fontsize=8.5)
     ax.set_ylabel("$R^2$", fontsize=8.5)
     ax.set_ylim(-0.1, 1.0)
