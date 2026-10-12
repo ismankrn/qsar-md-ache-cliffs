@@ -17,13 +17,14 @@ first, not hidden.
 | float | file | source script |
 |---|---|---|
 | Figure 2 (ladder) | `../figures/fig2_ladder.pdf` | `scripts/fig_ladder.py` |
-| Figure 3 (power) | `../figures/fig3_power.pdf` | `scripts/fig_power.py` |
-| Figure 5 (duration) | `../figures/fig5_duration.pdf` | `scripts/fig_duration.py` |
+| Figure 6 (power) | `../figures/fig3_power.pdf` | `scripts/fig_power.py` |
+| Figure 8 (duration) | `../figures/fig5_duration.pdf` | `scripts/fig_duration.py` |
 | Figure 1 (hAChE structure) | `../figures/Figure1_hAChE_structure.pdf` | `figures/fig1a.pml`, `fig1b.pml` + `scripts/compose_figures.py` |
 | Figure 2 (redocking) | `../figures/Figure2_redocking_validation.pdf` | `figures/fig2*.pml` + `scripts/compose_figures.py` |
-| Figure 3 (dataset) | `../figures/fig1_dataset.pdf` | `scripts/fig_dataset.py` |
+| Figure 3 (interactions) | `../figures/fig_interactions.pdf` | `scripts/fig_interactions.py` |
+| Figure 4 (dataset) | `../figures/fig1_dataset.pdf` | `scripts/fig_dataset.py` |
 | Table 1 (composition) | `../results/23_dataset_composition.tex` | `scripts/fig_dataset.py` |
-| Figure 4 (reliability) | `../figures/fig4_reliability.pdf` | `scripts/fig_reliability.py` |
+| Figure 7 (reliability) | `../figures/fig4_reliability.pdf` | `scripts/fig_reliability.py` |
 | Table 2 (benchmark) | `../results/22_benchmark_main.tex` | `scripts/table_benchmark.py` |
 | Tables S1, S2 | `../results/22_benchmark_si_{reg,clf}.tex` | `scripts/table_benchmark.py` |
 | Table 3 (subset) | `../results/21_subset_inflation.tex` | `scripts/table_subset_inflation.py` |
@@ -40,3 +41,7 @@ Figures 1 and 2 are rendered from the `.pml` scripts in `figures/` and composed 
 panels cannot be regenerated here — the committed PDFs and PNGs are the artefacts.
 Keep them. Their file names predate the `figN_` convention used by the newer
 scripts; the LaTeX numbering is by order of appearance, not by file name.
+
+`prolif` was added to the environment for Figure 3 (additive: prolif, dill,
+multiprocess; nothing downgraded). PLIP was not used because its visual output needs
+PyMOL, which is not installed here.

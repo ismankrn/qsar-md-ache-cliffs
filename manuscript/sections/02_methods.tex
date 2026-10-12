@@ -45,6 +45,31 @@
   rigid receptor, which is the observation that motivates ensemble docking in
   rung~2 and, ultimately, molecular dynamics in rung~4.}
 
+\begin{figure}[tb]
+  \centering
+  \includegraphics[width=\textwidth]{fig_interactions.pdf}
+  \caption{\textbf{The reference binding mode, and docking checked at the level of
+    contacts.} (a)~Donepezil in the crystal pose with the residues it contacts;
+    edge colour gives the interaction type. (b)~The same fingerprint computed for
+    the redocked pose. Six residues are contacted in both, five in the crystal only
+    and two in the docked pose only. Every \emph{typed} interaction at the three
+    named sites is recovered -- hydrophobic and $\pi$-stacking at Trp86 and Trp286,
+    cation--$\pi$ and hydrophobic at Tyr337 -- and what docking loses is van der
+    Waals contact alone with Ser203 and His447. Interaction typing by ProLIF;
+    bond orders are transferred from the docked structure so both poses share one
+    chemistry and differ only in coordinates.}
+  \label{fig:interactions}
+\end{figure}
+
+\TODO{Prose. This is a second, independent check on the docking protocol: Figure
+  \ref{fig:redock} validates it by RMSD, this one by interaction.}
+\NOTE{It also shows what the in-house descriptors summarise and what they discard.
+  Rung 2 and rung 4 are distance-based occupancies with no hydrogen-bond,
+  $\pi$-stacking or cation--$\pi$ distinction, so an independent tool is the honest
+  way to display the binding mode. Strictly descriptive: nothing from this figure
+  enters any model, and adding a typed descriptor family after the ladder had been
+  scored would be post hoc.}
+
 \subsection{Dataset and activity-cliff definition}
 \TODO{ChEMBL target CHEMBL220 (human AChE); pChEMBL aggregation; similarity and
   potency thresholds; 1{,}911 similar pairs; cliff/control definition.}
