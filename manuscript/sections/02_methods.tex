@@ -1,5 +1,50 @@
 \section{Methods}
 
+\subsection{Target and binding site}
+
+\begin{figure}[tb]
+  \centering
+  \includegraphics[width=\textwidth]{Figure1_hAChE_structure.pdf}
+  \caption{\textbf{Human acetylcholinesterase and its catalytic gorge (PDB 4EY7).}
+    (A)~Overall fold, rainbow-coloured from N- to C-terminus; donepezil in the
+    crystal pose marks the gorge as black spheres. (B)~Gorge architecture: Trp86 at
+    the catalytic anionic site, Trp286 at the peripheral anionic site, the swinging
+    Tyr337 gate between them, and the Ser203--His447--Glu334 catalytic triad.
+    The Trp86--Trp286 CZ3--CZ3 separation is 15.6~\AA{}, the span a bis-ligand must
+    bridge.}
+  \label{fig:structure}
+\end{figure}
+
+\TODO{Prose. This figure carries the mechanistic premise the whole descriptor
+  ladder is built on, so it belongs before the ladder rather than as decoration.}
+\NOTE{It is also where the rung-4 descriptors come from and should be cited as
+  such: \texttt{occ\_cas} and \texttt{occ\_pas} are contact occupancies at these two
+  tryptophans, \texttt{occ\_bridge} is both at once, and \texttt{depth\_mean} is the
+  projection on the axis drawn here.}
+
+\subsection{Docking protocol and its validation}
+
+\begin{figure}[tb]
+  \centering
+  \includegraphics[width=\textwidth]{Figure2_redocking_validation.pdf}
+  \caption{\textbf{Redocking validation, and the limit of a rigid receptor.}
+    (A)~Donepezil redocked into its own structure reproduces the crystal pose to
+    0.75~\AA{} RMSD over five seeds. (B)~Huperzine~A docked into its own receptor
+    (4EY5) succeeds. (C)~The same ligand cross-docked into 4EY7 fails at
+    3.10~\AA{}: the Tyr337 rotamer of this structure occludes the true pose.}
+  \label{fig:redock}
+\end{figure}
+
+\TODO{Prose and a table of the four validation ligands, from
+  results/06\_redocking\_validation.csv:}
+\NOTE{donepezil self 0.745 $\pm$ 0.009 \AA{}, 5/5 success; territrem~B cross
+  0.740 $\pm$ 0.012, 5/5; galantamine cross 2.463 $\pm$ 1.709, 4/5; huperzine~A
+  cross 3.098 $\pm$ 0.011, \textbf{0/5}. The box experiment
+  (06\_box\_experiment.csv) rules out a protocol artefact: huperzine~A sits at
+  3.05--3.18 \AA{} at box sizes 18, 22, 26 and 30 \AA{} alike. The failure is the
+  rigid receptor, which is the observation that motivates ensemble docking in
+  rung~2 and, ultimately, molecular dynamics in rung~4.}
+
 \subsection{Dataset and activity-cliff definition}
 \TODO{ChEMBL target CHEMBL220 (human AChE); pChEMBL aggregation; similarity and
   potency thresholds; 1{,}911 similar pairs; cliff/control definition.}

@@ -117,3 +117,15 @@ differences in the residuals.
 - [`19c_rung4_three_framings.md`](19c_rung4_three_framings.md) — **framing A gap CI [-0.508, -0.071] excludes zero: rung 4 is significantly WORSE than 2D on potency. B and C undecided.** First interval in the project to exclude zero. The 2D baseline is not a subset artefact here (+0.380 full-dev vs +0.413 subset).
 
 - [`21_subset_inflation.md`](21_subset_inflation.md) — **Table 3: the +0.478 at 59 pairs was an artefact worth +0.277, reconstructed from real completion order.** Random subsets of the same size show none of it; matching the baseline removes only a third.
+
+## Structure figures are not produced by any stage script
+
+`figures/Figure1_hAChE_structure.*` and `figures/Figure2_redocking_validation.*` come
+from the `.pml` scripts in `figures/` composed by `scripts/compose_figures.py`, and were
+never listed here. That omission had a consequence: an inventory of `results/` for the
+manuscript missed both, and a new dataset figure was named `fig1_dataset`, colliding with
+the existing `Figure1`. They are now Figures 1 and 2 of the manuscript, in Methods.
+
+PyMOL is not installed in the current environment, so the panels cannot be re-rendered
+here. The committed PDFs and PNGs are the artefacts; the `.pml` scripts record how they
+were made.
