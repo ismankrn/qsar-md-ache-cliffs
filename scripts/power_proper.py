@@ -67,6 +67,7 @@ for rho in (0.20, 0.26, 0.32, 0.38, 0.44, 0.52):
 BASE_RHO = min(grid, key=lambda r: abs(grid[r]-0.200))
 print(f"\nbaseline rung 1 disimulasikan pada rho {BASE_RHO:.2f} (R2 ~ {grid[BASE_RHO]:+.3f})")
 print()
+rows = []   # collected so fig_power.py reads the same numbers this prints
 print(f"{'R2 kandidat':>13s}{'selisih rata2':>15s}{'daya (CI>0)':>14s}{'CI lebar':>11s}")
 for rho, target in sorted(grid.items()):
     if rho == BASE_RHO: continue
@@ -83,6 +84,13 @@ for rho, target in sorted(grid.items()):
         lo, hi = np.percentile(b, [2.5, 97.5])
         widths.append(hi-lo)
         if lo > 0: hits += 1
+    rows.append(dict(rho=rho, candidate_r2=target, baseline_r2=grid[BASE_RHO],
+                     mean_gain=float(np.mean(diffs)), power=hits / NSIM,
+                     ci_width=float(np.mean(widths)), n_pairs=n_pairs,
+                     n_sim=NSIM, n_boot=NBOOT))
     print(f"{target:>13.3f}{np.mean(diffs):>15.3f}{100*hits/NSIM:>13.0f}%{np.mean(widths):>11.3f}")
 print(f"\n  NSIM={NSIM}, NBOOT={NBOOT}; baseline ikut disimulasikan ulang tiap kali,")
 print(f"  jadi ketidakpastian rung 1 ikut diperhitungkan.")
+
+pd.DataFrame(rows).to_csv(RES/"17_power_curve.csv", index=False)
+print(f"\n  -> results/17_power_curve.csv")

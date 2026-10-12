@@ -258,6 +258,12 @@ def score_reg_A(tag, X, y, f, rows_out, fams=None):
 
 
 def boot_gap(unit_rows, arms_a, arms_b, metric, n_boot, seed, clf=False):
+    """`arms_b=None` computes side A only and returns (q_a, None, None).
+
+    fig_ladder.py needs a per-rung interval, not a gap. Without this it had to pass a dummy
+    second side and pay for it, or grow a second copy of the resampling -- and consolidating
+    the two bootstraps into one function was the point of the previous commit.
+    """
     """CI on a best-of-candidates gap, resampling whole units with replacement.
 
     `unit_rows[i]` lists the row indices unit i owns, so a pair contributes both of its
@@ -286,7 +292,7 @@ def boot_gap(unit_rows, arms_a, arms_b, metric, n_boot, seed, clf=False):
     for _ in range(n_boot):
         rows = np.concatenate([unit_rows[u] for u in rng.integers(0, n_units, n_units)])
         side = []
-        for arms in (arms_a, arms_b):
+        for arms in ((arms_a,) if arms_b is None else (arms_a, arms_b)):
             vals = []
             for build, fams in arms:
                 X, yy, ff = build(rows)
@@ -296,9 +302,12 @@ def boot_gap(unit_rows, arms_a, arms_b, metric, n_boot, seed, clf=False):
                     except Exception:
                         vals.append(-np.inf)
             side.append(max(vals))
-        out["a"].append(side[0]); out["b"].append(side[1])
-        out["gap"].append(side[0] - side[1])
+        out["a"].append(side[0])
+        if arms_b is not None:
+            out["b"].append(side[1]); out["gap"].append(side[0] - side[1])
     q = lambda v: np.percentile(v, [2.5, 50, 97.5])
+    if arms_b is None:
+        return q(out["a"]), None, None
     return q(out["a"]), q(out["b"]), q(out["gap"])
 
 

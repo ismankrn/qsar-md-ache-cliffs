@@ -1,0 +1,16 @@
+framing,rung,key,value,arm,algorithm,n_features,ci_lo,ci_hi,n_ligands,n_pairs
+A,Rung 1 2D,r1,0.3857705054795837,binary ECFP4,PLS,2048,,,217,145
+A,Rung 2 pose,r2,0.04644733979086213,4EY7 + bridging,PLS,34,,,217,145
+A,Rung 2 ensemble,r2e,0.21502450408001705,ensemble median,Random Forest,29,,,217,145
+A,Rung 3 MM/GBSA,r3,0.11780961191036843,MM/GBSA,Random Forest,22,,,217,145
+A,Rung 4 MD,r4,0.06827934768290966,all descriptors (33),Random Forest,33,,,217,145
+B,Rung 1 2D,r1,0.20045508443869064,binary ECFP4,Gradient Boosting,2048,,,217,145
+B,Rung 2 pose,r2,0.16739627958680303,4EY7 + bridging,SVM (RBF),34,,,217,145
+B,Rung 2 ensemble,r2e,0.2744236759819453,ensemble median,SVM (RBF),29,,,217,145
+B,Rung 3 MM/GBSA,r3,-0.056488345866527734,MM/GBSA,Random Forest,22,,,217,145
+B,Rung 4 MD,r4,0.12383179595830018,replicate-filtered (12),SVM (RBF),12,,,217,145
+C,Rung 1 2D,r1,0.8053857906799082,count ECFP4 + RDKit2D,Random Forest,4530,,,217,145
+C,Rung 2 pose,r2,0.6837280366692131,4EY7 + bridging,Gradient Boosting,68,,,217,145
+C,Rung 2 ensemble,r2e,0.7050229182582124,ensemble median,Random Forest,58,,,217,145
+C,Rung 3 MM/GBSA,r3,0.752864782276547,MM/GBSA,Random Forest,44,,,217,145
+C,Rung 4 MD,r4,0.7929717341482048,replicate-filtered (12),Random Forest,24,,,217,145

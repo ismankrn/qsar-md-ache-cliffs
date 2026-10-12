@@ -53,6 +53,7 @@ se_b = np.array([se_of(c) for c in dev.ligand_b])
 noise_var = (se_a**2 + se_b**2).mean()
 obs_var = float(np.var(dev.delta, ddof=1))
 ceiling = max(0.0, 1.0 - noise_var/obs_var)
+_ceiling_rows = []   # written out at the end so the figure cites computed numbers
 print(f"\n  varians Δp teramati          : {obs_var:.3f}")
 print(f"  varians derau pengukuran     : {noise_var:.3f}")
 print(f"  LANGIT-LANGIT R²             : {ceiling:.3f}")
@@ -107,3 +108,21 @@ for true_r2 in (0.20, 0.30, 0.40, 0.50, 0.60):
           f"{100*detect/NSIM:>15.0f}%")
 
 print(f"\n  (daya = berapa persen simulasi yang batas bawah CI-nya melewati 0.200)")
+
+# Written for fig_power.py. The three sigmas are the median, mean and p90 of the between-assay
+# spread among the 6% of compounds carrying a repeat measurement; the p90 row is the
+# pessimistic bound and is the one worth quoting, because it is still far above every rung.
+try:
+    import pandas as _pd
+    _rows = []
+    for _lab, _s in (("median", float(rep.sd.median())),
+                     ("mean", float(rep.sd.mean())),
+                     ("p90", float(rep.sd.quantile(.9)))):
+        _nv = 2.0 * _s ** 2
+        _rows.append(dict(sigma_kind=_lab, sigma=_s,
+                          ceiling_r2=max(0.0, 1.0 - _nv / obs_var),
+                          n_with_repeat=int(len(rep)), n_compounds=int(len(cmp_))))
+    _pd.DataFrame(_rows).to_csv(RES/"17_noise_ceiling.csv", index=False)
+    print("\n  -> results/17_noise_ceiling.csv")
+except Exception as _e:
+    print(f"\n  ceiling CSV dilewati: {type(_e).__name__}: {_e}")
