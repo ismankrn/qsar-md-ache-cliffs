@@ -257,38 +257,47 @@ def score_reg_A(tag, X, y, f, rows_out, fams=None):
     return best
 
 
-def boot_gap(unit_rows, build, metric, n_units, n_boot, seed, clf=False):
-    """CI on a best-of-family gap, resampling whole units with replacement.
+def boot_gap(unit_rows, arms_a, arms_b, metric, n_boot, seed, clf=False):
+    """CI on a best-of-candidates gap, resampling whole units with replacement.
 
-    `unit_rows` maps a unit index to the row indices it owns, so a pair contributes both of
-    its antisymmetric rows together and a ligand contributes its single row. `build` returns
-    (X, y, fold) for a list of row indices, for each of the two rungs in turn.
+    `unit_rows[i]` lists the row indices unit i owns, so a pair contributes both of its
+    antisymmetric rows together and a ligand contributes its single row. `arms_a` and
+    `arms_b` are lists of (build, fams): `build(rows) -> (X, y, fold)`, `fams` an estimator
+    dict. Each side scores as the best over all its arms and all their estimators,
+    re-selected inside every replicate, because picking the best is part of the procedure
+    being measured.
+
+    Rung 1 gets several arms because stage 05 benchmarked two feature sets and the winner
+    depends on the framing: on framing B binary ECFP4 reaches +0.200 where count ECFP4 +
+    RDKit2D reaches -0.007. Bootstrapping against one set only would report an interval for
+    a baseline weaker than rung 1 actually achieves and inflate rung 4 by the difference --
+    the same inflation the matched-units recomputation exists to prevent, arriving through
+    features instead of units.
 
     One limitation, stated rather than hidden: resampling observations and then running the
     frozen 5-fold CV over the resample puts duplicated units on both sides of the train/test
-    boundary, which inflates the absolute scores. It is applied identically to both rungs, so
-    the gap -- the quantity actually read -- is far less affected than the levels. The levels
-    reported from a bootstrap median should not be quoted as the study's performance; the
-    point estimates from the unresampled fit are those.
+    boundary, which inflates the absolute scores. It is applied identically to both sides, so
+    the gap -- the quantity actually read -- is far less affected than the levels. A bootstrap
+    median must not be quoted as the study's performance; the unresampled estimates are.
     """
     rng = np.random.default_rng(seed)
+    n_units = len(unit_rows)
     out = {"a": [], "b": [], "gap": []}
     for _ in range(n_boot):
-        take = rng.integers(0, n_units, n_units)
-        rows = np.concatenate([unit_rows[u] for u in take])
-        best = []
-        for which in (0, 1):
-            X, y, f = build(which, rows)
+        rows = np.concatenate([unit_rows[u] for u in rng.integers(0, n_units, n_units)])
+        side = []
+        for arms in (arms_a, arms_b):
             vals = []
-            for mk in (CLF if clf else REG).values():
-                try:
-                    p = cv(X, y, f, mk, clf=clf)
-                    vals.append(metric(y, p))
-                except Exception:
-                    vals.append(-np.inf)
-            best.append(max(vals))
-        out["a"].append(best[0]); out["b"].append(best[1])
-        out["gap"].append(best[0] - best[1])
+            for build, fams in arms:
+                X, yy, ff = build(rows)
+                for mk in fams.values():
+                    try:
+                        vals.append(metric(yy, cv(X, yy, ff, mk, clf=clf)))
+                    except Exception:
+                        vals.append(-np.inf)
+            side.append(max(vals))
+        out["a"].append(side[0]); out["b"].append(side[1])
+        out["gap"].append(side[0] - side[1])
     q = lambda v: np.percentile(v, [2.5, 50, 97.5])
     return q(out["a"]), q(out["b"]), q(out["gap"])
 
@@ -314,44 +323,6 @@ def score(tag, X, y, f, rows_out, fams=None):
 # actual question, "is the gap's lower bound above zero", was dead code through the whole
 # preliminary reading. A function placed after the block that uses it is not a late
 # definition, it is an absent one.
-
-def bootstrap_gap(md, keep, ids, y, dpair, X1, n_boot=300, seed=SEED):
-    """CI on the rung4 - rung1 gap, resampling PAIRS with replacement.
-
-    Two things this does deliberately. It resamples pairs, not rows, because the two
-    antisymmetric rows of a pair are one observation. And it re-selects the best algorithm
-    inside every replicate for both rungs, because picking the best of six is part of the
-    procedure being measured -- fixing the winner chosen on the full sample would report a
-    CI for a procedure nobody ran.
-    """
-    rng = np.random.default_rng(seed)
-    Xm = md.loc[ids, keep].to_numpy(float)
-    idx = {c: i for i, c in enumerate(ids)}
-    have = set(ids)
-    cov = dpair[dpair.ligand_a.isin(have) & dpair.ligand_b.isin(have)].reset_index(drop=True)
-    gaps, r4s, r1s = [], [], []
-    for _ in range(n_boot):
-        take = cov.iloc[rng.integers(0, len(cov), len(cov))]
-        best = []
-        for X in (Xm, X1):
-            xs, ys, fs = [], [], []
-            for _, r in take.iterrows():
-                a, b = idx[r.ligand_a], idx[r.ligand_b]
-                xs += [X[a]-X[b], X[b]-X[a]]
-                ys += [y[a]-y[b], y[b]-y[a]]
-                fs += [r.cv_fold]*2
-            Xp, yp, fp = np.array(xs), np.array(ys), np.array(fs)
-            r2s = []
-            for mk in REG.values():
-                try:
-                    r2s.append(r2_score(yp, cv(Xp, yp, fp, mk)))
-                except Exception:
-                    r2s.append(-np.inf)
-            best.append(max(r2s))
-        r4s.append(best[0]); r1s.append(best[1]); gaps.append(best[0]-best[1])
-    q = lambda v: np.percentile(v, [2.5, 50, 97.5])
-    return q(r4s), q(r1s), q(gaps)
-
 
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
@@ -407,9 +378,20 @@ if __name__ == "__main__":
         results[tag] = score(tag, Xp, yp, fp, rows)
 
     # ---- matched rung-1 baseline, on exactly these pairs ----
-    X1 = None
+    X1 = None        # count ECFP4 + RDKit2D
+    X1b = None       # binary ECFP4
     # Comparing rung 4 on a subset against rung 1's published 0.200 over 145 pairs would be
-    # comparing two different problems. The baseline is recomputed on the same pairs.
+    # comparing two different problems, so the baseline is recomputed on the same units.
+    #
+    # It must also be recomputed with BOTH of rung 1's feature sets. Stage 05 benchmarked
+    # binary ECFP4 and count ECFP4 + RDKit2D, and which one wins depends entirely on the
+    # framing: on framing B binary gets +0.200 and count+RDKit gets -0.007. Scoring only
+    # count+RDKit therefore handed rung 1 a figure 0.21 below what it can actually do, and
+    # turned rung 4's framing-B result from "worse than 2D" into "better than 2D by +0.131".
+    # That is the same inflation the matched-units recomputation exists to prevent, arriving
+    # by a second route: holding the units fixed is not enough if the baseline is handicapped
+    # on features instead. Rung 1's score here is the best over both sets and all algorithms,
+    # which is what stage 05 reported and the only like-for-like comparison.
     try:
         from rdkit import Chem
         from rdkit.Chem import Descriptors, rdFingerprintGenerator
@@ -423,9 +405,13 @@ if __name__ == "__main__":
         rdk = np.nan_to_num(np.array([calc.CalcDescriptors(m) for m in mols], float),
                             nan=0.0, posinf=0.0, neginf=0.0)
         X1 = np.hstack([cnt, rdk])
+        X1b = np.array([gen.GetFingerprintAsNumPy(m) for m in mols], float)
         Xp1, yp1, fp1, _ = pair_rows(X1, y, None, ids, dpair)
-        results["rung1 2D (pasangan yang sama)"] = score(
-            "rung1 2D (pasangan yang sama)", Xp1, yp1, fp1, rows)
+        results["rung1 2D count+RDKit (pasangan yang sama)"] = score(
+            "rung1 2D count+RDKit (pasangan yang sama)", Xp1, yp1, fp1, rows)
+        Xp1b, _, _, _ = pair_rows(X1b, y, None, ids, dpair)
+        results["rung1 2D binary ECFP4 (pasangan yang sama)"] = score(
+            "rung1 2D binary ECFP4 (pasangan yang sama)", Xp1b, yp1, fp1, rows)
         # Dimensionality-matched arm. The headline comparison gives rung 1 2265 features and
         # rung 4 twelve, which is the comparison a practitioner faces but is also the first
         # thing a reviewer will object to. This cuts rung 1 to the same count, chosen inside
@@ -445,17 +431,28 @@ if __name__ == "__main__":
     print("=" * 74)
     for tag, (alg, r2) in results.items():
         print(f"  {tag:30s} R2 = {r2:+.3f}   ({alg})")
-    if "rung4 (tersaring)" in results and "rung1 2D (pasangan yang sama)" in results:
-        d = results["rung4 (tersaring)"][1] - results["rung1 2D (pasangan yang sama)"][1]
+    r1keys = [k for k in results if k.startswith("rung1 2D") and "k=" not in k]
+    if "rung4 (tersaring)" in results and r1keys:
+        best1 = max(results[k][1] for k in r1keys)
+        best1k = max(r1keys, key=lambda k: results[k][1])
+        print(f"\n  rung1 terbaik atas kedua set fitur: {best1:+.3f}  ({best1k})")
+        d = results["rung4 (tersaring)"][1] - best1
         print(f"\n  selisih rung4 - rung1 : {d:+.3f}")
         print(f"  (analisis daya stage 17: studi ini memisahkan R2 yang berjarak ~0,30;")
         print(f"   selisih di bawah itu tidak bisa dibedakan dari nol pada jumlah pasangan penuh,")
         print(f"   apalagi pada {len(covered)})")
         if a.n_boot and keep and X1 is not None:
-            print(f"\n  bootstrap atas pasangan, {a.n_boot} replika, algoritma dipilih ulang")
-            print("  di dalam setiap replika:")
-            q4, q1, qg = bootstrap_gap(md, keep, ids, y, dpair, X1,
-                                       n_boot=a.n_boot, seed=SEED)
+            print(f"\n  bootstrap atas pasangan, {a.n_boot} replika; rung4 memilih ulang")
+            print("  algoritma, rung1 memilih ulang set fitur + algoritma, tiap replika:")
+            XpK, ypK, fpK, _ = pair_rows(md.loc[ids, keep].to_numpy(float), y, None,
+                                         ids, dpair)
+            # A pair owns two consecutive antisymmetric rows; they must travel together.
+            unitsB = [np.array([2 * i, 2 * i + 1]) for i in range(len(ypK) // 2)]
+            armB = lambda M: (lambda r, M=M: (M[r], ypK[r], fpK[r]))
+            q4, q1, qg = boot_gap(unitsB,
+                                  [(armB(XpK), REG)],
+                                  [(armB(Xp1), REG), (armB(Xp1b), REG)],
+                                  r2_score, a.n_boot, SEED)
             for nm, q in (("rung4", q4), ("rung1 2D", q1), ("selisih", qg)):
                 print(f"    {nm:9s} median {q[1]:+.3f}   95% CI [{q[0]:+.3f}, {q[2]:+.3f}]")
             lo, hi = qg[0], qg[2]
@@ -495,8 +492,10 @@ if __name__ == "__main__":
         resA["rung4 (semua deskriptor)"] = score_reg_A("rung4 (semua deskriptor)",
                                                       md_all, y, fold, rowsA)
         if X1 is not None:
-            resA["rung1 2D (ligan yang sama)"] = score_reg_A("rung1 2D (ligan yang sama)",
-                                                            X1, y, fold, rowsA)
+            resA["rung1 2D count+RDKit (ligan yang sama)"] = score_reg_A(
+                "rung1 2D count+RDKit (ligan yang sama)", X1, y, fold, rowsA)
+            resA["rung1 2D binary ECFP4 (ligan yang sama)"] = score_reg_A(
+                "rung1 2D binary ECFP4 (ligan yang sama)", X1b, y, fold, rowsA)
             if md_keep is not None:
                 kk = md_keep.shape[1]
                 resA[f"rung1 2D (k={kk}, dipilih dalam fold)"] = score_reg_A(
@@ -506,15 +505,19 @@ if __name__ == "__main__":
         print("\n  ringkasan framing A")
         for tag, (alg, v) in resA.items():
             print(f"    {tag:30s} R2 = {v:+.3f}   ({alg})")
-        if md_keep is not None and X1 is not None:
-            gap = resA["rung4 (tersaring)"][1] - resA["rung1 2D (ligan yang sama)"][1]
+        r1A = [k for k in resA if k.startswith("rung1 2D") and "k=" not in k]
+        if md_keep is not None and r1A:
+            b = max(resA[k][1] for k in r1A); bk = max(r1A, key=lambda k: resA[k][1])
+            print(f"    rung1 terbaik atas kedua set : {b:+.3f}  ({bk})")
+            gap = resA["rung4 (tersaring)"][1] - b
             print(f"    selisih rung4 - rung1 : {gap:+.3f}")
             if a.n_boot:
                 units = [np.array([i]) for i in range(len(ids))]
-                mats = (md_keep, X1)
+                armA = lambda M: (lambda r, M=M: (M[r], y[r], fold[r]))
                 qa, qb, qg = boot_gap(units,
-                                      lambda w, r: (mats[w][r], y[r], fold[r]),
-                                      r2_score, len(units), a.n_boot, SEED)
+                                      [(armA(md_keep), REG)],
+                                      [(armA(X1), REG), (armA(X1b), REG)],
+                                      r2_score, a.n_boot, SEED)
                 for nm, q in (("rung4", qa), ("rung1 2D", qb), ("selisih", qg)):
                     print(f"    {nm:9s} median {q[1]:+.3f}   95% CI [{q[0]:+.3f}, {q[2]:+.3f}]")
                 CI_ROWS.append(dict(framing="A", metric="r2", n_units=len(units),
@@ -533,8 +536,11 @@ if __name__ == "__main__":
         resC["rung4 (semua deskriptor)"] = score_clf("rung4 (semua deskriptor)",
                                                     Xca, yca, fca, rowsC)
         Xc1, yc1, fc1 = sym_pairs(X1, ids, dpair)
-        resC["rung1 2D (pasangan yang sama)"] = score_clf("rung1 2D (pasangan yang sama)",
-                                                         Xc1, yc1, fc1, rowsC)
+        resC["rung1 2D count+RDKit (pasangan yang sama)"] = score_clf(
+            "rung1 2D count+RDKit (pasangan yang sama)", Xc1, yc1, fc1, rowsC)
+        Xc1b, _, _ = sym_pairs(X1b, ids, dpair)
+        resC["rung1 2D binary ECFP4 (pasangan yang sama)"] = score_clf(
+            "rung1 2D binary ECFP4 (pasangan yang sama)", Xc1b, yc1, fc1, rowsC)
         if md_keep is not None:
             kk = Xc.shape[1]          # sym_pairs doubles the width, so match the doubled count
             resC[f"rung1 2D (k={kk}, dipilih dalam fold)"] = score_clf(
@@ -544,15 +550,19 @@ if __name__ == "__main__":
         print("\n  ringkasan framing C")
         for tag, (alg, v) in resC.items():
             print(f"    {tag:30s} AUC = {v:.3f}   ({alg})")
-        if md_keep is not None:
-            gap = resC["rung4 (tersaring)"][1] - resC["rung1 2D (pasangan yang sama)"][1]
+        r1C = [k for k in resC if k.startswith("rung1 2D") and "k=" not in k]
+        if md_keep is not None and r1C:
+            b = max(resC[k][1] for k in r1C); bk = max(r1C, key=lambda k: resC[k][1])
+            print(f"    rung1 terbaik atas kedua set : {b:.3f}  ({bk})")
+            gap = resC["rung4 (tersaring)"][1] - b
             print(f"    selisih AUC rung4 - rung1 : {gap:+.3f}")
             if a.n_boot:
                 units = [np.array([i]) for i in range(len(yc))]
-                mats = (Xc, Xc1)
+                armC = lambda M: (lambda r, M=M: (M[r], yc[r], fc[r]))
                 qa, qb, qg = boot_gap(units,
-                                      lambda w, r: (mats[w][r], yc[r], fc[r]),
-                                      roc_auc_score, len(units), a.n_boot, SEED, clf=True)
+                                      [(armC(Xc), CLF)],
+                                      [(armC(Xc1), CLF), (armC(Xc1b), CLF)],
+                                      roc_auc_score, a.n_boot, SEED, clf=True)
                 for nm, q in (("rung4", qa), ("rung1 2D", qb), ("selisih", qg)):
                     print(f"    {nm:9s} median {q[1]:+.3f}   95% CI [{q[0]:+.3f}, {q[2]:+.3f}]")
                 CI_ROWS.append(dict(framing="C", metric="auc_roc", n_units=len(units),
