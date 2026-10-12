@@ -19,6 +19,8 @@ first, not hidden.
 | Figure 2 (ladder) | `../figures/fig2_ladder.pdf` | `scripts/fig_ladder.py` |
 | Figure 3 (power) | `../figures/fig3_power.pdf` | `scripts/fig_power.py` |
 | Figure 5 (duration) | `../figures/fig5_duration.pdf` | `scripts/fig_duration.py` |
+| Figure 1 (dataset) | `../figures/fig1_dataset.pdf` | `scripts/fig_dataset.py` |
+| Table 1 (composition) | `../results/23_dataset_composition.tex` | `scripts/fig_dataset.py` |
 | Figure 4 (reliability) | `../figures/fig4_reliability.pdf` | `scripts/fig_reliability.py` |
 | Table 2 (benchmark) | `../results/22_benchmark_main.tex` | `scripts/table_benchmark.py` |
 | Tables S1, S2 | `../results/22_benchmark_si_{reg,clf}.tex` | `scripts/table_benchmark.py` |
@@ -26,7 +28,5 @@ first, not hidden.
 
 ## Not yet built
 
-- Figure 1 — dataset, stereochemical-cliff audit, size confound
-- Table 1 — dataset composition
 - Figure 2 intervals — rerun `fig_ladder.py --n-boot 300`
 - `refs.bib` — every entry is an unverified stub

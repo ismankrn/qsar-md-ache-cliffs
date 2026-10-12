@@ -1,10 +1,45 @@
 \section{Results}
 
 \subsection{Dataset composition}
-\TODO{Table 1: ligands, pairs, cliff/control, dev/test. Figure 1: similarity vs
-  potency difference; the stereochemical-cliff audit; the size confound.}
-\NOTE{Figure 1 script not written yet. Data: 01\_cliffs\_CHEMBL220.csv,
-  02\_cliff\_similarity\_audit.csv, 10\_size\_adjusted\_tests.csv}
+\begin{figure}[tb]
+  \centering
+  \includegraphics[width=\textwidth]{fig1_dataset.pdf}
+  \caption{\textbf{Target selection, the cliff definition, and two confounds it
+    carries.} (a)~Six ChEMBL targets screened for activity cliffs, split into
+    constitutional and stereochemical pairs. Only stereoisomer-free constitutional
+    cliffs are a fair test of a 2D descriptor: no stereo-blind fingerprint can
+    resolve a stereoisomer pair by construction, while any 3D method resolves it
+    trivially, so a benchmark dominated by them favours structure before a single
+    model is fitted. Acetylcholinesterase is the only target screened where
+    constitutional cliffs dominate, 100 against 10; BACE1 inverts that at 5
+    against 101. (b)~All 97 cliff pairs in the final set are constitutional and
+    differ by 1--10 heavy atoms, yet binary ECFP4 reports Tanimoto exactly 1.000
+    for 49 of them. Count-based ECFP4 separates the same pairs at a median of
+    0.878. (c)~The cliff definition on the selected set; the similarity axis is
+    the binary fingerprint, which is the criterion that selected the pairs.
+    (d)~Cliff partners differ by 4.4 heavy atoms on average against 1.8 for
+    controls.}
+  \label{fig:dataset}
+\end{figure}
+
+\begin{table}[tb]
+  \centering
+  \caption{\textbf{Dataset composition.} The test split has not been scored by any
+    model in this work.}
+  \label{tab:dataset}
+  \input{../results/23_dataset_composition.tex}
+\end{table}
+
+\TODO{Prose. Composition from Table~\ref{tab:dataset}; the two confounds from
+  Figure~\ref{fig:dataset}.}
+\NOTE{The saturation in panel (b) is not only an observation about the pairs: the
+  selection criterion is that same binary fingerprint, verified identical to the
+  audit's t\_bit column. So the measure that chose the pairs is the one that
+  cannot tell molecules eight heavy atoms apart from identical. Say that plainly
+  -- it affects how the cliff set itself should be read, and it is a property of a
+  default representation rather than of this target.}
+\NOTE{Size confound: stage 10 found 0 of 19 descriptors survive a size adjustment,
+  and four that looked significant are size artefacts.}
 
 % ---------------------------------------------------------------------------
 \subsection{The ladder}
@@ -29,7 +64,7 @@
   \caption{\textbf{Best score per rung on each framing}, over the rung's descriptor
     arms and the algorithm families, on 217 development ligands and 145 development
     pairs. The winning family is named in parentheses. The full grid is
-    Tables~S1 and~S2.}
+    the supplementary tables at the end of this section.}
   \label{tab:benchmark}
   \input{../results/22_benchmark_main.tex}
 \end{table}
@@ -152,14 +187,14 @@
 
 \begin{table}[tb]
   \centering
-  \caption{\textbf{Table S1.} Every rung, descriptor arm and regression family on
+  \caption{Every rung, descriptor arm and regression family on
     \framingA{} and \framingB{}.}
   \input{../results/22_benchmark_si_reg.tex}
 \end{table}
 
 \begin{table}[tb]
   \centering
-  \caption{\textbf{Table S2.} Every rung, descriptor arm and classification family
+  \caption{Every rung, descriptor arm and classification family
     on \framingC{}. The families differ from Table~S1 because \framingC{} is a
     classification; Ridge and PLS have no counterpart here and are absent rather
     than failed.}
