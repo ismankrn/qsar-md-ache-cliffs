@@ -48,3 +48,13 @@ results/16c_qc/
 # that the results themselves do not.
 md/watch.log
 results/19_rung4_w20_*.log
+
+# LaTeX build products; main.pdf is regenerable with latexmk
+manuscript/*.aux
+manuscript/*.log
+manuscript/*.out
+manuscript/*.blg
+manuscript/*.bbl
+manuscript/*.fls
+manuscript/*.fdb_latexmk
+manuscript/main.pdf

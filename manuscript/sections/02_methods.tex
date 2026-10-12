@@ -1,0 +1,71 @@
+\section{Methods}
+
+\subsection{Dataset and activity-cliff definition}
+\TODO{ChEMBL target CHEMBL220 (human AChE); pChEMBL aggregation; similarity and
+  potency thresholds; 1{,}911 similar pairs; cliff/control definition.}
+\NOTE{Source: results/01\_*, 02\_pairs\_CHEMBL220.csv, 02\_cliff\_similarity\_audit.csv}
+
+\subsection{Stereochemical cliffs are an artefact of stereo-blind fingerprints}
+\TODO{Enantiomer pairs reach Tanimoto 1.0 under ECFP and are counted as cliffs
+  that no 2D method can resolve by construction, while 3D methods resolve them
+  trivially. Report how many, and how they are handled here.}
+\NOTE{This biases cliff benchmarks toward 3D methods -- the opposite direction to
+  the subset artefact in Section~\ref{sec:subset}. Having both measured in one
+  study is the point.}
+
+\subsection{Splits}
+\TODO{Connected-component splits over the similarity graph, seed 20260902, five
+  CV folds, sealed test set of 54 ligands. State that the test split has not been
+  scored by any model and when it will be.}
+
+\subsection{The three framings}
+\TODO{A: per-ligand $R^2$ on pChEMBL. B (primary): $R^2$ on the signed pair
+  difference, antisymmetric rows. C: cliff/control classification, ROC AUC,
+  order-invariant pair features $[d\_a+d\_b,\,|d\_a-d\_b|]$.}
+
+\subsection{Descriptor rungs}
+\TODO{Rung 1: binary ECFP4, and count ECFP4 + RDKit2D -- both, because the winner
+  depends on the framing. Rung 2: pose geometry on 4EY7 plus bridging features.
+  Rung 2e: median over eight receptor conformations. Rung 3: single-snapshot
+  MM/GBSA, energy and per-residue terms only. Rung 4: MD descriptors, below.}
+
+\subsection{Molecular dynamics}
+\TODO{OpenFF Sage 2.3.0 + amber14SB + TIP3P; system build; equilibration; 25 ns
+  production (45 ns for the first 55 runs); GPU-resident mdrun; 217 ligands.}
+\NOTE{Receptor preparation matters and belongs here: naive loop bridging in 4EY7
+  created fabricated bonds worth 90\% of the bond energy; MD uses the capped
+  4ey7\_rec\_md.pdb. Source: results/12b\_receptor\_chain\_breaks.md}
+
+\subsection{MD-derived descriptors}
+\TODO{33 descriptors, three design classes -- persistence, fluctuation, event
+  count -- deliberately not frame-averaged rung-2 quantities. Table of
+  definitions. 14 gorge-lining residues; CAS = Trp86, PAS = Trp286, gate = Tyr337.}
+\NOTE{Of the three classes only persistence survives the replicate filter: 8 of
+  the 11 survivors are contact occupancies. Report that here or in Results, but
+  report it -- it is the actionable guidance for anyone building MD descriptors.}
+
+\subsection{Periodic boundary handling}
+\TODO{Bond-based unwrap, nojump, minimum image, Kabsch superposition. State that
+  an earlier version was wrong and that 19 of 30 descriptors changed when it was
+  fixed, with the A/B test as evidence the QC catches real defects.}
+\NOTE{Source: results/16b\_rung4\_pbc\_fix.md}
+
+\subsection{Replicate pilot and the descriptor filter}
+\TODO{Reliability $\sigma^2\_{\mathrm{lig}}/(\sigma^2\_{\mathrm{lig}}+2\sigma^2\_{\mathrm{rep}})$;
+  12 replicate runs over 5 ligands; 81 of 160 descriptor$\times$window combinations
+  are seed-dominated; the filter keeps 11 at the 20 ns window.}
+\NOTE{Source: results/18\_replicate\_pilot.md and 18\_replicate\_pilot.csv}
+
+\subsection{Model suite and evaluation}
+\TODO{Six regression and five classification families; preprocessing fitted inside
+  each fold; best-of-family reported; bootstrap over units with the algorithm --
+  and, for rung 1, the feature set -- re-selected inside every replicate.}
+\NOTE{State the bootstrap's known bias: resampling units and then running the
+  frozen folds puts duplicates on both sides of the split and inflates the levels.
+  It applies identically to both sides, so the gap is the quantity to read.
+  Bootstrap medians must not be quoted as performance.}
+
+\subsection{Statistical power}
+\TODO{Synthetic descriptor matrices through the same pipeline; power against the
+  rung-1 baseline with the baseline re-simulated each replicate; measurement-noise
+  ceiling from repeat assays.}

@@ -1,0 +1,22 @@
+\section{Discussion}
+\TODO{Draft. Beats, in order:}
+\NOTE{(1) What was tested and what was not: five rungs, three framings, one
+  target, 145 pairs, resolution 0.30. (2) The null is bounded, not open-ended --
+  effects above 0.30 are excluded, smaller ones are not addressed. (3) The
+  measurement ceiling says the unexplained variance is real signal, so the
+  descriptors are the limitation rather than the data. (4) Two artefacts that bias
+  such comparisons in opposite directions, both quantified here, both
+  generalising beyond this target and beyond MD. (5) Of three descriptor design
+  classes only persistence survives a reliability filter -- actionable for anyone
+  building MD descriptors. (6) Length is not the lever; $n$ is.}
+
+\subsection{Limitations}
+\TODO{State, not bury:}
+\NOTE{One target. 145 pairs and a 0.30 resolution. 25 ns with no production
+  replicates. Feature counts are not matched in the headline comparison (12 or 33
+  against 2265), and the matched-dimensionality arm is a robustness check rather
+  than a controlled experiment. Bootstrap levels are inflated by resampling inside
+  the folds. 18 checkpoints were lost so 9 ligands cannot be extended without a
+  fresh run. \texttt{SVC(probability=True)} is deprecated in scikit-learn 1.9 and
+  removed in 1.11; replacing it changes \framingC{} and must be done for rungs 2
+  and 4 together.}

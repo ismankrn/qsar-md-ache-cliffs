@@ -1,0 +1,124 @@
+\section{Results}
+
+\subsection{Dataset composition}
+\TODO{Table 1: ligands, pairs, cliff/control, dev/test. Figure 1: similarity vs
+  potency difference; the stereochemical-cliff audit; the size confound.}
+\NOTE{Figure 1 script not written yet. Data: 01\_cliffs\_CHEMBL220.csv,
+  02\_cliff\_similarity\_audit.csv, 10\_size\_adjusted\_tests.csv}
+
+% ---------------------------------------------------------------------------
+\subsection{The ladder}
+\label{sec:ladder}
+
+\begin{figure}[tb]
+  \centering
+  \includegraphics[width=\textwidth]{fig2\_ladder.pdf}
+  \caption{\textbf{No structure-based rung resolvably outperforms 2D
+    fingerprints.} Each point is the best score over a rung's descriptor arms and
+    over the algorithm families, on 217 development ligands and 145 development
+    pairs with frozen five-fold cross-validation. Rung~1 carries both feature sets
+    benchmarked for it, because the winner depends on the framing. Rung~2 appears
+    twice, as a single rigid receptor and as the median over eight receptor
+    conformations. The dashed line marks the rung-1 level.
+    \TODO{add interval description once fig\_ladder.py is run with --n-boot 300}}
+  \label{fig:ladder}
+\end{figure}
+
+\TODO{Prose. The numbers, from results/20\_ladder.csv:}
+\NOTE{\framingA{}: rung 1 $+0.386$, rung 2 $+0.046$, rung 2e $+0.215$, rung 3
+  $+0.118$, rung 4 $+0.056$. \framingB{}: $+0.200$, $+0.167$, $+0.274$, $-0.056$,
+  $+0.124$. \framingC{}: $0.805$, $0.684$, $0.705$, $0.753$, $0.793$.
+  Rung 3 on framings A and C is new -- it had only ever been scored on B.
+  All five rungs cover all 217 ligands and all 145 pairs, so no rung is scored on
+  an easier subset.}
+
+\TODO{State plainly that on \framingB{} the ensemble rung 2 is numerically above
+  rung 1 ($+0.274$ vs $+0.200$) and that stage 15 showed the difference is not
+  resolvable. Do not write that 2D wins everything.}
+
+\subsection{Rung 4 against a matched 2D baseline}
+\TODO{Gaps and intervals, 300-replicate bootstrap: \framingA{} $-0.330$,
+  CI $[-0.607,-0.203]$ -- excludes zero, rung 4 is worse. \framingB{} $-0.077$,
+  CI $[-0.428,+0.131]$. \framingC{} \TODO{pending}.}
+\NOTE{Framing A's interval is the only one in the study that excludes zero. It
+  does not say rung 4 is unproven; it says rung 4 is worse, resolved by the design.}
+
+% ---------------------------------------------------------------------------
+\subsection{What the study could have detected}
+
+\begin{figure}[tb]
+  \centering
+  \includegraphics[width=\textwidth]{fig3\_power.pdf}
+  \caption{\textbf{The design separates large effects only, and what it leaves
+    unexplained is signal rather than assay noise.}
+    (a)~Power to call a candidate descriptor set better than rung~1, with the
+    baseline re-simulated inside every replicate; 80\% power requires
+    $R^2 \approx 0.45$ against a rung-1 baseline of 0.209.
+    (b)~The 95\% interval on the gap is 0.32 wide on average and nearly flat
+    across the range.
+    (c)~The measurement-noise ceiling, from 336 of 5{,}609 compounds carrying a
+    repeat assay, is 0.616 even on the pessimistic p90 spread -- far above every
+    rung.}
+  \label{fig:power}
+\end{figure}
+
+\TODO{Prose. The portable sentence is: this study separates two $R^2$ values about
+  0.30 apart and not less. Derived before any rung-4 run finished, and it held.}
+
+% ---------------------------------------------------------------------------
+\subsection{Descriptor reliability}
+\TODO{Figure 4: per-descriptor reliability by window; 81 of 160 combinations are
+  seed-dominated; 8 of the 11 survivors are contact occupancies, so of the three
+  design classes only persistence survives.}
+\NOTE{Figure 4 script not written yet. Data: 18\_replicate\_pilot.csv}
+
+\TODO{Show that the filter earns its place: \framingB{} $+0.124$ filtered against
+  $-0.054$ unfiltered; \framingC{} $0.793$ against $0.721$.}
+
+% ---------------------------------------------------------------------------
+\subsection{Trajectory length}
+
+\begin{figure}[tb]
+  \centering
+  \includegraphics[width=\textwidth]{fig5\_duration.pdf}
+  \caption{\textbf{Trajectory length is not the limiting factor between 5 and
+    20~ns.} Descriptors recomputed on the first 5, 10, 20 and 30~ns of analysed
+    trajectory. The per-window replicate filter selects 15, 14 and 12 descriptors
+    respectively, so it confounds trajectory length with descriptor choice; the
+    fixed series holds the 20~ns selection at every window and isolates length.
+    Only 45 development ligands reach 30~ns, drawn as their own series and never
+    joined to the full-sample line.}
+  \label{fig:duration}
+\end{figure}
+
+\TODO{Prose. With a fixed descriptor set, \framingA{} is flat
+  ($+0.039$, $+0.027$, $+0.056$) and \framingB{} peaks at 10 ns
+  ($+0.116$, $+0.198$, $+0.124$). The spread is inside the study's resolution, so
+  the conclusion is no resolvable dependence on length -- which answers the cost
+  objection with data.}
+\NOTE{Do NOT quote the $+0.198$ as a result. It is the best of six cells computed
+  together and it is the kind of number this paper exists to warn about.}
+
+% ---------------------------------------------------------------------------
+\subsection{A partial subset inflates an expensive descriptor set's apparent gain}
+\label{sec:subset}
+
+\begin{table}[tb]
+  \centering
+  \caption{\textbf{The gain reported at 59 of 145 pairs was an artefact worth
+    $+0.277$.} Prefixes follow the real completion order, recovered from each
+    run's file timestamp; random subsets of the same ligand count are the control.
+    Gains are against rung~1's published full-set figure and against rung~1
+    recomputed on the same pairs.}
+  \label{tab:subset}
+  \input{../results/21\_subset\_inflation.tex}
+\end{table}
+
+\TODO{Prose. Two findings: it is not a small-sample effect (random subsets of the
+  same size put rung 4 at $+0.093$ where arrival order puts it at $+0.477$), and
+  recomputing the baseline is necessary but not sufficient -- it removes 0.094 of
+  the 0.277 and leaves $+0.183$ standing.}
+\NOTE{Mechanism: state all three co-factors, not the convenient one. The early
+  ligands are smaller (median 31 vs 35 heavy atoms, $p=0.0005$, decaying to
+  $p=0.54$ by 196 ligands), they hold every multi-replicate run, and they average
+  28.8 ns of analysed trajectory against 20.0. 217 ligands cannot separate them.}

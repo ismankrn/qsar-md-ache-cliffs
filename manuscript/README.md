@@ -1,0 +1,31 @@
+# Manuscript
+
+    latexmk -pdf main.tex     # build
+    latexmk -c                # clean aux files
+
+Figures resolve from `../figures` via `\graphicspath`; generated tables are
+`\input` from `../results`. Nothing here should contain a number typed by hand:
+if a value appears in the text, a CSV in `../results` should produce it, and
+`../results/INDEX.md` says which stage wrote which file.
+
+`\draftingtrue` in `main.tex` turns on line numbers and makes `\TODO` red. Set it
+false before submission and both disappear — but the `\TODO`s must be resolved
+first, not hidden.
+
+## Artefacts already wired in
+
+| float | file | source script |
+|---|---|---|
+| Figure 2 (ladder) | `../figures/fig2_ladder.pdf` | `scripts/fig_ladder.py` |
+| Figure 3 (power) | `../figures/fig3_power.pdf` | `scripts/fig_power.py` |
+| Figure 5 (duration) | `../figures/fig5_duration.pdf` | `scripts/fig_duration.py` |
+| Table 3 (subset) | `../results/21_subset_inflation.tex` | `scripts/table_subset_inflation.py` |
+
+## Not yet built
+
+- Figure 1 — dataset, stereochemical-cliff audit, size confound
+- Figure 4 — MD descriptor reliability by window
+- Table 1 — dataset composition
+- Table 2 — full benchmark, rung × framing × algorithm
+- Figure 2 intervals — rerun `fig_ladder.py --n-boot 300`
+- `refs.bib` — every entry is an unverified stub
