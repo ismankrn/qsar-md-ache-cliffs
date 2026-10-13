@@ -16,6 +16,32 @@ it did not", and Limitations closes the section. `sections/04_discussion.tex` is
 false before submission and both disappear — but the `\TODO`s must be resolved
 first, not hidden.
 
+## Style rules
+
+Six rules came out of drafting Sections 2.1 and 2.2 against the author's own papers in
+`writing-references/`. Run `python scripts/check_manuscript.py` before committing a
+drafted section; it exits non-zero if an enforced rule fails.
+
+1. A drafted section carries no `\TODO` and no `\NOTE`. Guidance that is worth the
+   reader's attention belongs in the prose; the rest is dropped.
+2. Paragraphs are not left short.
+3. No colons in prose or in captions. Headings are exempt, since a heading is a title
+   rather than a sentence, but the drafted ones avoid them anyway.
+4. The words "rung" and "ladder" do not appear before the subsection that defines them.
+   Descriptor sets are named by what they are, as in "the pose-geometry descriptors".
+5. A caption identifies what each panel shows. The numbers and the interpretation go in
+   the prose, so a caption over roughly 120 words is a sign that something belongs
+   elsewhere.
+6. Every figure panel is referenced explicitly in the prose, as `Figure~\ref{...}(a)`.
+   All three figures in Sections 2.1 and 2.2 were first drafted referencing the figure
+   only as a whole. Every panel's content was discussed, so nothing was missing from the
+   argument, and a reader still had no way to tell which panel to look at.
+
+Voice is matched to those papers: present-tense passive for procedure, "by using X",
+"with the PDB ID being", "as shown in Figure~N", "i.e." for enumeration, and a roadmap
+sentence opening each section. Register is matched; the non-native constructions in the
+sources are not reproduced.
+
 ## Artefacts already wired in
 
 | float | file | source script |

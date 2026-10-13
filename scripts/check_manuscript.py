@@ -1,0 +1,164 @@
+#!/usr/bin/env python
+"""Check the drafted manuscript against the style rules agreed for this paper.
+
+Six rules came out of drafting Sections 2.1 and 2.2 against the author's own papers. Four of
+them are mechanical and are enforced here. The other two are matters of judgement and are
+only reported on, because a script that pretends to check them would be worse than one that
+says it cannot.
+
+  1. A drafted section carries no \\TODO and no \\NOTE.                        [reported]
+  2. Paragraphs are not left short.                                           [reported]
+  3. No colons in prose or in captions.                                       [enforced]
+  4. No "rung" or "ladder" before the subsection that defines them.           [enforced]
+  5. Captions identify what a panel shows; numbers belong in the prose.       [reported]
+  6. Every figure panel is referenced explicitly in the prose.                [enforced]
+
+Rule 6 exists because all three figures in Sections 2.1 and 2.2 were first drafted with the
+figure referenced only as a whole. The content of every panel was discussed, so nothing was
+missing from the argument, and a reader still had no way to tell which panel to look at. That
+is the kind of defect that survives proofreading, which is why it is checked by a script.
+
+Exit status is non-zero if any enforced rule fails, so this can run before a commit.
+
+Usage:
+    python scripts/check_manuscript.py
+    python scripts/check_manuscript.py --sections 2.1 2.2
+"""
+from __future__ import annotations
+import argparse, re, sys
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parent.parent
+SEC = ROOT/"manuscript"/"sections"
+RUNG_DEFINED_IN = "Descriptor rungs"      # the subsection that introduces the term
+SHORT_PARA_WORDS = 45
+
+
+def figure_blocks(text: str):
+    """(label, caption, full block) for every figure environment."""
+    for m in re.finditer(r"\\begin\{figure\}(.*?)\\end\{figure\}", text, re.S):
+        b = m.group(1)
+        lab = re.search(r"\\label\{(fig:[a-zA-Z]+)\}", b)
+        i = b.find(r"\caption{")
+        if i < 0 or not lab:
+            continue
+        j = i + len(r"\caption{")
+        depth, k = 1, j
+        while k < len(b) and depth:
+            depth += (b[k] == "{") - (b[k] == "}")
+            k += 1
+        yield lab.group(1), " ".join(b[j:k-1].split()), m.group(0)
+
+
+def prose_of(text: str) -> str:
+    """Everything that is not a float environment, a comment or a drafting macro."""
+    t = re.sub(r"\\begin\{(figure|table)\}.*?\\end\{\1\}", " ", text, flags=re.S)
+    t = re.sub(r"(?m)^\s*%.*$", " ", t)
+    t = re.sub(r"\\(TODO|NOTE)\{(?:[^{}]|\{[^{}]*\})*\}", " ", t)
+    return t
+
+
+def strip_refs(t: str) -> str:
+    return re.sub(r"\\(ref|label|cite[tp]?|citep|citet)\{[^}]*\}", "", t)
+
+
+def strip_headings(t: str) -> str:
+    """Section and paragraph headings are titles, not sentences, and the colon rule is
+    about sentences. Removing them here keeps the check from reporting a style choice
+    that was never in question."""
+    return re.sub(r"\\(sub)*(section|paragraph)\*?\{[^}]*\}", " ", t)
+
+
+def drafted_subsections(text: str) -> dict:
+    """{subsection title: has real prose} -- a figure in a subsection that is still
+    scaffolding cannot yet reference its panels, and flagging it is noise."""
+    out, parts = {}, re.split(r"(\\subsection\*?\{[^}]*\})", text)
+    cur = "(preamble)"
+    for chunk in parts:
+        m = re.match(r"\\subsection\*?\{([^}]*)\}", chunk)
+        if m:
+            cur = m.group(1)
+            out.setdefault(cur, False)
+            continue
+        if len(prose_of(chunk).split()) > 60:
+            out[cur] = True
+    return out
+
+
+def subsection_of(text: str, pos: int) -> str:
+    ms = list(re.finditer(r"\\subsection\*?\{([^}]*)\}", text[:pos]))
+    return ms[-1].group(1) if ms else "(preamble)"
+
+
+def main() -> None:
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--files", nargs="*", default=None)
+    a = ap.parse_args()
+    files = [Path(f) for f in a.files] if a.files else sorted(SEC.glob("*.tex"))
+
+    failures, notes = [], []
+    for f in files:
+        text = f.read_text()
+        prose = prose_of(text)
+        drafted = len(prose.split()) > 120 and r"\TODO" not in text
+
+        # rule 1 and 2 -- reported, not enforced
+        n_todo = text.count(r"\TODO")
+        n_note = text.count(r"\NOTE")
+        if drafted and (n_todo or n_note):
+            notes.append(f"{f.name}: drafted but still carries {n_todo} TODO, {n_note} NOTE")
+        for para in [p for p in re.split(r"\n\s*\n", prose) if p.strip()]:
+            w = len(strip_refs(para).split())
+            if 0 < w < SHORT_PARA_WORDS and not para.strip().startswith("\\"):
+                notes.append(f"{f.name}: short paragraph ({w} words) -- "
+                             f"{' '.join(para.split())[:60]}...")
+
+        # rule 3 -- colons anywhere a reader reads
+        for label, cap, _blk in figure_blocks(text):
+            if ":" in strip_refs(cap):
+                failures.append(f"{f.name}: colon in the caption of {label}")
+        for line in strip_headings(strip_refs(prose)).split("\n"):
+            if ":" in line:
+                failures.append(f"{f.name}: colon in prose -- {line.strip()[:70]}")
+
+        # rule 4 -- vocabulary introduced before it is defined
+        cut = text.find(RUNG_DEFINED_IN)
+        if cut > 0:
+            head = strip_refs(prose_of(text[:cut]))
+            for m in re.finditer(r"\b(rungs?|ladder)\b", head, re.I):
+                ctx = " ".join(head[max(0, m.start()-45):m.start()+25].split())
+                failures.append(f"{f.name}: '{m.group(0)}' used before "
+                                f"'{RUNG_DEFINED_IN}' -- ...{ctx}...")
+
+        # rule 5 -- caption length, reported
+        for label, cap, _blk in figure_blocks(text):
+            n = len(cap.split())
+            if n > 120:
+                notes.append(f"{f.name}: caption of {label} is {n} words; "
+                             f"consider moving numbers into the prose")
+
+        # rule 6 -- every panel referenced, but only once the subsection has prose
+        done = drafted_subsections(text)
+        for label, cap, blk in figure_blocks(text):
+            panels = sorted(set(re.findall(r"\((?:~)?([a-dA-D])\)", cap)))
+            if not panels:
+                continue
+            sub = subsection_of(text, text.find(blk))
+            cited = set(re.findall(r"\\ref\{" + re.escape(label) + r"\}\(([a-dA-D])\)", prose))
+            missing = [p for p in panels if p not in cited]
+            if not missing:
+                continue
+            msg = f"{f.name}: {label} panel(s) {','.join(missing)} never referenced in prose"
+            (failures if done.get(sub) else notes).append(
+                msg + ("" if done.get(sub) else f"  [{sub} not drafted yet]"))
+
+    for n in notes:
+        print(f"  note     {n}")
+    for x in failures:
+        print(f"  FAIL     {x}")
+    print(f"\n  {len(failures)} failure(s), {len(notes)} note(s)")
+    sys.exit(1 if failures else 0)
+
+
+if __name__ == "__main__":
+    main()
