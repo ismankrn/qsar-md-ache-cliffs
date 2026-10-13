@@ -159,25 +159,10 @@ only for validation here and is not carried into any descriptor set.
 
 \subsection{Dataset and activity-cliff definition}\label{sec:dataset}
 
-\begin{figure}[tb]
-  \centering
-  \includegraphics[width=\textwidth]{fig_dataset_flow.pdf}
-  \caption{\textbf{Assembly of the activity-cliff dataset.} The left-hand track
-    follows the curation of the compound pool, from the activity records retrieved
-    for the target to the compounds that are feasible to simulate, with the
-    exclusion applied at each step shown beside it. The right-hand track follows the
-    assembly of pairs, from near-identical pairs through the cliff criterion to the
-    matched control pairs. The two arrows that run between the tracks give the order
-    in which the filters act, since pairs are enumerated over the curated pool while
-    only compounds that survive the feasibility filter may form a surviving pair.}
-  \label{fig:flow}
-\end{figure}
-
 The dataset is constructed in three steps, i.e. the selection of the target, the
 curation of its activity data, and the assembly of pairs of near-identical ligands
 that differ sharply in potency together with pairs that are equally similar but do
-not, and the whole procedure together with the number of compounds and pairs
-remaining after each step is summarised in Figure~\ref{fig:flow}. Six candidate targets are screened against three entry criteria, namely at
+not. Six candidate targets are screened against three entry criteria, namely at
 least 80 compounds surviving curation, a potency range of at least 3 log units, and
 at least 25 activity cliffs. Two of the six satisfy all three criteria, with the
 remaining four failing on the number of cliffs. Among the pairs that satisfy the
@@ -223,8 +208,7 @@ filter removes 239 of the 5{,}609 compounds, most of them on molecular weight or
 rotatable-bond count. It is applied to the whole pool before any pairing and not to
 the pairs afterwards, because a pair is lost as soon as either of its two members is
 removed, so that filtering the pool first keeps every surviving pair intact by
-construction, which is the order shown by the two horizontal arrows of
-Figure~\ref{fig:flow}. Of the 100 constitutional cliff pairs, 97 survive this filter with both
+construction. Of the 100 constitutional cliff pairs, 97 survive this filter with both
 members intact, and those 97 pairs are formed from 99 distinct compounds.
 
 A control pair is defined as a pair that is near-identical under the same similarity
