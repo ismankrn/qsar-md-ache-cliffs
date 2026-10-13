@@ -1,5 +1,11 @@
 \section{Methods}
 
+In this section, we introduce the procedures to construct the descriptor ladder and
+to evaluate it. We first describe the target and its binding site, the docking
+protocol and its validation, and the construction of the activity-cliff dataset. We
+then describe the four descriptor rungs, the molecular dynamics simulations from
+which the fourth rung is derived, and the model suite on which all rungs are scored.
+
 \subsection{Target and binding site}
 
 \begin{figure}[tb]
@@ -15,12 +21,63 @@
   \label{fig:structure}
 \end{figure}
 
-\TODO{Prose. This figure carries the mechanistic premise the whole descriptor
-  ladder is built on, so it belongs before the ladder rather than as decoration.}
-\NOTE{It is also where the rung-4 descriptors come from and should be cited as
-  such: \texttt{occ\_cas} and \texttt{occ\_pas} are contact occupancies at these two
-  tryptophans, \texttt{occ\_bridge} is both at once, and \texttt{depth\_mean} is the
-  projection on the axis drawn here.}
+Human acetylcholinesterase (hAChE) is a therapeutic target in Alzheimer's disease.
+The enzyme hydrolyses acetylcholine, and its inhibition raises the synaptic
+concentration of this neurotransmitter. In addition, the peripheral anionic site of
+the enzyme has been reported to accelerate the aggregation of $\beta$-amyloid, and
+inhibitors that span both the catalytic and the peripheral site are therefore
+designed to address the two functions simultaneously \citep{grabowska2025}.
+Donepezil, which is the ligand in the structure used in this work, is such a
+dual-binding-site inhibitor.
+
+The receptor model is prepared from the X-ray crystal structure of recombinant human
+acetylcholinesterase (hAChE) in complex with donepezil, with the PDB ID being 4EY7
+\citep{cheung2012}, which is solved at a resolution of \SI{2.35}{\angstrom}. Chain~A
+is retained and the second copy in the asymmetric unit is discarded.
+
+The active site of hAChE is located at the base of a narrow gorge, as shown in
+Figure~\ref{fig:structure}. The gorge consists of two aromatic residues at its two
+ends, a gate residue between them, and the catalytic triad. Trp86 is located at the
+catalytic anionic site (CAS) adjacent to the Ser203--His447--Glu334 triad, while
+Trp286 is located at the peripheral anionic site (PAS) near the mouth of the gorge.
+Tyr337 is located between the two sites and adopts different rotamers in different
+complexes, and is therefore referred to as the gate. In the 4EY7 complex, the
+distance between the CZ3 atoms of the Trp86 and Trp286 indole rings is measured as
+\SI{15.6}{\angstrom}, and donepezil is observed to span this distance and to contact
+both residues.
+
+This architecture provides the mechanistic hypothesis that the descriptor ladder is
+designed to test. Following the dual-site rationale described above, we take the
+hypothesis to be that two closely related inhibitors are distinguished by
+how persistently each of them engages the two ends of the gorge and by its position
+along the axis between them. A fixed panel of fourteen gorge-lining residues, i.e.
+residues 72, 74, 86, 121, 124, 203, 286, 295, 297, 334, 337, 338, 341 and 447, is
+used throughout this work, so that the pose-geometry, MM/GBSA and molecular-dynamics
+descriptors are calculated on the same positions and remain comparable between
+rungs.
+
+\NOTE{The dual-site rationale is placed here rather than only in the introduction
+  because it is what makes the hypothesis in the last paragraph a \emph{published}
+  one. The descriptor ladder tests an established design principle, not a premise
+  invented for this study, and that distinction should survive into the results.}
+\NOTE{Keep the disease context to these three sentences. The fuller account --
+  prevalence, the cholinergic hypothesis, where the approved inhibitors sit --
+  belongs in the introduction, and repeating it here would read as padding.}
+\NOTE{Style is matched to Kurniawan et al. 2018 (BCSJ) and 2019 (Sci. Rep. Kanazawa
+  Univ.): present-tense passive for procedure, "by using X [ref]", "with the PDB ID
+  being", "as shown in Figure~N", "i.e." for enumeration, and a roadmap sentence
+  opening the section. Register is matched; non-native constructions in the sources
+  are not reproduced.}
+\NOTE{Every number above is from the verified PDB record or measured from the
+  structure. The gorge is often described as about \SI{20}{\angstrom} deep; that
+  figure is not used because it was not verified and no argument needs it.}
+\NOTE{This paragraph is where the rung-4 descriptors originate and should be
+  referred back to when they are defined: \texttt{occ\_cas} and \texttt{occ\_pas}
+  are contact occupancies at these two tryptophans, \texttt{occ\_bridge} is both at
+  once, \texttt{gate\_chi1\_sd} and \texttt{gate\_flips\_per\_ns} follow Tyr337, and
+  \texttt{depth\_mean} is the projection on the Trp86--Trp286 axis.}
+\NOTE{Receptor preparation is described in Section~\ref{sec:md}, because the missing
+  loops matter only once a force field is applied.}
 
 \subsection{Docking protocol and its validation}
 
@@ -120,7 +177,7 @@ counts to bits discards the multiplicity that distinguishes them.
   Rung 2e: median over eight receptor conformations. Rung 3: single-snapshot
   MM/GBSA, energy and per-residue terms only. Rung 4: MD descriptors, below.}
 
-\subsection{Molecular dynamics}
+\subsection{Molecular dynamics}\label{sec:md}
 \TODO{OpenFF Sage 2.3.0 + amber14SB + TIP3P; system build; equilibration; 25 ns
   production (45 ns for the first 55 runs); GPU-resident mdrun; 217 ligands.}
 \NOTE{Receptor preparation matters and belongs here: naive loop bridging in 4EY7
