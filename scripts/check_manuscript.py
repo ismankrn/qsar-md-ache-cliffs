@@ -12,6 +12,7 @@ says it cannot.
   4. No "rung" or "ladder" before the subsection that defines them.           [enforced]
   5. Captions identify what a panel shows; numbers belong in the prose.       [reported]
   6. Every figure panel is referenced explicitly in the prose.                [enforced]
+  7. Procedure in Methods is written in the past tense.                       [reported]
 
 Rule 6 exists because all three figures in Sections 2.1 and 2.2 were first drafted with the
 figure referenced only as a whole. The content of every panel was discussed, so nothing was
@@ -33,6 +34,22 @@ SEC = ROOT/"manuscript"/"sections"
 RUNG_DEFINED_IN = "Descriptor rungs"      # the subsection that introduces the term
 SHORT_PARA_WORDS = 45
 
+# Rule 7. Methods describes what was done, so a present-tense passive there is
+# usually a slip. Three kinds of present tense are correct and are allowed. A
+# pointer to the paper's own apparatus ("is shown in Figure~2"), a timeless fact
+# about the protein or the chemistry ("Trp86 is located at the catalytic anionic
+# site"), and a definition that still holds ("the descriptors are defined in terms
+# of residue contacts"). The allowance is by verb rather than by context, so the
+# check reports rather than enforces and a few false positives are expected.
+PRESENT_PASSIVE = re.compile(r"\b(?:is|are)\s+(?:\w+ly\s+)?(\w+ed|shown|drawn|built|"
+                             r"set|kept|taken|made|written|held|run|known)\b")
+TENSE_ALLOWED = {
+    "shown", "described", "compared", "drawn", "listed", "summarised", "summarized",
+    "located", "situated", "designed", "reported", "detected", "marked", "known",
+    "defined", "resolved", "referred", "based", "expressed", "formed", "composed",
+    "related", "concerned", "intended", "regarded", "considered", "called", "termed",
+}
+
 
 def figure_blocks(text: str):
     """(label, caption, full block) for every figure environment."""
@@ -50,11 +67,34 @@ def figure_blocks(text: str):
         yield lab.group(1), " ".join(b[j:k-1].split()), m.group(0)
 
 
+def drop_macro(text: str, name: str) -> str:
+    """Remove every \\name{...}, counting braces.
+
+    A regex with one level of nesting baked in was the first attempt and it silently
+    failed on \\TODO{... $\\sigma^2\\_{\\mathrm{lig}}$ ...}, which is two levels deep, so
+    that TODO was read as prose by every rule that works on prose.
+    """
+    out, i, tag = [], 0, "\\" + name + "{"
+    while True:
+        j = text.find(tag, i)
+        if j < 0:
+            out.append(text[i:])
+            return "".join(out)
+        out.append(text[i:j])
+        k, depth = j + len(tag), 1
+        while k < len(text) and depth:
+            depth += (text[k] == "{") - (text[k] == "}")
+            k += 1
+        out.append(" ")
+        i = k
+
+
 def prose_of(text: str) -> str:
     """Everything that is not a float environment, a comment or a drafting macro."""
     t = re.sub(r"\\begin\{(figure|table)\}.*?\\end\{\1\}", " ", text, flags=re.S)
     t = re.sub(r"(?m)^\s*%.*$", " ", t)
-    t = re.sub(r"\\(TODO|NOTE)\{(?:[^{}]|\{[^{}]*\})*\}", " ", t)
+    for name in ("TODO", "NOTE"):
+        t = drop_macro(t, name)
     return t
 
 
@@ -136,6 +176,15 @@ def main() -> None:
             if n > 120:
                 notes.append(f"{f.name}: caption of {label} is {n} words; "
                              f"consider moving numbers into the prose")
+
+        # rule 7 -- Methods in the past tense, reported
+        if "methods" in f.name:
+            for line in strip_headings(strip_refs(prose)).split("\n"):
+                for m in PRESENT_PASSIVE.finditer(line):
+                    if m.group(1) in TENSE_ALLOWED:
+                        continue
+                    notes.append(f"{f.name}: present-tense passive in Methods -- "
+                                 f"...{line.strip()[max(0, m.start()-35):m.end()+15]}...")
 
         # rule 6 -- every panel referenced, but only once the subsection has prose
         done = drafted_subsections(text)

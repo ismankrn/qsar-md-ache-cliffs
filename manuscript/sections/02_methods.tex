@@ -4,8 +4,8 @@ In this section, we introduce the procedures to construct and to evaluate the
 descriptor sets compared in this work. We first describe the target and its binding
 site, the docking protocol and its validation, and the construction of the
 activity-cliff dataset. We then describe the four descriptor sets, the molecular
-dynamics simulations from which the last of them is derived, and the model suite on
-which all of them are scored.
+dynamics simulations from which the last of them was derived, and the model suite on
+which all of them were scored.
 
 \subsection{Target and binding site}\label{sec:site}
 
@@ -29,43 +29,42 @@ treatment of the disease. Beyond this catalytic function, the peripheral anionic
 site of the enzyme has been reported to accelerate the aggregation of
 $\beta$-amyloid, and inhibitors that span both the catalytic and the peripheral site
 are therefore designed to address the two functions simultaneously
-\citep{grabowska2025}. Donepezil, which is the ligand in the structure used in this
+\citep{grabowska2025}. Donepezil, which was the ligand in the structure used in this
 work, is such a dual-binding-site inhibitor. The simultaneous engagement of the two
 ends of the gorge is thus an established design principle rather than a premise
-introduced here, and it is this principle that the descriptor sets described in
-the present work are constructed to test.
+introduced here, and it was this principle that the descriptor sets described in the
+present work were constructed to test.
 
-The receptor model is prepared from the X-ray crystal structure of recombinant hAChE
-in complex with donepezil, with the PDB ID being 4EY7 \citep{cheung2012}, which is
-solved at a resolution of \SI{2.35}{\angstrom}. Chain~A is retained and the second
-copy in the asymmetric unit is discarded. The overall fold is shown in
+The receptor model was prepared from the X-ray crystal structure of recombinant hAChE
+in complex with donepezil, with the PDB ID being 4EY7 \citep{cheung2012} and the
+resolution being \SI{2.35}{\angstrom}. Chain~A was retained and the second copy in
+the asymmetric unit was discarded. The overall fold is shown in
 Figure~\ref{fig:structure}(A), in which the position of the gorge is marked by
 donepezil in its crystal pose. The active site is located at the base of this narrow
-gorge, and its architecture is shown in Figure~\ref{fig:structure}(B), where the gorge
-consists of two aromatic residues at its two ends, a gate residue between them, and
-the catalytic triad. Trp86 is located at the catalytic anionic site (CAS) adjacent to the
-Ser203--His447--Glu334 triad, while Trp286 is located at the peripheral anionic site
-(PAS) near the mouth of the gorge. Tyr337 is located between the two sites and adopts
-different rotamers in different complexes, and is therefore referred to as the gate.
-In the 4EY7 complex, the distance between the CZ3 atoms of the Trp86 and Trp286
-indole rings is measured as \SI{15.6}{\angstrom}, and donepezil is observed to span
-this distance and to contact both residues.
+gorge, and its architecture is shown in Figure~\ref{fig:structure}(B), where the
+gorge consists of two aromatic residues at its two ends, a gate residue between them,
+and the catalytic triad. Trp86 is located at the catalytic anionic site (CAS)
+adjacent to the Ser203--His447--Glu334 triad, while Trp286 is located at the
+peripheral anionic site (PAS) near the mouth of the gorge. Tyr337 is located between
+the two sites and adopts different rotamers in different complexes, and is therefore
+referred to as the gate. In the 4EY7 complex, the distance between the CZ3 atoms of
+the Trp86 and Trp286 indole rings was measured as \SI{15.6}{\angstrom}, and donepezil
+was observed to span this distance and to contact both residues.
 
-The design principle described above is translated into a testable form in terms of
+The design principle described above was translated into a testable form in terms of
 this architecture, namely that two closely related inhibitors are distinguished by
 how persistently each of them engages the two ends of the gorge and by its position
 along the axis between them. A fixed panel of fourteen gorge-lining residues, i.e.
-residues 72, 74, 86, 121, 124, 203, 286, 295, 297, 334, 337, 338, 341 and 447, is
+residues 72, 74, 86, 121, 124, 203, 286, 295, 297, 334, 337, 338, 341 and 447, was
 used throughout this work, so that the pose-geometry, MM/GBSA and molecular-dynamics
-descriptors are calculated on the same positions and remain comparable with one
-another.
-The molecular-dynamics descriptors defined in Section~\ref{sec:mddesc} follow
-directly from this geometry, i.e. the contact occupancies at Trp86 and at Trp286 and
-at both residues simultaneously, the rotameric behaviour of Tyr337, and the
-projection of the ligand on the Trp86--Trp286 axis. The preparation of the receptor,
-including the treatment of the loops that are not resolved in the crystal structure,
-is described in Section~\ref{sec:md}, since it becomes relevant only once a force
-field is applied.
+descriptors were calculated on the same positions and remained comparable with one
+another. The molecular-dynamics descriptors defined in Section~\ref{sec:mddesc}
+followed directly from this geometry, i.e. the contact occupancies at Trp86 and at
+Trp286 and at both residues simultaneously, the rotameric behaviour of Tyr337, and
+the projection of the ligand on the Trp86--Trp286 axis. The preparation of the
+receptor, including the treatment of the loops that are not resolved in the crystal
+structure, is described in Section~\ref{sec:md}, since it became relevant only once a
+force field was applied.
 
 \subsection{Docking protocol and its validation}
 
@@ -81,52 +80,52 @@ field is applied.
   \label{fig:redock}
 \end{figure}
 
-All ligands are docked into the prepared 4EY7 receptor by using AutoDock Vina
-\citep{vina} through its Python bindings. The search box is a cube of
+All ligands were docked into the prepared 4EY7 receptor by using AutoDock Vina
+\citep{vina} through its Python bindings. The search box was a cube of
 \SI{30}{\angstrom} per side, centred at $(-14.257, -42.544, 30.646)$~\AA{}, which
-lies midway between the CAS and the PAS so that poses spanning the gorge are
-accessible. The exhaustiveness is set to 32. Ligand structures are generated from the
-standardised SMILES by adding hydrogens, embedding a single conformer with the
-ETKDGv3 method under a fixed random seed, and optimising it with the MMFF94 force
-field, all of which is performed by using RDKit \citep{rdkit}; the resulting
-structures are converted to the PDBQT format by using Meeko \citep{meeko}. Each
-ligand is docked with three independent seeds, and the pose-geometry descriptors
-defined in Section~\ref{sec:rungs} are calculated on the top-ranked pose of each seed
-and reduced to their median, with the spread across seeds retained so that unstable
-poses can be identified.
+lies midway between the CAS and the PAS so that poses spanning the gorge were
+accessible, and the exhaustiveness was set to 32. Ligand structures were generated
+from the standardised SMILES by adding hydrogens, by embedding a single conformer
+with the ETKDGv3 method under a fixed random seed, and by optimising it with the
+MMFF94 force field, all of which was performed by using RDKit \citep{rdkit}, and the
+resulting structures were converted to the PDBQT format by using Meeko
+\citep{meeko}. Each ligand was docked with three independent seeds, and the
+pose-geometry descriptors defined in Section~\ref{sec:rungs} were calculated on the
+top-ranked pose of each seed and reduced to their median, with the spread across
+seeds retained so that unstable poses could be identified.
 
-The protocol is validated by redocking four ligands whose complexes with hAChE have
-been solved, with five seeds per ligand and a pose counted as successful when its RMSD
-from the crystal pose is below \SI{2.0}{\angstrom}. Donepezil, which is the ligand of
-4EY7 itself, is reproduced at $0.745 \pm 0.009$~\AA{} in five of five runs, as shown in
-Figure~\ref{fig:redock}(A), and territrem~B is reproduced at
-$0.740 \pm 0.012$~\AA{} in five of five runs. The remaining two ligands are not
-reproduced as well. Galantamine gives $2.463 \pm 1.709$~\AA{} and succeeds in four of
-five runs, and huperzine~A gives $3.098 \pm 0.011$~\AA{} and fails in all five. The
-failure of huperzine~A is systematic rather than stochastic, since the spread across
-seeds is only \SI{0.011}{\angstrom}, and it therefore requires an explanation before
-the protocol can be used.
+The protocol was validated by redocking four ligands whose complexes with hAChE have
+been solved, with five seeds per ligand and a pose counted as successful when its
+RMSD from the crystal pose was below \SI{2.0}{\angstrom}. Donepezil, which was the
+ligand of 4EY7 itself, was reproduced at $0.745 \pm 0.009$~\AA{} in five of five
+runs, as shown in Figure~\ref{fig:redock}(A), and territrem~B was reproduced at
+$0.740 \pm 0.012$~\AA{} in five of five runs. The remaining two ligands were not
+reproduced as well. Galantamine gave $2.463 \pm 1.709$~\AA{} and succeeded in four of
+five runs, and huperzine~A gave $3.098 \pm 0.011$~\AA{} and failed in all five. The
+failure of huperzine~A was systematic rather than stochastic, since the spread across
+seeds was only \SI{0.011}{\angstrom}, and it therefore required an explanation before
+the protocol could be used.
 
-Two explanations are tested. The first is that the search box is too large for small
-ligands, which is examined by repeating the docking with boxes of 18, 22, 26 and
-\SI{30}{\angstrom} per side. The RMSD of huperzine~A is between 3.05 and
-\SI{3.18}{\angstrom} across all four box sizes, so box size is not the cause. The
-second is that the single receptor conformation of 4EY7 cannot accommodate these
-ligands. This is examined by docking each ligand into the structure of its own
-complex, and both of them succeed, since huperzine~A is reproduced at
+Two explanations were tested. The first was that the search box is too large for
+small ligands, which was examined by repeating the docking with boxes of 18, 22, 26
+and \SI{30}{\angstrom} per side. The RMSD of huperzine~A was between 3.05 and
+\SI{3.18}{\angstrom} across all four box sizes, so that box size was not the cause.
+The second was that the single receptor conformation of 4EY7 cannot accommodate these
+ligands. This was examined by docking each ligand into the structure of its own
+complex, and both of them succeeded, since huperzine~A was reproduced at
 \SI{0.23}{\angstrom} in 4EY5, as shown in Figure~\ref{fig:redock}(B), and galantamine
-at \SI{0.81}{\angstrom} in 4EY6. The same ligand and the same protocol fail in 4EY7,
-as shown in Figure~\ref{fig:redock}(C), so that the two panels differ only in the
-receptor. The side chain of Tyr337, which forms the gate between the two sites,
+at \SI{0.81}{\angstrom} in 4EY6. The same ligand and the same protocol failed in
+4EY7, as shown in Figure~\ref{fig:redock}(C), so that the two panels differ only in
+the receptor. The side chain of Tyr337, which forms the gate between the two sites,
 differs by \SI{2.53}{\angstrom} between 4EY5 and 4EY7 and occludes the true
-huperzine~A pose in the latter. The limitation is
-therefore the rigidity of the receptor rather than the docking protocol, which is the
-observation that motivates the ensemble-docking procedure described in
-Section~\ref{sec:rungs} and, ultimately, the molecular dynamics of
-Section~\ref{sec:md}. A third observation from the same experiments is that Vina is
-strongly stochastic for small ligands, since galantamine gave 5.88 and
-\SI{1.60}{\angstrom} on different seeds under otherwise identical settings, and this
-is the reason that seeds are fixed and three replicates are run for every ligand.
+huperzine~A pose in the latter. The limitation was therefore the rigidity of the
+receptor rather than the docking protocol, which is the observation that motivated
+the ensemble-docking procedure described in Section~\ref{sec:rungs} and, ultimately,
+the molecular dynamics of Section~\ref{sec:md}. A third observation from the same
+experiments was that Vina is strongly stochastic for small ligands, since galantamine
+gave 5.88 and \SI{1.60}{\angstrom} on different seeds under otherwise identical
+settings, and this was the reason that seeds were fixed and that three replicates
+were run for every ligand.
 
 \begin{figure}[tb]
   \centering
@@ -139,97 +138,98 @@ is the reason that seeds are fixed and three replicates are run for every ligand
 \end{figure}
 
 Since the pose-geometry and molecular-dynamics descriptors are defined in terms of
-residue contacts
-rather than RMSD, the protocol is validated a second time at the level of
-interactions. Interaction fingerprints are calculated for the crystal pose and for
-the redocked pose of donepezil by using ProLIF \citep{prolif2021}, with bond orders
-transferred from the docked structure so that the two poses carry identical chemistry
-and differ only in their coordinates. The binding mode of the crystal pose is shown in
-Figure~\ref{fig:interactions}(a), in which every residue contacting the ligand is
-drawn and the colour of the connecting edge gives the type of interaction that is
-detected. The two fingerprints are compared in Figure~\ref{fig:interactions}(b), which
-resolves each contact by residue and by interaction type and distinguishes the crystal
-pose from the docked one. Six residues are contacted in both poses, five in the
-crystal pose only, and two in the docked pose only. Every typed interaction at the three named sites is
-recovered, i.e. the hydrophobic and $\pi$-stacking interactions at Trp86 and at
-Trp286 and the cation--$\pi$ and hydrophobic interactions at Tyr337, and what is lost
-on docking is van der Waals contact alone with Ser203 and His447. The binding mode on which the
-later descriptors depend is therefore reproduced, although the typing itself is used
-only for validation here and is not carried into any descriptor set.
+residue contacts rather than RMSD, the protocol was validated a second time at the
+level of interactions. Interaction fingerprints were calculated for the crystal pose
+and for the redocked pose of donepezil by using ProLIF \citep{prolif2021}, with bond
+orders transferred from the docked structure so that the two poses carried identical
+chemistry and differed only in their coordinates. The binding mode of the crystal
+pose is shown in Figure~\ref{fig:interactions}(a), in which every residue contacting
+the ligand is drawn and the colour of the connecting edge gives the type of
+interaction that was detected. The two fingerprints are compared in
+Figure~\ref{fig:interactions}(b), which resolves each contact by residue and by
+interaction type and distinguishes the crystal pose from the docked one. Six residues
+were contacted in both poses, five in the crystal pose only, and two in the docked
+pose only. Every typed interaction at the three named sites was recovered, i.e. the
+hydrophobic and $\pi$-stacking interactions at Trp86 and at Trp286 and the
+cation--$\pi$ and hydrophobic interactions at Tyr337, and what was lost on docking was
+van der Waals contact alone with Ser203 and His447. The binding mode on which the
+later descriptors depend was therefore reproduced, although the typing itself was
+used only for validation here and was not carried into any descriptor set.
 
 \subsection{Dataset and activity-cliff definition}\label{sec:dataset}
 
-The dataset is constructed in three steps, i.e. the selection of the target, the
+The dataset was constructed in three steps, i.e. the selection of the target, the
 curation of its activity data, and the assembly of pairs of near-identical ligands
 that differ sharply in potency together with pairs that are equally similar but do
-not. Six candidate targets are screened against three entry criteria, namely at
+not. Six candidate targets were screened against three entry criteria, namely at
 least 80 compounds surviving curation, a potency range of at least 3 log units, and
-at least 25 activity cliffs. Two of the six satisfy all three criteria, with the
-remaining four failing on the number of cliffs. Among the pairs that satisfy the
+at least 25 activity cliffs. Two of the six satisfied all three criteria, with the
+remaining four failing on the number of cliffs. Among the pairs that satisfied the
 similarity and potency criteria, those whose two members are stereoisomers of one
-another are counted separately from those that differ in constitution, for the reason
-given in Section~\ref{sec:artefacts}, and only the latter are informative for the
-comparison made in this work. Acetylcholinesterase is selected because it is the only
-target screened in which the constitutional pairs dominate, i.e. 100 constitutional
-pairs against 10 stereochemical ones, and because the dual-site architecture
-described in Section~\ref{sec:site} gives a mechanistic reason to expect its cliffs
-to be geometric in origin.
+another were counted separately from those that differ in constitution, for the
+reason given in Section~\ref{sec:artefacts}, and only the latter were informative for
+the comparison made in this work. Acetylcholinesterase was selected because it was
+the only target screened in which the constitutional pairs dominated, i.e. 100
+constitutional pairs against 10 stereochemical ones, and because the dual-site
+architecture described in Section~\ref{sec:site} gives a mechanistic reason to expect
+its cliffs to be geometric in origin.
 
-Activity data for CHEMBL220 are retrieved from ChEMBL, and a record is retained only
-when it comes from a binding assay, reports IC\textsubscript{50}, $K_\mathrm{i}$ or
-$K_\mathrm{d}$ with an exact relation and in nanomolar units, carries a pChEMBL
-value, is free of the data-validity flags assigned by ChEMBL itself, and is not
-marked as a potential duplicate. A single assay type is then retained, which is the
-most frequent one and is IC\textsubscript{50} in this case, since a pair formed from an
-IC\textsubscript{50} measurement and a $K_\mathrm{i}$ measurement can satisfy a cliff criterion
-by virtue of the assay rather than of the chemistry. Structures are standardised by
-stripping salts, by retaining the largest covalent fragment as the parent, and by
-neutralising formal charges introduced by the deposited representation, and
-structures below six heavy atoms are removed. Replicate measurements of the same
-standardised structure are collapsed to their median, and a structure whose
-replicates disagree by more than one log unit, measured as their standard deviation,
-is discarded rather than averaged, because a compound measured inconsistently can
-enter a cliff pair on the strength of its own measurement error. The curated set
-consists of 5{,}609 compounds spanning pChEMBL 4.00 to 10.96.
+Activity data for CHEMBL220 were retrieved from ChEMBL, and a record was retained
+only when it came from a binding assay, reported IC\textsubscript{50},
+$K_\mathrm{i}$ or $K_\mathrm{d}$ with an exact relation and in nanomolar units,
+carried a pChEMBL value, was free of the data-validity flags assigned by ChEMBL
+itself, and was not marked as a potential duplicate. A single assay type was then
+retained, which was the most frequent one and was IC\textsubscript{50} in this case,
+since a pair formed from an IC\textsubscript{50} measurement and a $K_\mathrm{i}$
+measurement can satisfy a cliff criterion by virtue of the assay rather than of the
+chemistry. Structures were standardised by stripping salts, by retaining the largest
+covalent fragment as the parent, and by neutralising formal charges introduced by the
+deposited representation, and structures below six heavy atoms were removed.
+Replicate measurements of the same standardised structure were collapsed to their
+median, and a structure whose replicates disagreed by more than one log unit,
+measured as their standard deviation, was discarded rather than averaged, because a
+compound measured inconsistently can enter a cliff pair on the strength of its own
+measurement error. The curated set consisted of 5{,}609 compounds spanning pChEMBL
+4.00 to 10.96.
 
-Structural similarity is computed as the Tanimoto coefficient on binary ECFP4
+Structural similarity was computed as the Tanimoto coefficient on binary ECFP4
 fingerprints, i.e. Morgan fingerprints of radius 2 folded to 2{,}048 bits. A pair of
-compounds is treated as near-identical when its Tanimoto coefficient is at least
-0.90, and as an activity cliff when, in addition, the two members differ in pChEMBL
+compounds was treated as near-identical when its Tanimoto coefficient was at least
+0.90, and as an activity cliff when, in addition, the two members differed in pChEMBL
 by at least 2.0 log units, which corresponds to a hundredfold difference in potency.
-Within the curated set, 421 pairs clear the similarity criterion with a potency
-difference of at least one log unit, 110 of these reach the hundredfold criterion,
-and 100 of those 110 are constitutional. The compound pool is then filtered for
-simulation feasibility, with a compound retained only when it is composed of the
-elements H, C, N, O, F, S, Cl, Br, I and P, carries no radical electrons, has a
-molecular weight between 150 and 700~Da, has at most 55 heavy atoms and
-at most 18 rotatable bonds, and can be embedded in three dimensions by ETKDGv3. This
-filter removes 239 of the 5{,}609 compounds, most of them on molecular weight or on
-rotatable-bond count. It is applied to the whole pool before any pairing and not to
+Within the curated set, 421 pairs cleared the similarity criterion with a potency
+difference of at least one log unit, 110 of these reached the hundredfold criterion,
+and 100 of those 110 were constitutional. The compound pool was then filtered for
+simulation feasibility, with a compound retained only when it was composed of the
+elements H, C, N, O, F, S, Cl, Br, I and P, carried no radical electrons, had a
+molecular weight between 150 and 700~Da, had at most 55 heavy atoms and at most 18
+rotatable bonds, and could be embedded in three dimensions by ETKDGv3. This filter
+removed 239 of the 5{,}609 compounds, most of them on molecular weight or on
+rotatable-bond count. It was applied to the whole pool before any pairing and not to
 the pairs afterwards, because a pair is lost as soon as either of its two members is
-removed, so that filtering the pool first keeps every surviving pair intact by
-construction. Of the 100 constitutional cliff pairs, 97 survive this filter with both
-members intact, and those 97 pairs are formed from 99 distinct compounds.
+removed, so that filtering the pool first kept every surviving pair intact by
+construction. Of the 100 constitutional cliff pairs, 97 survived this filter with both
+members intact, and those 97 pairs were formed from 99 distinct compounds.
 
-A control pair is defined as a pair that is near-identical under the same similarity
-floor of 0.90 but whose two members differ in pChEMBL by at most 0.30 log units,
-i.e. by less than twofold, so that the two groups differ in the property under test
-and in as little else as possible. Stereoisomer pairs are excluded here on the same
-grounds as above, and controls are drawn so as to reproduce the joint distribution of
-similarity and mean potency of the cliff pairs, binned into four similarity intervals
-and five potency intervals, with each control compound used in one pair only. The
-procedure yields 86 control pairs formed from 172 compounds, and the matching is
-close on both matched quantities, since the median Tanimoto coefficient is 1.000 for
-the cliff pairs against 0.993 for the controls and the mean of the pair-mean
-potencies is 6.64 against 6.58, while the quantity under test differs by
-construction, with a mean potency difference of 2.66 log units against 0.13. The
-final set therefore consists of 271 ligands and 183 pairs, i.e. 97 cliff pairs and 86
-control pairs. A ligand is prepared and simulated once while a pair refers to two
-ligands, since a compound may belong to more than one pair, and the two tables are
-kept separate throughout for this reason. The dominant protonation state of each
-ligand at pH 7.4 is assigned by a set of explicit rules, and every ligand in the
-final set carries a net positive charge, with 170 ligands at $+1$ and 101 at $+2$,
-which is consistent with the cation--$\pi$ recognition at Trp86 described in
+A control pair was defined as a pair that was near-identical under the same
+similarity floor of 0.90 but whose two members differed in pChEMBL by at most 0.30
+log units, i.e. by less than twofold, so that the two groups differed in the property
+under test and in as little else as possible. Stereoisomer pairs were excluded here
+on the same grounds as above, and controls were drawn so as to reproduce the joint
+distribution of similarity and mean potency of the cliff pairs, binned into four
+similarity intervals and five potency intervals, with each control compound used in
+one pair only. The procedure yielded 86 control pairs formed from 172 compounds, and
+the matching was close on both matched quantities, since the median Tanimoto
+coefficient was 1.000 for the cliff pairs against 0.993 for the controls and the mean
+of the pair-mean potencies was 6.64 against 6.58, while the quantity under test
+differed by construction, with a mean potency difference of 2.66 log units against
+0.13. The final set therefore consisted of 271 ligands and 183 pairs, i.e. 97 cliff
+pairs and 86 control pairs. A ligand was prepared and simulated once while a pair
+refers to two ligands, since a compound may belong to more than one pair, and the two
+tables were kept separate throughout for this reason. The dominant protonation state
+of each ligand at pH 7.4 was assigned by a set of explicit rules, and every ligand in
+the final set carried a net positive charge, with 170 ligands at $+1$ and 101 at
+$+2$, which is consistent with the cation--$\pi$ recognition at Trp86 described in
 Section~\ref{sec:site}. The division of this set into a development part and a sealed
 test part is described in Section~\ref{sec:splits}.
 

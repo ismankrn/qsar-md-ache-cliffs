@@ -37,7 +37,15 @@ drafted section; it exits non-zero if an enforced rule fails.
    only as a whole. Every panel's content was discussed, so nothing was missing from the
    argument, and a reader still had no way to tell which panel to look at.
 
-Voice is matched to those papers: present-tense passive for procedure, "by using X",
+7. Procedure in Methods is written in the past tense. The reference papers are split
+   on this, with the 2018 BCSJ paper fully past-tense passive and the 2019 Kanazawa
+   paper present-tense, and the author settled it in favour of the past. Three kinds
+   of present tense stay. A pointer to the paper's own apparatus, as in "is shown in
+   Figure~2"; a timeless fact about the protein or the chemistry, as in "Trp86 is
+   located at the catalytic anionic site"; and a general claim that is not a step
+   taken here, as in "no stereo-blind fingerprint can resolve such a pair".
+
+Voice is matched to those papers: past-tense passive for procedure, "by using X",
 "with the PDB ID being", "as shown in Figure~N", "i.e." for enumeration, and a roadmap
 sentence opening each section. Register is matched; the non-native constructions in the
 sources are not reproduced.
