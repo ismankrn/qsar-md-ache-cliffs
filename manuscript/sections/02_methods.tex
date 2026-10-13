@@ -233,34 +233,57 @@ $+2$, which is consistent with the cation--$\pi$ recognition at Trp86 described 
 Section~\ref{sec:site}. The division of this set into a development part and a sealed
 test part is described in Section~\ref{sec:splits}.
 
-\subsection{Two fingerprint artefacts, at two different stages}\label{sec:artefacts}
-\TODO{Keep these separate -- an earlier draft of this subsection merged them and
-  attributed the wrong one to the AChE set.}
+\subsection{Limitations of the fingerprint that defines an activity
+cliff}\label{sec:artefacts}
 
-\paragraph{Stereochemical cliffs at target screening.} Enantiomer and
-diastereomer pairs reach Tanimoto 1.0 under ECFP, which does not encode
-stereochemistry, and a naive similarity-plus-potency criterion counts them as
-maximal-similarity cliffs. No stereo-blind fingerprint can resolve such a pair by
-construction while any 3D method resolves it trivially, so a benchmark dominated by
-them is biased toward structure before a model is fitted. This is what disqualified
-four of the six targets screened, since BACE1 returned 101 stereochemical cliffs against
-5 constitutional. Acetylcholinesterase inverts that, 100 against 10, and
-\textbf{every pair in the final set is constitutional} -- \texttt{same\_formula} is
-false for all 97 and the minimum heavy-atom difference is 1.
+The criterion that defines an activity cliff in this work combines a difference in
+potency with a structural similarity, and that similarity is a fingerprint, so the
+set of cliffs that the criterion returns inherits whatever the fingerprint cannot
+see. Two such limitations act at two different stages of the construction described
+in Section~\ref{sec:dataset}, and both of them were measured rather than assumed. The
+first is that ECFP does not encode stereochemistry, so that a pair of enantiomers or
+of diastereomers reaches a Tanimoto coefficient of exactly 1.0 and a criterion that
+combines similarity with a potency difference counts such a pair as a
+maximal-similarity cliff. No stereo-blind fingerprint can resolve such a pair by
+construction, while any method that uses three-dimensional coordinates resolves it
+trivially, so a benchmark dominated by these pairs favours structure-based
+descriptors before a single model has been fitted. Pairs were therefore classified by
+comparing the canonical SMILES of their two members with stereochemistry stripped,
+and it was this classification that disqualified four of the six targets screened,
+since BACE1 returned 101 stereochemical pairs against 5 constitutional ones.
+Acetylcholinesterase inverts that ratio at 100 against 10, and every pair in the final
+set is constitutional, since the two members differ in molecular formula in all 97
+pairs and the smallest difference in heavy-atom count is one.
 
-\paragraph{Binary saturation at pair selection.} A separate problem affects the
-pairs that do enter. Binary ECFP4 reports Tanimoto exactly 1.000 for 49 of the 97
-constitutional cliff pairs, molecules a median of four and up to eight heavy atoms
-apart; count-based ECFP4 separates the same pairs at a median of 0.878. Folding
-counts to bits discards the multiplicity that distinguishes them.
-\TODO{State that the selection criterion is itself the binary fingerprint --
-  verified bit-identical to the audit's t\_bit column -- so the measure that chose
-  these pairs is the one that cannot tell them apart.}
+The second limitation affects the pairs that do enter the set. Binary ECFP4 reports a
+Tanimoto coefficient of exactly 1.000 for 49 of the 97 constitutional cliff pairs,
+although the two members of those pairs differ by a median of 4 and by as many as 8
+heavy atoms and differ in potency by a median of 2.51 log units. Count-based ECFP4,
+which retains the number of times each substructure occurs rather than only whether
+it occurs at all, separates the same 49 pairs at a median coefficient of 0.878.
+Folding counts to bits therefore discards exactly the multiplicity that distinguishes
+a molecule from its longer homologue. This is not only an observation about the
+pairs, because the criterion that selected them is the binary fingerprint itself, and
+the similarity recorded at selection was verified to be identical to the audited
+binary coefficient for all 97 pairs. The measure that chose these pairs is thus the
+measure that cannot tell their two members apart, and a model given only that measure
+has no feature on which to place them differently.
 
-\NOTE{Direction matters and is worth saying explicitly: the stereochemical artefact
-  biases cliff benchmarks \emph{toward} structure-based methods, while the subset
-  artefact in Section~\ref{sec:subset} biases a partial expensive descriptor set
-  \emph{toward} itself. Having both measured in one study is the point.}
+Both limitations were carried forward rather than removed, and they were handled in
+different ways because they are not the same kind of problem. Stereochemical pairs
+were excluded at target screening and again at control selection, so that no pair in
+this work rests on them. The saturation of the binary fingerprint was retained,
+because removing it would have meant changing the definition of the set after the set
+had been selected, and the two-dimensional descriptors defined in
+Section~\ref{sec:rungs} were instead scored as binary ECFP4 and as count-based ECFP4
+combined with physicochemical descriptors, with the stronger of the two taken, so
+that the comparison does not rest on whichever representation happens to suit the
+quantity being predicted. The two limitations are also worth separating because they
+bias in opposite directions. The stereochemical one favours descriptors derived from
+three-dimensional structure, while the confound examined in Section~\ref{sec:subset}
+favours an expensive descriptor set that is available for only part of the data, and
+measuring both in a single study is what allows each of them to be reported with a
+direction rather than only as a caveat.
 
 \subsection{Splits}\label{sec:splits}
 \TODO{Connected-component splits over the similarity graph, seed 20260902, five
