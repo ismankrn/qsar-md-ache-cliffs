@@ -55,63 +55,17 @@ logical pipeline order, not the order in which the work happened.
   `14g`/`14h` (vast2, 14h's 23 unfinished runs were folded into 14i/14j/14k),
   `14c_md_runs_repl_pilot.csv` (12 replicates, vast2). With `14l` placed, all 217 phase-1
   runs have a host.
-- **OPEN AT DRAFTING: the rung-4 descriptors have no citations yet.** They were
-  assembled from the AChE CAS/PAS bridging hypothesis plus standard MD analysis
-  practice, not from a literature survey. Most are established observables --
-  contact occupancy (the structural-interaction-fingerprint family, extended to
-  trajectories), ligand RMSD from the docked pose, RMSF, water-mediated bridges,
-  chi1 rotamer analysis -- and CAS-PAS bridging is a long-standing theme in AChE
-  pharmacology. `depth_mean`/`depth_sd`, the projection on the CAS->PAS axis, is
-  our own construction, as is the design rule that every descriptor must be a
-  persistence, a fluctuation or an event count rather than a frame-averaged rung-2
-  quantity. A Methods section introducing 35 descriptors with no references will be
-  read as invented ones. Two things to settle before submission: verified citations
-  per descriptor group, and whether anyone has already used MD descriptors on
-  activity cliffs -- that determines how the novelty claim must be worded.
-
-## Where the ladder stands
-
-| Rung | Descriptors | Framing B, best R² |
-|---|---|---:|
-| 1 | 2D fingerprints + physicochemical | **+0.200** |
-| — | raw docking score | cliff/control separation −0.03 kcal/mol |
-| 2 | static pose geometry | +0.167 |
-| 3 | single-snapshot MM/GBSA | −0.055 |
-
-After adjusting for molecular size, **0 of 19 descriptors** separate cliff
-pairs from control pairs. No static structure-based descriptor explains these
-activity cliffs, and the CAS–PAS bridging hypothesis is unsupported by both
-geometry and energetics.
-
-`docking/poses/` is not versioned: 1,416 files, 16 MB, regenerable by
-`run_docking.py` with its fixed seeds, or moved with `scripts/sync.sh`.
-
-## The size confound
-
-Cliff partners differ by 4.4 heavy atoms on average, controls by 1.8, so any
-size-correlated descriptor separates the groups for the wrong reason. Four
-descriptors that looked significant — `n_contacts_4A`, `dSASA`,
-`dG_nonpolar`, `axis_span_frac` — are size artefacts.
-
-Matching harder does not fix it. Across all 1,911 similar AChE pairs, potency
-difference grows with size difference: pairs differing by 0–2 heavy atoms are
-iso-potent 48% of the time, pairs differing by 6–9 only 18%. Size-matched
-iso-potent controls are intrinsically rare. `rebuild_controls.py` records the
-attempt — it cost 26 of 86 control pairs and still left a 2.9 vs 4.4 gap, so
-it is not used. The confound is handled statistically instead, in
-`size_adjusted_tests.py`.
-
-Note on that script: trust the **stratified** column, not the residual one.
-Regressing out a covariate that itself differs between groups can manufacture
-differences in the residuals.
-
-## Stages not yet run
-
-| Stage | Description | Cost |
-|---|---|---|
-| 11 | Ensemble docking — tests whether wrong poses explain the failure | free, ~6 days |
-| 12 | MD, 16 ligands — tests whether dynamics explains it | ~$43 |
-
+- **Citations checked 2026-10-13; see `29_literature_check.md`.** Three answers.
+  (1) No study was found that applies MD-derived descriptors to activity cliffs; the
+  closest precedent is Husby et al. 2015, whose abstract says structure-based methods
+  predict cliffs accurately but whose prospective cross-docking arm sits at a median 53%,
+  which used both partners' crystal structures and ran no 2D baseline. (2) Trajectory-averaged
+  interaction occupancy is **not** novel machinery -- ProLIF 2021 and a 2024 J. Cheminform.
+  paper do exactly this -- so the novelty is the application, the matched baseline and the
+  stated detection limit, and any wording implying otherwise must change. (3) `occ_*` is SIFt
+  (Deng 2004) per frame; `depth_mean` remains our own; the fluctuation and water descriptors
+  are still uncited. Subset-baseline inflation has no named treatment that two searches could
+  find, so claim "we are not aware of" rather than "first".
 - [`19b_rung4_85pairs.md`](19b_rung4_85pairs.md) — **rung 4 at 85 pairs: the gap is +0.032, 95% CI [-0.271, +0.393]. The preliminary +0.478 does not survive. `bootstrap_gap` had never run.** Projection says even 145 pairs will not clear zero; see the note there on size bias in the covered subset.
 
 - [`19c_rung4_three_framings.md`](19c_rung4_three_framings.md) — **framing A gap CI [-0.508, -0.071] excludes zero: rung 4 is significantly WORSE than 2D on potency. B and C undecided.** First interval in the project to exclude zero. The 2D baseline is not a subset artefact here (+0.380 full-dev vs +0.413 subset).

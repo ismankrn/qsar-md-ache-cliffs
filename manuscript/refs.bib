@@ -1,66 +1,116 @@
 % ============================================================================
-%  EVERY ENTRY BELOW IS A STUB AND MUST BE VERIFIED AGAINST THE PUBLISHER
-%  RECORD BEFORE SUBMISSION.
+%  Entries marked VERIFIED were checked against the publisher or PubMed record
+%  on 2026-10-13 and may be cited. Entries marked STUB were not, and must be
+%  before submission -- a plausible-looking wrong citation is worse than an
+%  obviously missing one.
 %
-%  These were written from memory to give \cite keys something to resolve to so
-%  the document compiles. Author lists, years, volumes, pages and DOIs are
-%  deliberately left incomplete rather than guessed: a plausible-looking wrong
-%  citation is worse than an obviously missing one, and this project has already
-%  shown how easily a convenient number survives unchecked.
-%
-%  Still open (see ../results/INDEX.md): whether subset-baseline inflation has
-%  been named in the literature, and whether MD-derived descriptors have been
-%  applied to activity cliffs before. Both change how the novelty is worded.
+%  See ../results/29_literature_check.md for what the search found and, more
+%  importantly, what it did not.
 % ============================================================================
 
-@misc{chembl,
-  title = {ChEMBL database},
-  note  = {VERIFY: cite the current database paper and the release used}
+% ---------------------------------------------------------------- VERIFIED --
+
+@article{husby2015,
+  author  = {Husby, Jarmila and Bottegoni, Giovanni and Kufareva, Irina and
+             Abagyan, Ruben and Cavalli, Andrea},
+  title   = {Structure-Based Predictions of Activity Cliffs},
+  journal = {Journal of Chemical Information and Modeling},
+  volume  = {55}, number = {5}, pages = {1062--1076}, year = {2015},
+  doi     = {10.1021/ci500742b},
+  note    = {VERIFIED journal/volume/pages/DOI. AUTHOR LIST NOT YET VERIFIED --
+             check before submission. Engage with this paper rather than citing
+             its abstract: template docking reaches a median 90\% but uses the
+             X-ray pose of the stronger ligand, the ALiBERO arm selects pockets
+             using the cliff labels and the authors call it purely
+             retrospective, and the prospective cross-docking arm sits at a
+             median 53\%. Both partners have crystal structures, the task is
+             pairwise ranking rather than regression, and no ligand-based
+             baseline is run anywhere in the paper.}
 }
 
-@misc{gromacs,
-  title = {GROMACS},
-  note  = {VERIFY: cite the version actually used; see environment-hpc.yml}
+@article{vantilborg2022,
+  author  = {van Tilborg, Derek and Alenicheva, Alisa and Grisoni, Francesca},
+  title   = {Exposing the Limitations of Molecular Machine Learning with
+             Activity Cliffs},
+  journal = {Journal of Chemical Information and Modeling},
+  volume  = {62}, number = {23}, pages = {5938--5951}, year = {2022},
+  doi     = {10.1021/acs.jcim.2c01073},
+  note    = {VERIFIED. 24 methods, 30 targets; descriptor-based models beat deep
+             learning on cliffs. A later correction fixes a train/test splitting
+             bug caused by mislabelled cliff pairs -- quote the corrected
+             numbers and say so.}
 }
 
-@misc{openff_sage,
-  title = {Open Force Field Sage 2.3.0},
-  note  = {VERIFY: cite the Sage force field paper and the toolkit}
+@article{dablander2023,
+  title   = {Exploring {QSAR} models for activity-cliff prediction},
+  journal = {Journal of Cheminformatics},
+  year    = {2023},
+  doi     = {10.1186/s13321-023-00708-w},
+  note    = {VERIFIED journal/year/DOI. AUTHOR LIST AND PAGES NOT YET VERIFIED.
+             Nine QSAR models on three targets; models frequently fail on
+             cliffs and ECFP remains the strongest representation.}
 }
 
-@misc{amber_ff14sb,
-  title = {ff14SB protein force field},
-  note  = {VERIFY}
+@article{sift2004,
+  author  = {Deng, Zhan and Chuaqui, Claudio and Singh, Juswinder},
+  title   = {Structural Interaction Fingerprint ({SIFt}): A Novel Method for
+             Analyzing Three-Dimensional Protein--Ligand Binding Interactions},
+  journal = {Journal of Medicinal Chemistry},
+  volume  = {47}, number = {2}, pages = {337--344}, year = {2004},
+  note    = {VERIFIED via PubMed record. The foundational residue-wise
+             interaction fingerprint; this is what the occ\_* descriptors are,
+             computed per frame instead of per structure.}
 }
 
-@misc{tip3p,
-  title = {TIP3P water model},
-  note  = {VERIFY}
+@article{prolif2021,
+  author  = {Bouysset, C{\'e}dric and Fiorucci, S{\'e}bastien},
+  title   = {{ProLIF}: A Library to Encode Molecular Interactions as
+             Fingerprints},
+  journal = {Journal of Cheminformatics},
+  year    = {2021},
+  doi     = {10.1186/s13321-021-00548-6},
+  note    = {VERIFIED DOI and scope: interaction fingerprints from MD
+             trajectories, docking and experimental structures. Used here for
+             the typed-interaction figures, and the reason trajectory-averaged
+             occupancy must not be claimed as new.}
 }
 
-@misc{rdkit,
-  title = {RDKit: open-source cheminformatics},
-  note  = {VERIFY: cite the version used}
+@article{ifp_md_2024,
+  title   = {Aggregated interaction fingerprints from molecular dynamics},
+  journal = {Journal of Cheminformatics},
+  year    = {2024},
+  doi     = {10.1186/s13321-024-00822-3},
+  note    = {TITLE AND AUTHORS NOT VERIFIED -- DOI is from a search result and
+             resolves to a J. Cheminform. 2024 paper that aggregates per-frame
+             interaction fingerprints into occupancies with a 30\% presence
+             threshold. Fetch the record and complete this entry; it is the
+             closest precedent for the occ\_* construction.}
 }
 
-@misc{sklearn,
-  title = {scikit-learn: machine learning in Python},
-  note  = {VERIFY}
-}
+% -------------------------------------------------------------------- STUB --
+% Software and data. Standard, but the version actually used must be cited, and
+% none of these has been checked against its publisher record.
 
-@misc{vina,
-  title = {AutoDock Vina},
-  note  = {VERIFY: cite the version used for docking and ensemble docking}
-}
+@misc{chembl,     title = {ChEMBL database},                 note = {STUB: cite the database paper and the release used}}
+@misc{gromacs,    title = {GROMACS},                         note = {STUB: cite the version in environment-hpc.yml}}
+@misc{openff_sage,title = {Open Force Field Sage 2.3.0},     note = {STUB: Sage paper plus the toolkit}}
+@misc{amber_ff14sb,title = {ff14SB protein force field},     note = {STUB}}
+@misc{tip3p,      title = {TIP3P water model},               note = {STUB}}
+@misc{rdkit,      title = {RDKit: open-source cheminformatics}, note = {STUB: cite the version used}}
+@misc{sklearn,    title = {scikit-learn: machine learning in Python}, note = {STUB}}
+@misc{vina,       title = {AutoDock Vina},                   note = {STUB: version used for docking and ensemble docking}}
+@misc{mdanalysis, title = {MDAnalysis},                      note = {STUB: used for trajectory analysis}}
+@misc{structure_4ey7, title = {Human acetylcholinesterase, PDB 4EY7}, note = {STUB: cite the structure paper, not the PDB ID}}
 
-@misc{moleculeace,
-  title = {MoleculeACE: a benchmark for activity cliff prediction},
-  note  = {VERIFY authorship, venue and year. This is the standard multi-target
-           activity-cliff benchmark and is the obvious vehicle for generalising
-           rungs 1--3 beyond one target; do not cite until checked.}
-}
-
-@misc{structure_4ey7,
-  title = {Crystal structure of human acetylcholinesterase, PDB 4EY7},
-  note  = {VERIFY: cite the structure paper, not just the PDB ID}
-}
+% ------------------------------------------------------------------ MISSING --
+% Searched for and not found; see ../results/29_literature_check.md
+%
+%  * MD-derived descriptors applied to activity cliffs -- no study found.
+%  * Subset-baseline inflation -- no named treatment found in two searches.
+%    Word any novelty claim as "we are not aware of", not "the first".
+%  * "Pharmacophore Modeling of Targets Infested with Activity Cliffs via
+%    Molecular Dynamics Simulation Coupled with QSAR" (KDR) -- a title exists
+%    but could not be retrieved. FIND IT; it is the one item that could change
+%    the answer to the question above.
+%  * Canonical citations for rmsf_*, n_bridge_water, gate_chi1_sd,
+%    gate_flips_per_ns -- not searched for yet.
