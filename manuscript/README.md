@@ -8,6 +8,10 @@ Figures resolve from `../figures` via `\graphicspath`; generated tables are
 if a value appears in the text, a CSV in `../results` should produce it, and
 `../results/INDEX.md` says which stage wrote which file.
 
+Results and Discussion are one section: each interpretation sits with the number it
+rests on, the cross-cutting argument is gathered in "What this study tested, and what
+it did not", and Limitations closes the section. `sections/04_discussion.tex` is gone.
+
 `\draftingtrue` in `main.tex` turns on line numbers and makes `\TODO` red. Set it
 false before submission and both disappear — but the `\TODO`s must be resolved
 first, not hidden.

@@ -1,4 +1,7 @@
-\section{Results}
+\section{Results and Discussion}
+\NOTE{Results and discussion are merged so each interpretation sits with the
+  number it rests on. The cross-cutting argument is gathered in
+  Section~\ref{sec:synthesis} at the end, and limitations after it.}
 
 \subsection{Dataset composition}
 \begin{figure}[tb]
@@ -40,6 +43,15 @@
   default representation rather than of this target.}
 \NOTE{Size confound: stage 10 found 0 of 19 descriptors survive a size adjustment,
   and four that looked significant are size artefacts.}
+
+\NOTE{Discussion. Two artefacts in this figure bias a cliff study in \emph{opposite}
+  directions, and that is the point of measuring both. Stereochemical cliffs favour
+  structure-based methods, because no stereo-blind fingerprint can resolve a
+  stereoisomer pair by construction while any 3D method resolves it trivially; they
+  are why four of six targets were rejected. Binary saturation favours nothing in
+  particular but corrupts the pair selection itself, since the criterion that chose
+  these pairs cannot tell molecules eight heavy atoms apart from identical. Neither
+  is specific to this target or to MD.}
 
 % ---------------------------------------------------------------------------
 \subsection{The ladder}
@@ -119,6 +131,14 @@
 \TODO{Prose. The portable sentence is: this study separates two $R^2$ values about
   0.30 apart and not less. Derived before any rung-4 run finished, and it held.}
 
+\NOTE{Discussion. This is what makes the null bounded rather than open-ended.
+  Differences larger than about 0.30 in $R^2$ are excluded; smaller ones are not
+  addressed, and the manuscript should say both halves. Panel (c) carries the
+  complementary point: the pessimistic measurement ceiling is 0.62, far above every
+  rung, so the variance the ladder fails to explain is real signal rather than assay
+  noise. The limitation is in the descriptors, not in the data -- which is why
+  "nothing to find" is not an available reading.}
+
 % ---------------------------------------------------------------------------
 \subsection{Descriptor reliability}
 \begin{figure}[tb]
@@ -138,6 +158,14 @@
   window 11 survive and 8 of them are contact occupancies.}
 \NOTE{The zero is the quotable number. How long a contact persists reproduces
   across seeds; how fast something fluctuates, at this length, largely does not.}
+
+\NOTE{Discussion. This is the most transferable result in the paper and the one
+  least tied to AChE. Anyone building descriptors from trajectories of this length
+  should expect persistence-type observables to survive a replicate test and
+  fluctuation and event-rate observables not to, and should run the test rather than
+  assume. Note also that the filter earns its place within this study: the filtered
+  set beats the unfiltered one on both pair endpoints, so this is not a diagnostic
+  that was merely interesting.}
 
 \TODO{Show that the filter earns its place: \framingB{} $+0.124$ filtered against
   $-0.054$ unfiltered; \framingC{} $0.793$ against $0.721$.}
@@ -165,6 +193,12 @@
   objection with data.}
 \NOTE{Do NOT quote the $+0.198$ as a result. It is the best of six cells computed
   together and it is the kind of number this paper exists to warn about.}
+
+\NOTE{Discussion. Trajectory length is not the lever, and the practical reading is
+  that these descriptors can be computed from 10 ns of simulation rather than 50, a
+  fivefold saving that answers the cost objection with data. What would move the
+  result is $n$: the resolution of 0.30 follows from 145 pairs, and only more pairs
+  or more targets change it. More nanoseconds do not.}
 
 % ---------------------------------------------------------------------------
 \subsection{A partial subset inflates an expensive descriptor set's apparent gain}
@@ -209,3 +243,40 @@
     than failed.}
   \input{../results/22_benchmark_si_clf.tex}
 \end{table}
+
+% ---------------------------------------------------------------------------
+\subsection{What this study tested, and what it did not}
+\label{sec:synthesis}
+
+\TODO{Draft the cross-cutting argument here. Beats, in order:}
+\NOTE{(1) Five descriptor rungs on three endpoints, one target, 145 pairs, with a
+  resolution of about 0.30 in $R^2$ stated in advance and holding. (2) No
+  structure-based rung is resolvably better than a fingerprint on any endpoint;
+  every structure-based interval crosses the rung-1 level. On \framingA{} the gap
+  is resolved and negative, which says rung 4 is worse rather than unproven. (3)
+  The measurement ceiling puts the unexplained variance beyond assay noise, so the
+  descriptors are the limitation. (4) Two measurement artefacts biasing in opposite
+  directions are quantified here and generalise past this target and past MD. (5)
+  Of three descriptor design classes only persistence survives a replicate test.
+  (6) Length is not the lever; $n$ is.}
+
+\NOTE{Positioning against the closest precedent belongs here as much as in the
+  introduction. \citet{husby2015} reports that structure-based methods predict
+  activity cliffs accurately; its prospective cross-docking arm sits at a median
+  53\%, both partners carry crystal structures, and no ligand-based baseline is
+  run. This study is the prospective case with a matched baseline, and its answer
+  is consistent with that arm rather than with the abstract.}
+
+% ---------------------------------------------------------------------------
+\subsection{Limitations}
+\TODO{State, not bury:}
+\NOTE{One target. 145 pairs and a 0.30 resolution. 25 ns with no production
+  replicates. Feature counts are not matched in the headline comparison (12 or 33
+  against 2265), and the matched-dimensionality arm is a robustness check rather
+  than a controlled experiment. Bootstrap levels are inflated by resampling inside
+  the folds, so medians are not performance. 18 checkpoints were lost, so 9 ligands
+  cannot be extended without a fresh run. \texttt{SVC(probability=True)} is
+  deprecated in scikit-learn 1.9 and removed in 1.11; replacing it changes
+  \framingC{} and must be done for rungs 2 and 4 together. The distance-only
+  occupancies overstate engagement where the ligand is near a residue without a
+  typed interaction, by up to 77 percentage points.}
