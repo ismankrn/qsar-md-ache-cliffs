@@ -132,8 +132,10 @@ def main() -> None:
                     arrowprops=dict(arrowstyle="-", lw=0.9, color=col, alpha=0.75,
                                     shrinkA=18, shrinkB=10))
     ax.set_xlim(-130, 750); ax.set_ylim(750, -130)
-    ax.set_title("(a) Donepezil in the crystal pose and the residues it contacts",
-                 fontsize=9.5)
+    # Panel letters only. The caption carries what each panel shows, and repeating it
+    # inside the figure doubles the text the reader has to get through.
+    ax.text(0.0, 1.0, "(a)", transform=ax.transAxes, fontsize=11, fontweight="bold",
+            va="top", ha="left")
     # The edge colours carry the interaction type and were unlabelled in the first draft.
     seen = []
     for k in sorted(set(xres.kind)):
@@ -168,8 +170,8 @@ def main() -> None:
     ax.grid(color="0.93", lw=0.6)
     ax.set_axisbelow(True)
     ax.spines[["top", "right"]].set_visible(False)
-    ax.set_title("(b) Does the docked pose recover the crystal interactions?",
-                 fontsize=9.5)
+    ax.text(-0.22, 1.0, "(b)", transform=ax.transAxes, fontsize=11, fontweight="bold",
+            va="top", ha="left")
     # Outside the axes: the first version sat on the TYR72 row and hid its only marker.
     ax.legend(handles=[Line2D([], [], marker="o", ls="", color="0.35", label="crystal"),
                        Line2D([], [], marker="s", ls="", color="0.35", label="docked")],
@@ -179,15 +181,9 @@ def main() -> None:
     only_x = set(ix.residue) - set(idk.residue)
     only_d = set(idk.residue) - set(ix.residue)
     shared = set(ix.residue) & set(idk.residue)
-    fig.suptitle("Reference binding mode, and docking checked at the level of contacts",
-                 fontsize=11, y=0.98)
-    fig.text(0.5, 0.012,
-             f"Interaction typing by ProLIF {prolif.__version__}; bond orders transferred "
-             f"from the docked SDF so both poses share one chemistry. "
-             f"{len(shared)} residues contacted in both poses, {len(only_x)} in the crystal "
-             f"only, {len(only_d)} in the docked pose only. Descriptive: nothing here enters "
-             f"any model.", ha="center", fontsize=7, color="0.35")
-    fig.tight_layout(rect=(0, 0.045, 1, 0.95))
+    # No suptitle and no footer. Both duplicated the caption, which is where the method,
+    # the counts and the scope belong; the figure carries only what must be seen.
+    fig.tight_layout()
     for ext in ("pdf", "png"):
         fig.savefig(FIGS/f"fig_interactions.{ext}", dpi=300)
     print(f"  -> figures/fig_interactions.pdf / .png")

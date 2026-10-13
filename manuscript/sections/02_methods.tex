@@ -1,10 +1,11 @@
 \section{Methods}
 
-In this section, we introduce the procedures to construct the descriptor ladder and
-to evaluate it. We first describe the target and its binding site, the docking
-protocol and its validation, and the construction of the activity-cliff dataset. We
-then describe the four descriptor rungs, the molecular dynamics simulations from
-which the fourth rung is derived, and the model suite on which all rungs are scored.
+In this section, we introduce the procedures to construct and to evaluate the
+descriptor sets compared in this work. We first describe the target and its binding
+site, the docking protocol and its validation, and the construction of the
+activity-cliff dataset. We then describe the four descriptor sets, the molecular
+dynamics simulations from which the last of them is derived, and the model suite on
+which all of them are scored.
 
 \subsection{Target and binding site}
 
@@ -13,7 +14,7 @@ which the fourth rung is derived, and the model suite on which all rungs are sco
   \includegraphics[width=\textwidth]{Figure1_hAChE_structure.pdf}
   \caption{\textbf{Human acetylcholinesterase and its catalytic gorge (PDB 4EY7).}
     (A)~Overall fold, rainbow-coloured from N- to C-terminus; donepezil in the
-    crystal pose marks the gorge as black spheres. (B)~Gorge architecture: Trp86 at
+    crystal pose marks the gorge as black spheres. (B)~The architecture of the gorge, formed by Trp86 at
     the catalytic anionic site, Trp286 at the peripheral anionic site, the swinging
     Tyr337 gate between them, and the Ser203--His447--Glu334 catalytic triad.
     The Trp86--Trp286 CZ3--CZ3 separation is 15.6~\AA{}, the span a bis-ligand must
@@ -23,61 +24,46 @@ which the fourth rung is derived, and the model suite on which all rungs are sco
 
 Human acetylcholinesterase (hAChE) is a therapeutic target in Alzheimer's disease.
 The enzyme hydrolyses acetylcholine, and its inhibition raises the synaptic
-concentration of this neurotransmitter. In addition, the peripheral anionic site of
-the enzyme has been reported to accelerate the aggregation of $\beta$-amyloid, and
-inhibitors that span both the catalytic and the peripheral site are therefore
-designed to address the two functions simultaneously \citep{grabowska2025}.
-Donepezil, which is the ligand in the structure used in this work, is such a
-dual-binding-site inhibitor.
+concentration of this neurotransmitter, which is the basis of the cholinergic
+treatment of the disease. Beyond this catalytic function, the peripheral anionic
+site of the enzyme has been reported to accelerate the aggregation of
+$\beta$-amyloid, and inhibitors that span both the catalytic and the peripheral site
+are therefore designed to address the two functions simultaneously
+\citep{grabowska2025}. Donepezil, which is the ligand in the structure used in this
+work, is such a dual-binding-site inhibitor. The simultaneous engagement of the two
+ends of the gorge is thus an established design principle rather than a premise
+introduced here, and it is this principle that the descriptor sets described in
+the present work are constructed to test.
 
-The receptor model is prepared from the X-ray crystal structure of recombinant human
-acetylcholinesterase (hAChE) in complex with donepezil, with the PDB ID being 4EY7
-\citep{cheung2012}, which is solved at a resolution of \SI{2.35}{\angstrom}. Chain~A
-is retained and the second copy in the asymmetric unit is discarded.
+The receptor model is prepared from the X-ray crystal structure of recombinant hAChE
+in complex with donepezil, with the PDB ID being 4EY7 \citep{cheung2012}, which is
+solved at a resolution of \SI{2.35}{\angstrom}. Chain~A is retained and the second
+copy in the asymmetric unit is discarded. The active site is located at the base of a
+narrow gorge, as shown in Figure~\ref{fig:structure}, and the gorge consists of two
+aromatic residues at its two ends, a gate residue between them, and the catalytic
+triad. Trp86 is located at the catalytic anionic site (CAS) adjacent to the
+Ser203--His447--Glu334 triad, while Trp286 is located at the peripheral anionic site
+(PAS) near the mouth of the gorge. Tyr337 is located between the two sites and adopts
+different rotamers in different complexes, and is therefore referred to as the gate.
+In the 4EY7 complex, the distance between the CZ3 atoms of the Trp86 and Trp286
+indole rings is measured as \SI{15.6}{\angstrom}, and donepezil is observed to span
+this distance and to contact both residues.
 
-The active site of hAChE is located at the base of a narrow gorge, as shown in
-Figure~\ref{fig:structure}. The gorge consists of two aromatic residues at its two
-ends, a gate residue between them, and the catalytic triad. Trp86 is located at the
-catalytic anionic site (CAS) adjacent to the Ser203--His447--Glu334 triad, while
-Trp286 is located at the peripheral anionic site (PAS) near the mouth of the gorge.
-Tyr337 is located between the two sites and adopts different rotamers in different
-complexes, and is therefore referred to as the gate. In the 4EY7 complex, the
-distance between the CZ3 atoms of the Trp86 and Trp286 indole rings is measured as
-\SI{15.6}{\angstrom}, and donepezil is observed to span this distance and to contact
-both residues.
-
-This architecture provides the mechanistic hypothesis that the descriptor ladder is
-designed to test. Following the dual-site rationale described above, we take the
-hypothesis to be that two closely related inhibitors are distinguished by
+The design principle described above is translated into a testable form in terms of
+this architecture, namely that two closely related inhibitors are distinguished by
 how persistently each of them engages the two ends of the gorge and by its position
 along the axis between them. A fixed panel of fourteen gorge-lining residues, i.e.
 residues 72, 74, 86, 121, 124, 203, 286, 295, 297, 334, 337, 338, 341 and 447, is
 used throughout this work, so that the pose-geometry, MM/GBSA and molecular-dynamics
-descriptors are calculated on the same positions and remain comparable between
-rungs.
-
-\NOTE{The dual-site rationale is placed here rather than only in the introduction
-  because it is what makes the hypothesis in the last paragraph a \emph{published}
-  one. The descriptor ladder tests an established design principle, not a premise
-  invented for this study, and that distinction should survive into the results.}
-\NOTE{Keep the disease context to these three sentences. The fuller account --
-  prevalence, the cholinergic hypothesis, where the approved inhibitors sit --
-  belongs in the introduction, and repeating it here would read as padding.}
-\NOTE{Style is matched to Kurniawan et al. 2018 (BCSJ) and 2019 (Sci. Rep. Kanazawa
-  Univ.): present-tense passive for procedure, "by using X [ref]", "with the PDB ID
-  being", "as shown in Figure~N", "i.e." for enumeration, and a roadmap sentence
-  opening the section. Register is matched; non-native constructions in the sources
-  are not reproduced.}
-\NOTE{Every number above is from the verified PDB record or measured from the
-  structure. The gorge is often described as about \SI{20}{\angstrom} deep; that
-  figure is not used because it was not verified and no argument needs it.}
-\NOTE{This paragraph is where the rung-4 descriptors originate and should be
-  referred back to when they are defined: \texttt{occ\_cas} and \texttt{occ\_pas}
-  are contact occupancies at these two tryptophans, \texttt{occ\_bridge} is both at
-  once, \texttt{gate\_chi1\_sd} and \texttt{gate\_flips\_per\_ns} follow Tyr337, and
-  \texttt{depth\_mean} is the projection on the Trp86--Trp286 axis.}
-\NOTE{Receptor preparation is described in Section~\ref{sec:md}, because the missing
-  loops matter only once a force field is applied.}
+descriptors are calculated on the same positions and remain comparable with one
+another.
+The molecular-dynamics descriptors defined in Section~\ref{sec:mddesc} follow
+directly from this geometry, i.e. the contact occupancies at Trp86 and at Trp286 and
+at both residues simultaneously, the rotameric behaviour of Tyr337, and the
+projection of the ligand on the Trp86--Trp286 axis. The preparation of the receptor,
+including the treatment of the loops that are not resolved in the crystal structure,
+is described in Section~\ref{sec:md}, since it becomes relevant only once a force
+field is applied.
 
 \subsection{Docking protocol and its validation}
 
@@ -88,44 +74,80 @@ rungs.
     (A)~Donepezil redocked into its own structure reproduces the crystal pose to
     0.75~\AA{} RMSD over five seeds. (B)~Huperzine~A docked into its own receptor
     (4EY5) succeeds. (C)~The same ligand cross-docked into 4EY7 fails at
-    3.10~\AA{}: the Tyr337 rotamer of this structure occludes the true pose.}
+    3.10~\AA{}, because the Tyr337 rotamer of this structure occludes the true
+    pose.}
   \label{fig:redock}
 \end{figure}
 
-\TODO{Prose and a table of the four validation ligands, from
-  results/06\_redocking\_validation.csv:}
-\NOTE{donepezil self 0.745 $\pm$ 0.009 \AA{}, 5/5 success; territrem~B cross
-  0.740 $\pm$ 0.012, 5/5; galantamine cross 2.463 $\pm$ 1.709, 4/5; huperzine~A
-  cross 3.098 $\pm$ 0.011, \textbf{0/5}. The box experiment
-  (06\_box\_experiment.csv) rules out a protocol artefact: huperzine~A sits at
-  3.05--3.18 \AA{} at box sizes 18, 22, 26 and 30 \AA{} alike. The failure is the
-  rigid receptor, which is the observation that motivates ensemble docking in
-  rung~2 and, ultimately, molecular dynamics in rung~4.}
+All ligands are docked into the prepared 4EY7 receptor by using AutoDock Vina
+\citep{vina} through its Python bindings. The search box is a cube of
+\SI{30}{\angstrom} per side, centred at $(-14.257, -42.544, 30.646)$~\AA{}, which
+lies midway between the CAS and the PAS so that poses spanning the gorge are
+accessible. The exhaustiveness is set to 32. Ligand structures are generated from the
+standardised SMILES by adding hydrogens, embedding a single conformer with the
+ETKDGv3 method under a fixed random seed, and optimising it with the MMFF94 force
+field, all of which is performed by using RDKit \citep{rdkit}; the resulting
+structures are converted to the PDBQT format by using Meeko \citep{meeko}. Each
+ligand is docked with three independent seeds, and the pose-geometry descriptors
+defined in Section~\ref{sec:rungs} are calculated on the top-ranked pose of each seed
+and reduced to their median, with the spread across seeds retained so that unstable
+poses can be identified.
+
+The protocol is validated by redocking four ligands whose complexes with hAChE have
+been solved, as shown in Figure~\ref{fig:redock}, with five seeds per ligand and a
+pose counted as successful when its RMSD from the crystal pose is below
+\SI{2.0}{\angstrom}. Donepezil, which is the ligand of 4EY7 itself, is reproduced at
+$0.745 \pm 0.009$~\AA{} in five of five runs, and territrem~B is reproduced at
+$0.740 \pm 0.012$~\AA{} in five of five runs. The remaining two ligands are not
+reproduced as well. Galantamine gives $2.463 \pm 1.709$~\AA{} and succeeds in four of
+five runs, and huperzine~A gives $3.098 \pm 0.011$~\AA{} and fails in all five. The
+failure of huperzine~A is systematic rather than stochastic, since the spread across
+seeds is only \SI{0.011}{\angstrom}, and it therefore requires an explanation before
+the protocol can be used.
+
+Two explanations are tested. The first is that the search box is too large for small
+ligands, which is examined by repeating the docking with boxes of 18, 22, 26 and
+\SI{30}{\angstrom} per side. The RMSD of huperzine~A is between 3.05 and
+\SI{3.18}{\angstrom} across all four box sizes, so box size is not the cause. The
+second is that the single receptor conformation of 4EY7 cannot accommodate these
+ligands. This is examined by docking each ligand into the structure of its own
+complex, and both of them succeed, since huperzine~A is reproduced at
+\SI{0.23}{\angstrom} in 4EY5 and galantamine at \SI{0.81}{\angstrom} in 4EY6. The side chain of Tyr337, which
+forms the gate between the two sites, differs by \SI{2.53}{\angstrom} between 4EY5
+and 4EY7 and occludes the true huperzine~A pose in the latter. The limitation is
+therefore the rigidity of the receptor rather than the docking protocol, which is the
+observation that motivates the ensemble-docking procedure described in
+Section~\ref{sec:rungs} and, ultimately, the molecular dynamics of
+Section~\ref{sec:md}. A third observation from the same experiments is that Vina is
+strongly stochastic for small ligands, since galantamine gave 5.88 and
+\SI{1.60}{\angstrom} on different seeds under otherwise identical settings, and this
+is the reason that seeds are fixed and three replicates are run for every ligand.
 
 \begin{figure}[tb]
   \centering
   \includegraphics[width=\textwidth]{fig_interactions.pdf}
   \caption{\textbf{The reference binding mode, and docking checked at the level of
-    contacts.} (a)~Donepezil in the crystal pose with the residues it contacts;
-    edge colour gives the interaction type. (b)~The same fingerprint computed for
-    the redocked pose. Six residues are contacted in both, five in the crystal only
-    and two in the docked pose only. Every \emph{typed} interaction at the three
-    named sites is recovered -- hydrophobic and $\pi$-stacking at Trp86 and Trp286,
-    cation--$\pi$ and hydrophobic at Tyr337 -- and what docking loses is van der
-    Waals contact alone with Ser203 and His447. Interaction typing by ProLIF;
-    bond orders are transferred from the docked structure so both poses share one
-    chemistry and differ only in coordinates.}
+    contacts.} (a)~Donepezil in the crystal pose with the residues it contacts,
+    where the colour of each edge gives the type of interaction. (b)~The same
+    fingerprint calculated for the redocked pose.}
   \label{fig:interactions}
 \end{figure}
 
-\TODO{Prose. This is a second, independent check on the docking protocol: Figure
-  \ref{fig:redock} validates it by RMSD, this one by interaction.}
-\NOTE{It also shows what the in-house descriptors summarise and what they discard.
-  Rung 2 and rung 4 are distance-based occupancies with no hydrogen-bond,
-  $\pi$-stacking or cation--$\pi$ distinction, so an independent tool is the honest
-  way to display the binding mode. Strictly descriptive: nothing from this figure
-  enters any model, and adding a typed descriptor family after the ladder had been
-  scored would be post hoc.}
+Since the pose-geometry and molecular-dynamics descriptors are defined in terms of
+residue contacts
+rather than RMSD, the protocol is validated a second time at the level of
+interactions, as shown in Figure~\ref{fig:interactions}. Interaction fingerprints are
+calculated for the crystal pose and for the redocked pose of donepezil by using
+ProLIF \citep{prolif2021}, with bond orders transferred from the docked structure so
+that the two poses carry identical chemistry and differ only in their coordinates.
+Six residues are contacted in both poses, five in the crystal pose only, and two in
+the docked pose only, and the colour of each edge in the figure gives the type of
+interaction that is detected. Every typed interaction at the three named sites is
+recovered, i.e. the hydrophobic and $\pi$-stacking interactions at Trp86 and at
+Trp286 and the cation--$\pi$ and hydrophobic interactions at Tyr337, and what is lost
+on docking is van der Waals contact alone with Ser203 and His447. The binding mode on which the
+later descriptors depend is therefore reproduced, although the typing itself is used
+only for validation here and is not carried into any descriptor set.
 
 \subsection{Dataset and activity-cliff definition}
 \TODO{ChEMBL target CHEMBL220 (human AChE); pChEMBL aggregation; similarity and
@@ -171,7 +193,7 @@ counts to bits discards the multiplicity that distinguishes them.
   difference, antisymmetric rows. C: cliff/control classification, ROC AUC,
   order-invariant pair features $[d\_a+d\_b,\,|d\_a-d\_b|]$.}
 
-\subsection{Descriptor rungs}
+\subsection{Descriptor rungs}\label{sec:rungs}
 \TODO{Rung 1: binary ECFP4, and count ECFP4 + RDKit2D -- both, because the winner
   depends on the framing. Rung 2: pose geometry on 4EY7 plus bridging features.
   Rung 2e: median over eight receptor conformations. Rung 3: single-snapshot
@@ -247,7 +269,7 @@ counts to bits discards the multiplicity that distinguishes them.
   what turns those numbers into 1.3 and 4.2~\AA{}. It is the same defect stage 16b
   found in the descriptor pipeline, and the archive still carries it.}
 
-\subsection{MD-derived descriptors}
+\subsection{MD-derived descriptors}\label{sec:mddesc}
 \TODO{33 descriptors, three design classes -- persistence, fluctuation, event
   count -- deliberately not frame-averaged rung-2 quantities. Table of
   definitions. 14 gorge-lining residues; CAS = Trp86, PAS = Trp286, gate = Tyr337.}
