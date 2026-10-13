@@ -78,7 +78,7 @@ def main() -> None:
                     rotation=90, va="top")
     ax.set_xlabel("Candidate descriptor set, true $R^2$", fontsize=8.5)
     ax.set_ylabel("Power to call it better than rung 1 (%)", fontsize=8.5)
-    ax.set_title("(a) The study sees large effects only", fontsize=9)
+    ax.text(0.0, 1.02, "a", transform=ax.transAxes, fontsize=11, fontweight="bold", va="bottom", ha="left")
     ax.set_ylim(-3, 103)
 
     # ---- (b) interval width ----
@@ -90,7 +90,7 @@ def main() -> None:
             va="bottom", ha="right")
     ax.set_xlabel("Candidate descriptor set, true $R^2$", fontsize=8.5)
     ax.set_ylabel("95% interval width on the gap", fontsize=8.5)
-    ax.set_title("(b) Resolution is ~0.30 across the range", fontsize=9)
+    ax.text(0.0, 1.02, "b", transform=ax.transAxes, fontsize=11, fontweight="bold", va="bottom", ha="left")
     ax.set_ylim(0, max(0.45, float(pw.ci_width.max())*1.25))
 
     # ---- (c) ceiling vs where the rungs land ----
@@ -114,19 +114,13 @@ def main() -> None:
         ax.set_xlabel("Rung (framing B)", fontsize=8.5)
     ax.set_ylabel("$R^2$", fontsize=8.5)
     ax.set_ylim(-0.1, 1.0)
-    ax.set_title("(c) The gap is signal, not noise", fontsize=9)
+    ax.text(0.0, 1.02, "c", transform=ax.transAxes, fontsize=11, fontweight="bold", va="bottom", ha="left")
 
     for ax in axes:
         ax.tick_params(labelsize=8)
         ax.spines[["top", "right"]].set_visible(False)
 
     n = int(pw.n_pairs.iloc[0])
-    fig.text(0.5, 0.005,
-             f"{n} dev pairs; {int(pw.n_sim.iloc[0])} simulations x {int(pw.n_boot.iloc[0])} "
-             f"resamples, baseline re-simulated each time; ceiling from "
-             f"{int(nc.n_with_repeat.iloc[0])} of {int(nc.n_compounds.iloc[0])} compounds "
-             f"with a repeat measurement",
-             ha="center", fontsize=7, color="0.35")
     fig.tight_layout(rect=(0, 0.04, 1, 1))
     for ext in ("pdf", "png"):
         fig.savefig(FIGS/f"fig3_power.{ext}", dpi=300)

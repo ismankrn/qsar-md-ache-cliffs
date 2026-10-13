@@ -91,11 +91,99 @@ def resid_of(label: str) -> int:
     return int(m.group(1)) if m else -1
 
 
+def figure(d, a) -> None:
+        # ---------------- figure ----------------
+        FIGS.mkdir(exist_ok=True)
+        fig, axes = plt.subplots(1, 2, figsize=(12.0, 5.2),
+                                 gridspec_kw={"width_ratios": [1.5, 1.0]})
+
+        # (a) median occupancy per residue per type, gorge residues only
+        g = d[d.resid_4ey7.isin(LINING)]
+        piv = g.pivot_table(index="resid_4ey7", columns="kind", values="occupancy",
+                            aggfunc="median").fillna(0.0)
+        ax = axes[0]
+        im = ax.imshow(piv.to_numpy()*100, aspect="auto", cmap="YlGnBu", vmin=0, vmax=100)
+        ax.set_xticks(range(len(piv.columns)))
+        ax.set_xticklabels(piv.columns, rotation=30, ha="right", fontsize=7.5)
+        ax.set_yticks(range(len(piv.index)))
+        ax.set_yticklabels([f"{r}" + (f"  {NAMED[r].split()[0]}" if r in NAMED else "")
+                            for r in piv.index], fontsize=7.5)
+        for yi, r in enumerate(piv.index):
+            for xi, c in enumerate(piv.columns):
+                v = piv.iloc[yi, xi]*100
+                if v >= 5:
+                    ax.text(xi, yi, f"{v:.0f}", ha="center", va="center", fontsize=6.2,
+                            color="white" if v > 55 else "0.25")
+        plt.colorbar(im, ax=ax, label="median occupancy (%)", fraction=0.035, pad=0.02)
+        ax.text(0.0, 1.02, "a", transform=ax.transAxes, fontsize=11, fontweight="bold", va="bottom", ha="left")
+        ax.set_ylabel("Gorge-lining residue (4EY7 numbering)", fontsize=8.5)
+
+        # (b) ProLIF total occupancy vs the project's distance-only occupancy
+        ax = axes[1]
+        import json, glob as _g
+        own = {}
+        for f in _g.glob(str(RES/"16_rung4_per_run"/"*.json")):
+            j = json.loads(Path(f).read_text())
+            w = (j.get("windows") or {}).get("20")
+            if w:
+                own[j["run"]] = (w.get("occ_cas"), w.get("occ_pas"))
+        tot = (d[d.resid_4ey7.isin([86, 286])]
+               .groupby(["run", "resid_4ey7"]).occupancy.max().unstack())
+        pts = []
+        for run, r in tot.iterrows():
+            if run in own:
+                for rid, col, lab in ((86, 0, "Trp86 / occ_cas"), (286, 1, "Trp286 / occ_pas")):
+                    if rid in r and np.isfinite(r[rid]) and own[run][col] is not None:
+                        pts.append(dict(run=run, site=lab, prolif=float(r[rid]),
+                                        own=float(own[run][col])))
+        P = pd.DataFrame(pts)
+        for lab, col in (("Trp86 / occ_cas", "#b2182b"), ("Trp286 / occ_pas", "#2166ac")):
+            s = P[P.site == lab]
+            if len(s):
+                rho = s.prolif.corr(s.own, method="spearman")
+                ax.scatter(s.own*100, s.prolif*100, s=14, alpha=0.6, color=col,
+                           edgecolors="none", label=f"{lab}  (rho={rho:.2f}, n={len(s)})")
+        ax.plot([0, 100], [0, 100], color="0.6", lw=0.9, ls="--")
+        ax.set_xlabel("Distance-only occupancy, this study (%)", fontsize=8.5)
+        ax.set_ylabel("ProLIF typed occupancy, any type (%)", fontsize=8.5)
+        ax.text(0.0, 1.02, "b", transform=ax.transAxes, fontsize=11, fontweight="bold", va="bottom", ha="left")
+        ax.legend(fontsize=7, frameon=False, loc="lower right")
+        P.to_csv(RES/"26b_occupancy_agreement.csv", index=False)
+
+        for ax in axes:
+            ax.tick_params(labelsize=8)
+        axes[1].spines[["top", "right"]].set_visible(False)
+
+        fig.tight_layout(rect=(0, 0.04, 1, 0.94))
+        for ext in ("pdf", "png"):
+            fig.savefig(FIGS/f"fig_dynamic_interactions.{ext}", dpi=300)
+        print(f"  -> figures/fig_dynamic_interactions.pdf / .png")
+        if len(P):
+            print("\n  agreement (Spearman):")
+            for lab in P.site.unique():
+                s = P[P.site == lab]
+                print(f"    {lab:20s} rho = {s.prolif.corr(s.own, method='spearman'):+.3f}  "
+                      f"median typed {s.prolif.median()*100:.0f}%  "
+                      f"distance-only {s.own.median()*100:.0f}%")
+
+
+
+
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--stride", type=int, default=10)
     ap.add_argument("--limit", type=int, default=0, help="debug: only this many runs")
+    ap.add_argument("--from-csv", action="store_true",
+                    help="redraw from results/26_dynamic_interactions.csv without rerunning "
+                         "ProLIF. The full pass over 229 trajectories takes about four "
+                         "hours, so a change to the figure must not require repeating it.")
     a = ap.parse_args()
+
+    if a.from_csv:
+        d = pd.read_csv(RES/"26_dynamic_interactions.csv")
+        print(f"  redrawing from {len(d)} rows, {d.run.nunique()} runs")
+        figure(d, a)
+        return
 
     dock_ca = mda.Universe(str(ROOT/"docking"/"4ey7_rec_clean.pdb")).select_atoms(
         "protein and name CA")
@@ -134,87 +222,7 @@ def main() -> None:
     print(f"\n  -> results/26_dynamic_interactions.csv  ({len(d)} rows, "
           f"{d.run.nunique()} runs)")
 
-    # ---------------- figure ----------------
-    FIGS.mkdir(exist_ok=True)
-    fig, axes = plt.subplots(1, 2, figsize=(12.0, 5.2),
-                             gridspec_kw={"width_ratios": [1.5, 1.0]})
-
-    # (a) median occupancy per residue per type, gorge residues only
-    g = d[d.resid_4ey7.isin(LINING)]
-    piv = g.pivot_table(index="resid_4ey7", columns="kind", values="occupancy",
-                        aggfunc="median").fillna(0.0)
-    ax = axes[0]
-    im = ax.imshow(piv.to_numpy()*100, aspect="auto", cmap="YlGnBu", vmin=0, vmax=100)
-    ax.set_xticks(range(len(piv.columns)))
-    ax.set_xticklabels(piv.columns, rotation=30, ha="right", fontsize=7.5)
-    ax.set_yticks(range(len(piv.index)))
-    ax.set_yticklabels([f"{r}" + (f"  {NAMED[r].split()[0]}" if r in NAMED else "")
-                        for r in piv.index], fontsize=7.5)
-    for yi, r in enumerate(piv.index):
-        for xi, c in enumerate(piv.columns):
-            v = piv.iloc[yi, xi]*100
-            if v >= 5:
-                ax.text(xi, yi, f"{v:.0f}", ha="center", va="center", fontsize=6.2,
-                        color="white" if v > 55 else "0.25")
-    plt.colorbar(im, ax=ax, label="median occupancy (%)", fraction=0.035, pad=0.02)
-    ax.set_title("(a) Typed interaction occupancy over the trajectories", fontsize=9.5)
-    ax.set_ylabel("Gorge-lining residue (4EY7 numbering)", fontsize=8.5)
-
-    # (b) ProLIF total occupancy vs the project's distance-only occupancy
-    ax = axes[1]
-    import json, glob as _g
-    own = {}
-    for f in _g.glob(str(RES/"16_rung4_per_run"/"*.json")):
-        j = json.loads(Path(f).read_text())
-        w = (j.get("windows") or {}).get("20")
-        if w:
-            own[j["run"]] = (w.get("occ_cas"), w.get("occ_pas"))
-    tot = (d[d.resid_4ey7.isin([86, 286])]
-           .groupby(["run", "resid_4ey7"]).occupancy.max().unstack())
-    pts = []
-    for run, r in tot.iterrows():
-        if run in own:
-            for rid, col, lab in ((86, 0, "Trp86 / occ_cas"), (286, 1, "Trp286 / occ_pas")):
-                if rid in r and np.isfinite(r[rid]) and own[run][col] is not None:
-                    pts.append(dict(run=run, site=lab, prolif=float(r[rid]),
-                                    own=float(own[run][col])))
-    P = pd.DataFrame(pts)
-    for lab, col in (("Trp86 / occ_cas", "#b2182b"), ("Trp286 / occ_pas", "#2166ac")):
-        s = P[P.site == lab]
-        if len(s):
-            rho = s.prolif.corr(s.own, method="spearman")
-            ax.scatter(s.own*100, s.prolif*100, s=14, alpha=0.6, color=col,
-                       edgecolors="none", label=f"{lab}  (rho={rho:.2f}, n={len(s)})")
-    ax.plot([0, 100], [0, 100], color="0.6", lw=0.9, ls="--")
-    ax.set_xlabel("Distance-only occupancy, this study (%)", fontsize=8.5)
-    ax.set_ylabel("ProLIF typed occupancy, any type (%)", fontsize=8.5)
-    ax.set_title("(b) Does the distance-only descriptor track the typed one?",
-                 fontsize=9.5)
-    ax.legend(fontsize=7, frameon=False, loc="lower right")
-    P.to_csv(RES/"26b_occupancy_agreement.csv", index=False)
-
-    for ax in axes:
-        ax.tick_params(labelsize=8)
-    axes[1].spines[["top", "right"]].set_visible(False)
-
-    fig.suptitle("Interaction types over the dynamics, and what the distance-only "
-                 "descriptors summarise", fontsize=11, y=0.98)
-    fig.text(0.5, 0.01,
-             f"{d.run.nunique()} runs, every {a.stride}th frame after the first "
-             f"{EQUIL_NS:g} ns. Periodic images corrected per frame; residues renumbered "
-             f"uniquely and mapped back to 4EY7 numbering. Descriptive: nothing here enters "
-             f"any model.", ha="center", fontsize=7, color="0.35")
-    fig.tight_layout(rect=(0, 0.04, 1, 0.94))
-    for ext in ("pdf", "png"):
-        fig.savefig(FIGS/f"fig_dynamic_interactions.{ext}", dpi=300)
-    print(f"  -> figures/fig_dynamic_interactions.pdf / .png")
-    if len(P):
-        print("\n  agreement (Spearman):")
-        for lab in P.site.unique():
-            s = P[P.site == lab]
-            print(f"    {lab:20s} rho = {s.prolif.corr(s.own, method='spearman'):+.3f}  "
-                  f"median typed {s.prolif.median()*100:.0f}%  "
-                  f"distance-only {s.own.median()*100:.0f}%")
+    figure(d, a)
 
 
 if __name__ == "__main__":

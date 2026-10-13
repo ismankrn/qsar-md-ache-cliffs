@@ -41,8 +41,6 @@ for i, (img, lab, ttl) in enumerate(panels):
     ax.set_anchor("N")                      # top-align both panels
     bb = ax.get_position()
     # titles placed in FIGURE coords so they line up despite differing aspects
-    fig.text(bb.x0 + bb.width/2, 0.975, ttl, fontsize=11.5, style="italic",
-             color="0.25", ha="center", va="top")
     fig.text(bb.x0 + 0.004, 0.945, lab, fontsize=19, fontweight="bold",
              ha="left", va="top")
 
@@ -56,9 +54,6 @@ handles = [
 fig.legend(handles=handles, loc="lower center", ncol=3, frameon=False,
            fontsize=10.5, bbox_to_anchor=(0.5, 0.055), handlelength=1.5,
            columnspacing=1.8, handletextpad=0.6)
-fig.text(0.5, 0.022, "Dashed line in panel B: Trp86–Trp286 CZ3–CZ3 distance = 15.6 Å, "
-         "the span a bis-ligand must bridge",
-         fontsize=9.5, color="0.3", ha="center")
 fig.savefig(F/"Figure1_hAChE_structure.png", dpi=300, facecolor="white")
 fig.savefig(F/"Figure1_hAChE_structure.pdf", facecolor="white")
 plt.close(fig)
@@ -75,8 +70,6 @@ for i, (img, (lab, ttl, rms)) in enumerate(zip(imgs, titles)):
     ax = fig.add_subplot(gs[0, i]); ax.imshow(img); ax.axis("off")
     ax.set_anchor("N")
     bb = ax.get_position()
-    fig.text(bb.x0 + bb.width/2, 0.985, ttl, fontsize=11.5, style="italic",
-             color="0.25", ha="center", va="top")
     fig.text(bb.x0 + 0.004, 0.955, lab, fontsize=19, fontweight="bold",
              ha="left", va="top")
     ok = float(rms.split("=")[1].strip().split()[0]) < 2.0
@@ -97,10 +90,6 @@ handles = [
 fig.legend(handles=handles, loc="lower center", ncol=3, frameon=False,
            fontsize=10.5, bbox_to_anchor=(0.5, 0.065), handlelength=1.5,
            columnspacing=2.2, handletextpad=0.6)
-fig.text(0.5, 0.025, "Same ligand and protocol throughout; only the receptor "
-         "differs between panels B and C. The Tyr337 side chain moves 2.53 Å "
-         "between 4EY5 and 4EY7, blocking the true huperzine A pose.",
-         fontsize=9.5, color="0.3", ha="center")
 fig.savefig(F/"Figure2_redocking_validation.png", dpi=300, facecolor="white")
 fig.savefig(F/"Figure2_redocking_validation.pdf", facecolor="white")
 plt.close(fig)

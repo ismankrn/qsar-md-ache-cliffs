@@ -162,7 +162,8 @@ def main() -> None:
         ax.set_xticks([float(w) for w in WINDOWS])
         ax.set_xlabel("Analysed trajectory (ns)", fontsize=8.5)
         ax.set_ylabel(ylabs[fr], fontsize=8.5)
-        ax.set_title(titles[fr], fontsize=9)
+        ax.text(0.0, 1.02, f"({'abc'['ABC'.index(fr)]})", transform=ax.transAxes,
+                fontsize=11, fontweight="bold", va="bottom", ha="left")
         ax.tick_params(labelsize=8)
         ax.spines[["top", "right"]].set_visible(False)
         if fr == "C":
@@ -175,15 +176,11 @@ def main() -> None:
         top.set_xlabel("Simulated per ligand (ns)", fontsize=7.5, labelpad=2)
         top.tick_params(length=2)
 
-    fig.suptitle("Trajectory length is not the limiting factor between 5 and 20 ns",
-                 fontsize=10.5, y=1.0)
     cap = ("Descriptors recomputed on the first 5/10/20/30 ns of analysed trajectory; frozen "
            "5-fold CV, best over algorithm families. The per-window filter selects 15/14/12 "
            "descriptors, so it confounds trajectory length with descriptor choice; the fixed "
            "series holds the 20 ns selection at every window and answers length alone. Only "
            "45 dev ligands (11 pairs) reach 30 ns, so the full-sample series stop at 20 ns.")
-    fig.text(0.5, 0.012, "\n".join(textwrap.wrap(cap, 155)),
-             ha="center", va="bottom", fontsize=6.8, color="0.35")
     fig.tight_layout(rect=(0, 0.11, 1, 0.95))
     for ext in ("pdf", "png"):
         fig.savefig(FIGS/f"fig5_duration.{ext}", dpi=300)

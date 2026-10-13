@@ -116,19 +116,11 @@ def main() -> None:
         ax.axvline(EQUIL_NS, color="0.55", lw=0.8, ls="--")
         ax.set_xlabel("Time (ns)", fontsize=8.5)
         ax.set_ylabel(ylab, fontsize=8.5)
-        ax.set_title(title, fontsize=9.5)
+        ax.text(0.0, 1.02, title.split(")")[0] + ")", transform=ax.transAxes,
+                fontsize=11, fontweight="bold", va="bottom", ha="left")
         ax.tick_params(labelsize=8)
         ax.spines[["top", "right"]].set_visible(False)
 
-    fig.suptitle("Production ensembles ran at the intended thermodynamic state",
-                 fontsize=11, y=0.99)
-    fig.text(0.5, 0.01,
-             f"{len(df)} runs with surviving energy files, of 229; median and 5--95 "
-             f"percentile band. Temperature {df.T_mean.mean():.2f} K, density "
-             f"{df.rho_mean.mean():.0f} kg m$^{{-3}}$, mean pressure "
-             f"{df.P_mean.mean():+.1f} bar with an instantaneous spread of "
-             f"{df.P_sd.mean():.0f} bar. Dashed line marks the end of equilibration.",
-             ha="center", fontsize=7, color="0.35")
     fig.tight_layout(rect=(0, 0.05, 1, 0.93))
     for ext in ("pdf", "png"):
         fig.savefig(FIGS/f"fig_thermo.{ext}", dpi=300)

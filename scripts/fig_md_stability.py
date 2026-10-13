@@ -160,8 +160,8 @@ def main() -> None:
         ax.set_xlabel("Time (ns)", fontsize=8.5)
         ax.set_ylabel(lab.replace(r"\AA", "Å"), fontsize=8.5)
         ax.legend(fontsize=7, frameon=False, loc="upper left")
-    axes[0].set_title("(a) Receptor stays folded", fontsize=9.5)
-    axes[1].set_title("(b) Ligand stays in the gorge", fontsize=9.5)
+    axes[0].text(0.0, 1.02, "a", transform=axes[0].transAxes, fontsize=11, fontweight="bold", va="bottom", ha="left")
+    axes[1].text(0.0, 1.02, "b", transform=axes[1].transAxes, fontsize=11, fontweight="bold", va="bottom", ha="left")
 
     ax = axes[2]
     if rmsfs:
@@ -185,20 +185,12 @@ def main() -> None:
         ax.legend(fontsize=7, frameon=False, loc="upper right")
         ax.set_xlabel("Residue number", fontsize=8.5)
         ax.set_ylabel("C$\\alpha$ RMSF (Å)", fontsize=8.5)
-        ax.set_title(f"(c) Gorge residues are not unusually mobile (n={len(R)})",
-                     fontsize=9.5)
+        ax.text(0.0, 1.02, "c", transform=ax.transAxes, fontsize=11, fontweight="bold", va="bottom", ha="left")
 
     for ax in axes:
         ax.tick_params(labelsize=8)
         ax.spines[["top", "right"]].set_visible(False)
 
-    fig.suptitle("Structural stability across all production runs", fontsize=11, y=0.99)
-    fig.text(0.5, 0.008,
-             f"{len(df)} runs, protein+ligand archives at 100 ps. Median and interquartile "
-             f"band across runs. Periodic images corrected and frames superposed on "
-             f"C$\\alpha$ before any distance is taken; the first {EQUIL_NS:g} ns is "
-             f"equilibration and is excluded from descriptors.",
-             ha="center", fontsize=7, color="0.35")
     fig.tight_layout(rect=(0, 0.04, 1, 0.94))
     for ext in ("pdf", "png"):
         fig.savefig(FIGS/f"fig_md_stability.{ext}", dpi=300)

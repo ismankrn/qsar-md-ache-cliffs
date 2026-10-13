@@ -55,6 +55,10 @@ RUNGS = [
 ]
 DROP = {"molecule_chembl_id", "n_seeds_used", "seed_used"}
 
+# Panel identity only. The descriptive text lives in the caption, and draw() must not
+# depend on anything main() computes, so that --from-csv can redraw without rescoring.
+PANELS = [("A", "$R^2$"), ("B", "$R^2$"), ("C", "ROC AUC")]
+
 
 def numeric_matrix(df: pd.DataFrame, ids: list[str]) -> np.ndarray:
     """Rows in `ids` order, numeric columns only, one row per ligand."""
@@ -135,12 +139,67 @@ def best_expanded(arms, fams, metric, clf=False):
     return best
 
 
+def draw(out, a) -> None:
+        # ---------------- figure ----------------
+        FIGS.mkdir(exist_ok=True)
+        fig, axes = plt.subplots(1, 3, figsize=(11.5, 4.3))
+        xs = np.arange(len(RUNGS))
+        for ax, (fr, ylab) in zip(axes, PANELS):
+            s = out[out.framing == fr].set_index("key").reindex([k for _, k in RUNGS])
+            v = s["value"].to_numpy(float)
+            ax.axhline(0.0, color="0.75", lw=0.8, zorder=1)
+            # rung 1 is the thing every other rung has to beat, so draw it as a line across
+            ax.axhline(v[0], color="#b2182b", lw=1.0, ls="--", zorder=1,
+                       label="Rung 1 (2D) level")
+            # Draw the bars whenever the data carries them. Keying this off the --n-boot
+            # flag meant --from-csv silently produced a figure with no intervals, which
+            # looked finished and was not.
+            lo = s["ci_lo"].to_numpy(float)
+            hi = s["ci_hi"].to_numpy(float)
+            if np.isfinite(lo).all() and np.isfinite(hi).all():
+                err = np.vstack([v - lo, hi - v])
+                ax.errorbar(xs, v, yerr=err, fmt="none", ecolor="0.35", lw=1.2, capsize=3,
+                            zorder=2)
+            ax.plot(xs, v, "o-", color="#2166ac", ms=6, lw=1.2, zorder=3)
+            ax.set_xticks(xs)
+            ax.set_xticklabels([lab for lab, _ in RUNGS], fontsize=7.5)
+            ax.text(0.0, 1.02, f"({'abc'['ABC'.index(fr)]})", transform=ax.transAxes,
+                    fontsize=11, fontweight="bold", va="bottom", ha="left")
+            ax.set_ylabel(ylab, fontsize=9)
+            ax.tick_params(labelsize=8)
+            ax.spines[["top", "right"]].set_visible(False)
+            if fr == "C":
+                ax.axhline(0.5, color="0.75", lw=0.8, ls=":", zorder=1)
+                ax.set_ylim(0.45, 0.92)
+                ax.text(0.02, 0.5, "chance", transform=ax.get_yaxis_transform(),
+                        va="bottom", fontsize=6.5, color="0.5")
+        axes[0].legend(fontsize=7.5, frameon=False, loc="lower left")
+        # The first draft said "does not improve any endpoint". That is false as written: on
+        # framing B the ensemble rung 2 reaches +0.274 against rung 1's +0.200. Stage 15 showed
+        # the difference is not resolvable, which is the claim the data supports.
+        fig.tight_layout(rect=(0, 0.03, 1, 0.94))
+        for ext in ("pdf", "png"):
+            fig.savefig(FIGS/f"fig2_ladder.{ext}", dpi=300)
+        print(f"  -> figures/fig2_ladder.pdf / .png")
+
+
+
+
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--window", default="20", help="rung-4 analysis window in ns")
     ap.add_argument("--n-boot", type=int, default=0,
                     help="bootstrap replicates per rung; 0 draws the figure without intervals")
+    ap.add_argument("--from-csv", action="store_true",
+                    help="redraw from results/20_ladder.csv without recomputing. The "
+                         "300-replicate bootstrap takes eleven hours, so a change to the "
+                         "figure's appearance must not require repeating it.")
     a = ap.parse_args()
+
+    if a.from_csv:
+        out = pd.read_csv(RES/"20_ladder.csv")
+        draw(out, a)
+        return
 
     sl = pd.read_csv(RES/f"03_splits_ligands_{TARGET}.csv")
     pairs = pd.read_csv(RES/f"03_splits_pairs_{TARGET}.csv")
@@ -208,49 +267,7 @@ def main() -> None:
     out.to_csv(RES/"20_ladder.csv", index=False)
     print(f"\n  -> results/20_ladder.csv")
 
-    # ---------------- figure ----------------
-    FIGS.mkdir(exist_ok=True)
-    fig, axes = plt.subplots(1, 3, figsize=(11.5, 4.3))
-    xs = np.arange(len(RUNGS))
-    for ax, (fr, title, ylab, *_rest) in zip(axes, FRAMINGS):
-        s = out[out.framing == fr].set_index("key").reindex([k for _, k in RUNGS])
-        v = s["value"].to_numpy(float)
-        ax.axhline(0.0, color="0.75", lw=0.8, zorder=1)
-        # rung 1 is the thing every other rung has to beat, so draw it as a line across
-        ax.axhline(v[0], color="#b2182b", lw=1.0, ls="--", zorder=1,
-                   label="Rung 1 (2D) level")
-        if a.n_boot:
-            err = np.vstack([v - s["ci_lo"].to_numpy(float),
-                             s["ci_hi"].to_numpy(float) - v])
-            ax.errorbar(xs, v, yerr=err, fmt="none", ecolor="0.35", lw=1.2, capsize=3,
-                        zorder=2)
-        ax.plot(xs, v, "o-", color="#2166ac", ms=6, lw=1.2, zorder=3)
-        ax.set_xticks(xs)
-        ax.set_xticklabels([lab for lab, _ in RUNGS], fontsize=7.5)
-        ax.set_title(title, fontsize=9)
-        ax.set_ylabel(ylab, fontsize=9)
-        ax.tick_params(labelsize=8)
-        ax.spines[["top", "right"]].set_visible(False)
-        if fr == "C":
-            ax.axhline(0.5, color="0.75", lw=0.8, ls=":", zorder=1)
-            ax.set_ylim(0.45, 0.92)
-            ax.text(0.02, 0.5, "chance", transform=ax.get_yaxis_transform(),
-                    va="bottom", fontsize=6.5, color="0.5")
-    axes[0].legend(fontsize=7.5, frameon=False, loc="lower left")
-    note = (f"{len(ids)} dev ligands, {len(dpair)} dev pairs, frozen 5-fold CV (seed {SEED}); "
-            f"best over descriptor arms and algorithm families")
-    if a.n_boot:
-        note += f"; {a.n_boot}-replicate bootstrap over units"
-    # The first draft said "does not improve any endpoint". That is false as written: on
-    # framing B the ensemble rung 2 reaches +0.274 against rung 1's +0.200. Stage 15 showed
-    # the difference is not resolvable, which is the claim the data supports.
-    fig.suptitle("No structure-based rung resolvably outperforms 2D fingerprints",
-                 fontsize=10.5, y=0.99)
-    fig.text(0.5, 0.005, note, ha="center", fontsize=7, color="0.35")
-    fig.tight_layout(rect=(0, 0.03, 1, 0.94))
-    for ext in ("pdf", "png"):
-        fig.savefig(FIGS/f"fig2_ladder.{ext}", dpi=300)
-    print(f"  -> figures/fig2_ladder.pdf / .png")
+    draw(out, a)
 
 
 if __name__ == "__main__":

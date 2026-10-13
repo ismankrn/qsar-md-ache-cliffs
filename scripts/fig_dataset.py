@@ -78,7 +78,7 @@ def main() -> None:
                 ok, fontsize=7, va="center",
                 color="#1b7837" if ok == "PASS" else "0.55")
     ax.set_xlabel("Activity-cliff pairs found", fontsize=8.5)
-    ax.set_title("(a) Only one target is dominated by constitutional cliffs", fontsize=9)
+    ax.text(0.0, 1.02, "a", transform=ax.transAxes, fontsize=11, fontweight="bold", va="bottom", ha="left")
     ax.legend(fontsize=7, frameon=False, loc="lower right")
 
     # ---- (b) binary vs count Tanimoto ----
@@ -97,7 +97,7 @@ def main() -> None:
     plt.colorbar(s, ax=ax, label="heavy-atom difference", fraction=0.046, pad=0.03)
     ax.set_xlabel("Tanimoto, binary ECFP4", fontsize=8.5)
     ax.set_ylabel("Tanimoto, count ECFP4", fontsize=8.5)
-    ax.set_title("(b) Binary fingerprints saturate; counts do not", fontsize=9)
+    ax.text(0.0, 1.02, "b", transform=ax.transAxes, fontsize=11, fontweight="bold", va="bottom", ha="left")
 
     # ---- (c) the cliff definition ----
     ax = axes[1, 0]
@@ -115,7 +115,7 @@ def main() -> None:
     ax.set_xlabel("Tanimoto similarity, binary ECFP4 (the selection criterion)",
                   fontsize=8.5)
     ax.set_ylabel(r"$|\Delta$pChEMBL$|$", fontsize=8.5)
-    ax.set_title("(c) Cliffs and matched controls", fontsize=9)
+    ax.text(0.0, 1.02, "c", transform=ax.transAxes, fontsize=11, fontweight="bold", va="bottom", ha="left")
     ax.legend(fontsize=7, frameon=False, loc="upper left", bbox_to_anchor=(0.0, 0.98))
 
     # ---- (d) the size confound ----
@@ -130,14 +130,12 @@ def main() -> None:
         ax.text(i, d.max()+0.5, f"mean {d.mean():.1f}", ha="center", fontsize=7.5)
     ax.set_xticks([0, 1]); ax.set_xticklabels(["cliff", "control"], fontsize=8.5)
     ax.set_ylabel("Heavy-atom difference within a pair", fontsize=8.5)
-    ax.set_title("(d) Cliff partners differ more in size", fontsize=9)
+    ax.text(0.0, 1.02, "d", transform=ax.transAxes, fontsize=11, fontweight="bold", va="bottom", ha="left")
 
     for ax in axes.ravel():
         ax.tick_params(labelsize=8)
         ax.spines[["top", "right"]].set_visible(False)
 
-    fig.suptitle("Target selection, the cliff definition, and two confounds it carries",
-                 fontsize=11, y=0.985)
     fig.tight_layout(rect=(0, 0.01, 1, 0.96))
     for ext in ("pdf", "png"):
         fig.savefig(FIGS/f"fig1_dataset.{ext}", dpi=300)

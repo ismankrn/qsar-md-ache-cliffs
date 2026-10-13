@@ -103,7 +103,7 @@ def main() -> None:
     ax.set_ylim(-1, len(order))
     ax.set_xlabel(r"$\mathrm{sd}_{\mathrm{ligand}} / \mathrm{sd}_{\mathrm{replicate}}$"
                   "   (log scale)", fontsize=9)
-    ax.set_title("(a) Ligand signal against seed noise, by analysis window", fontsize=9.5)
+    ax.text(0.0, 1.02, "a", transform=ax.transAxes, fontsize=11, fontweight="bold", va="bottom", ha="left")
     ax.tick_params(labelsize=8)
     ax.spines[["top", "right"]].set_visible(False)
     ax.grid(axis="x", color="0.92", lw=0.6)
@@ -130,21 +130,12 @@ def main() -> None:
     ax.set_xticklabels([f"{int(w)}" for w in piv.index], fontsize=8)
     ax.set_xlabel("Analysis window (ns)", fontsize=9)
     ax.set_ylabel("Descriptors", fontsize=9)
-    ax.set_title("(b) How many survive, by window", fontsize=9.5)
+    ax.text(0.0, 1.02, "b", transform=ax.transAxes, fontsize=11, fontweight="bold", va="bottom", ha="left")
     ax.legend(fontsize=7, frameon=False, loc="upper right")
     ax.tick_params(labelsize=8)
     ax.spines[["top", "right"]].set_visible(False)
 
     n_usable = int((d.verdict == "usable").sum())
-    fig.suptitle("Of three descriptor design classes, only persistence survives a "
-                 "replicate test", fontsize=11, y=0.985)
-    fig.text(0.5, 0.008,
-             f"{d.descriptor.nunique()} descriptors x {len(windows)} windows = {len(d)} "
-             f"combinations; {n_usable} usable, {int((d.verdict=='seed-dominated').sum())} "
-             f"seed-dominated. Threshold fixed before the pilot ran. Ratio {RATIO_USABLE:g} "
-             f"corresponds to a reliability of "
-             f"{RATIO_USABLE**2/(RATIO_USABLE**2+2):.2f}.",
-             ha="center", fontsize=7.2, color="0.35")
     fig.tight_layout(rect=(0, 0.03, 1, 0.96))
     for ext in ("pdf", "png"):
         fig.savefig(FIGS/f"fig4_reliability.{ext}", dpi=300)
