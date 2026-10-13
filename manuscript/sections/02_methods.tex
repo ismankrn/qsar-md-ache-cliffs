@@ -7,7 +7,7 @@ activity-cliff dataset. We then describe the four descriptor sets, the molecular
 dynamics simulations from which the last of them is derived, and the model suite on
 which all of them are scored.
 
-\subsection{Target and binding site}
+\subsection{Target and binding site}\label{sec:site}
 
 \begin{figure}[tb]
   \centering
@@ -157,12 +157,83 @@ on docking is van der Waals contact alone with Ser203 and His447. The binding mo
 later descriptors depend is therefore reproduced, although the typing itself is used
 only for validation here and is not carried into any descriptor set.
 
-\subsection{Dataset and activity-cliff definition}
-\TODO{ChEMBL target CHEMBL220 (human AChE); pChEMBL aggregation; similarity and
-  potency thresholds; 1{,}911 similar pairs; cliff/control definition.}
-\NOTE{Source: results/01\_*, 02\_pairs\_CHEMBL220.csv, 02\_cliff\_similarity\_audit.csv}
+\subsection{Dataset and activity-cliff definition}\label{sec:dataset}
 
-\subsection{Two fingerprint artefacts, at two different stages}
+The dataset is constructed in three steps, i.e. the selection of the target, the
+curation of its activity data, and the assembly of pairs of near-identical ligands
+that differ sharply in potency together with pairs that are equally similar but do
+not. Six candidate targets are screened against three entry criteria, namely at
+least 80 compounds surviving curation, a potency range of at least 3 log units, and
+at least 25 activity cliffs. Two of the six satisfy all three criteria, with the
+remaining four failing on the number of cliffs. Among the pairs that satisfy the
+similarity and potency criteria, those whose two members are stereoisomers of one
+another are counted separately from those that differ in constitution, for the reason
+given in Section~\ref{sec:artefacts}, and only the latter are informative for the
+comparison made in this work. Acetylcholinesterase is selected because it is the only
+target screened in which the constitutional pairs dominate, i.e. 100 constitutional
+pairs against 10 stereochemical ones, and because the dual-site architecture
+described in Section~\ref{sec:site} gives a mechanistic reason to expect its cliffs
+to be geometric in origin.
+
+Activity data for CHEMBL220 are retrieved from ChEMBL, and a record is retained only
+when it comes from a binding assay, reports IC\textsubscript{50}, $K_\mathrm{i}$ or
+$K_\mathrm{d}$ with an exact relation and in nanomolar units, carries a pChEMBL
+value, is free of the data-validity flags assigned by ChEMBL itself, and is not
+marked as a potential duplicate. A single assay type is then retained, which is the
+most frequent one and is IC\textsubscript{50} in this case, since a pair formed from an
+IC\textsubscript{50} measurement and a $K_\mathrm{i}$ measurement can satisfy a cliff criterion
+by virtue of the assay rather than of the chemistry. Structures are standardised by
+stripping salts, by retaining the largest covalent fragment as the parent, and by
+neutralising formal charges introduced by the deposited representation, and
+structures below six heavy atoms are removed. Replicate measurements of the same
+standardised structure are collapsed to their median, and a structure whose
+replicates disagree by more than one log unit, measured as their standard deviation,
+is discarded rather than averaged, because a compound measured inconsistently can
+enter a cliff pair on the strength of its own measurement error. The curated set
+consists of 5{,}609 compounds spanning pChEMBL 4.00 to 10.96.
+
+Structural similarity is computed as the Tanimoto coefficient on binary ECFP4
+fingerprints, i.e. Morgan fingerprints of radius 2 folded to 2{,}048 bits. A pair of
+compounds is treated as near-identical when its Tanimoto coefficient is at least
+0.90, and as an activity cliff when, in addition, the two members differ in pChEMBL
+by at least 2.0 log units, which corresponds to a hundredfold difference in potency.
+Within the curated set, 421 pairs clear the similarity criterion with a potency
+difference of at least one log unit, 110 of these reach the hundredfold criterion,
+and 100 of those 110 are constitutional. The compound pool is then filtered for
+simulation feasibility, with a compound retained only when it is composed of the
+elements H, C, N, O, F, S, Cl, Br, I and P, carries no radical electrons, has a
+molecular weight between 150 and 700~Da, has at most 55 heavy atoms and
+at most 18 rotatable bonds, and can be embedded in three dimensions by ETKDGv3. This
+filter removes 239 of the 5{,}609 compounds, most of them on molecular weight or on
+rotatable-bond count. It is applied to the whole pool before any pairing and not to
+the pairs afterwards, because a pair is lost as soon as either of its two members is
+removed, so that filtering the pool first keeps every surviving pair intact by
+construction. Of the 100 constitutional cliff pairs, 97 survive this filter with both
+members intact, and those 97 pairs are formed from 99 distinct compounds.
+
+A control pair is defined as a pair that is near-identical under the same similarity
+floor of 0.90 but whose two members differ in pChEMBL by at most 0.30 log units,
+i.e. by less than twofold, so that the two groups differ in the property under test
+and in as little else as possible. Stereoisomer pairs are excluded here on the same
+grounds as above, and controls are drawn so as to reproduce the joint distribution of
+similarity and mean potency of the cliff pairs, binned into four similarity intervals
+and five potency intervals, with each control compound used in one pair only. The
+procedure yields 86 control pairs formed from 172 compounds, and the matching is
+close on both matched quantities, since the median Tanimoto coefficient is 1.000 for
+the cliff pairs against 0.993 for the controls and the mean of the pair-mean
+potencies is 6.64 against 6.58, while the quantity under test differs by
+construction, with a mean potency difference of 2.66 log units against 0.13. The
+final set therefore consists of 271 ligands and 183 pairs, i.e. 97 cliff pairs and 86
+control pairs. A ligand is prepared and simulated once while a pair refers to two
+ligands, since a compound may belong to more than one pair, and the two tables are
+kept separate throughout for this reason. The dominant protonation state of each
+ligand at pH 7.4 is assigned by a set of explicit rules, and every ligand in the
+final set carries a net positive charge, with 170 ligands at $+1$ and 101 at $+2$,
+which is consistent with the cation--$\pi$ recognition at Trp86 described in
+Section~\ref{sec:site}. The division of this set into a development part and a sealed
+test part is described in Section~\ref{sec:splits}.
+
+\subsection{Two fingerprint artefacts, at two different stages}\label{sec:artefacts}
 \TODO{Keep these separate -- an earlier draft of this subsection merged them and
   attributed the wrong one to the AChE set.}
 
@@ -191,7 +262,7 @@ counts to bits discards the multiplicity that distinguishes them.
   artefact in Section~\ref{sec:subset} biases a partial expensive descriptor set
   \emph{toward} itself. Having both measured in one study is the point.}
 
-\subsection{Splits}
+\subsection{Splits}\label{sec:splits}
 \TODO{Connected-component splits over the similarity graph, seed 20260902, five
   CV folds, sealed test set of 54 ligands. State that the test split has not been
   scored by any model and when it will be.}
