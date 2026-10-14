@@ -12,67 +12,54 @@ all of the sets were scored.
 
 \subsection{Dataset, activity-cliff definition and splits}\label{sec:dataset}
 
-The dataset was constructed in four steps, i.e. selection of the target, curation of
-its activity data, assembly of the pairs, and division into a development and a sealed
-test part. Pairs of near-identical ligands were
-divided according to whether their two members differ in constitution or only in
-stereochemistry, which was decided by comparing their canonical SMILES with the
-stereochemistry stripped, and only the constitutional pairs were treated as
-informative, since no stereo-blind fingerprint can resolve a stereoisomer pair by
-construction while any method that uses three-dimensional coordinates resolves it
-trivially. Six candidate targets were screened against three entry criteria, namely at
-least 80 compounds surviving curation, a potency range of at least 3 log units, and at
-least 25 constitutional activity cliffs. All six satisfied the first two criteria and
-two of them satisfied the third. Acetylcholinesterase was selected from those two
-because its constitutional pairs dominate most strongly and because its binding site
-gives a mechanistic reason to expect its cliffs to be geometric in origin, and the
-counts behind the choice are reported in Section~\ref{sec:composition}. The enzyme is
-a therapeutic target in Alzheimer's disease, and its peripheral anionic site has in
-addition been reported to accelerate the aggregation of $\beta$-amyloid, so that
-inhibitors designed to span both ends of its active site are an established design
-principle rather than a premise introduced here \citep{grabowska2025}. The enzyme is
-shown in Figure~\ref{fig:structure}(A), where donepezil in its crystal pose marks the
-active site at the base of a narrow gorge. The architecture of that gorge is shown in
-Figure~\ref{fig:structure}(B), with an aromatic residue at each end, i.e. Trp86 at the
-catalytic anionic site (CAS) and Trp286 at the peripheral anionic site (PAS) near the
-mouth, and with Tyr337 between the two, which adopts different rotamers in different
-complexes and is therefore referred to as the gate. It is this design principle that
-the descriptor sets of the present work were constructed to test.
+The dataset was constructed in four steps, i.e. curation of the activity data,
+definition of the activity cliffs, selection of the target, and assembly of the pairs
+followed by their division into a development and a sealed test part. The curation and
+the cliff criterion are described first, because the target was selected by applying
+both of them to six candidates.
 
-\begin{figure}[tb]
-  \centering
-  \includegraphics[width=\textwidth]{Figure1_hAChE_structure.pdf}
-  \caption{\textbf{Human acetylcholinesterase and its catalytic gorge (PDB 4EY7).}
-    (A)~Overall fold, rainbow-coloured from N- to C-terminus; donepezil in the
-    crystal pose marks the gorge as black spheres. (B)~The architecture of the gorge, formed by Trp86 at
-    the catalytic anionic site, Trp286 at the peripheral anionic site, the swinging
-    Tyr337 gate between them, and the Ser203--His447--Glu334 catalytic triad.}
-  \label{fig:structure}
-\end{figure}
-
-Activity data for CHEMBL220 were retrieved from ChEMBL, retaining a record only when
-it came from a binding assay, reported IC\textsubscript{50}, $K_\mathrm{i}$ or
-$K_\mathrm{d}$ with an exact relation in nanomolar units, carried a pChEMBL value, was
-free of ChEMBL's own data-validity flags and was not marked a potential duplicate. A
-single assay type was then kept, the most frequent one, which is
-IC\textsubscript{50} here, since a pair formed from an IC\textsubscript{50} and a
-$K_\mathrm{i}$ measurement can satisfy a cliff criterion by virtue of the assay rather
-than of the chemistry. Structures were standardised by stripping salts, keeping the
-largest covalent fragment and neutralising formal charges from the deposited
-representation, and those below six heavy atoms were removed. Replicates of one
-standardised structure were collapsed to their median, and a structure whose
-replicates disagreed by more than one log unit in standard deviation was discarded
-rather than averaged, since a compound measured inconsistently can enter a cliff pair
-on its own measurement error. The curated set holds 5{,}609 compounds spanning pChEMBL
-4.00 to 10.96.
+Activity data were retrieved from ChEMBL for each candidate target, retaining a record
+only when it came from a binding assay, reported IC\textsubscript{50}, $K_\mathrm{i}$
+or $K_\mathrm{d}$ with an exact relation in nanomolar units, carried a pChEMBL value,
+was free of ChEMBL's own data-validity flags and was not marked a potential duplicate.
+A single assay type was then kept, the most frequent one, which is
+IC\textsubscript{50} for acetylcholinesterase, since a pair formed from an
+IC\textsubscript{50} and a $K_\mathrm{i}$ measurement can satisfy a cliff criterion by
+virtue of the assay rather than of the chemistry. Structures were standardised by
+stripping salts, keeping the largest covalent fragment and neutralising formal charges
+from the deposited representation, and those below six heavy atoms were removed.
+Replicates of one standardised structure were collapsed to their median, and a
+structure whose replicates disagreed by more than one log unit in standard deviation
+was discarded rather than averaged, since a compound measured inconsistently can enter
+a cliff pair on its own measurement error. For acetylcholinesterase the curated set
+holds 5{,}609 compounds spanning pChEMBL 4.00 to 10.96.
 
 Similarity was computed as the Tanimoto coefficient on binary ECFP4, i.e. Morgan
 fingerprints of radius 2 folded to 2{,}048 bits. A pair was treated as near-identical
 at a coefficient of at least 0.90 and as an activity cliff when its two members also
 differed by at least 2.0 log units in pChEMBL, a hundredfold difference in potency.
-Within the curated set 421 pairs cleared the similarity criterion with a difference of
-at least one log unit, 110 of them reached the hundredfold criterion and 100 of those
-were constitutional. The pool was then filtered for simulation feasibility, retaining
+Pairs were further divided according to whether their two members differ in
+constitution or only in stereochemistry, which was decided by comparing their
+canonical SMILES with the stereochemistry stripped, and only the constitutional pairs
+were treated as informative, since no stereo-blind fingerprint can resolve a
+stereoisomer pair by construction while any method that uses three-dimensional
+coordinates resolves it trivially. Within the curated acetylcholinesterase set 421
+pairs cleared the similarity criterion with a difference of at least one log unit, 110
+of them reached the hundredfold criterion and 100 of those were constitutional.
+
+Six candidate targets were screened against three entry criteria, namely at least 80
+compounds surviving curation, a potency range of at least 3 log units, and at least 25
+constitutional activity cliffs. All six satisfied the first two criteria and two of
+them satisfied the third. Acetylcholinesterase was selected from those two because its
+constitutional pairs dominate most strongly and because its binding site gives a
+mechanistic reason to expect its cliffs to be geometric in origin, since its two
+recognition sites sit at opposite ends of a narrow gorge and its inhibitors are
+designed to span them, as described in Section~\ref{sec:dock}. The enzyme is also a
+therapeutic target in Alzheimer's disease, and the counts behind the choice are
+reported in Section~\ref{sec:composition}.
+
+The pool of the selected target was then filtered for simulation feasibility,
+retaining
 a compound only when it was composed of the elements H, C, N, O, F, S, Cl, Br, I and
 P, carried no radical electrons, had a molecular weight between 150 and 700~Da, had at
 most 55 heavy atoms and at most 18 rotatable bonds, and could be embedded in three
@@ -97,7 +84,7 @@ cliff and 86 control. A ligand was prepared and simulated once while a pair refe
 two ligands, since a compound may belong to more than one pair. The dominant
 protonation state at pH 7.4 was assigned by explicit rules, and every ligand carries a
 net positive charge, 170 at $+1$ and 101 at $+2$, consistent with the cation--$\pi$
-recognition at Trp86.
+recognition at the aromatic residues lining the gorge.
 
 This set was then divided into a development and a test part, once and in a separate
 step that wrote the assignment to a file, with the random seed being 20260902.
@@ -260,14 +247,37 @@ that the held-out fold can never influence which features are chosen.
 \subsection{Receptor model, docking protocol and its
 validation}\label{sec:dock}
 
+\begin{figure}[tb]
+  \centering
+  \includegraphics[width=\textwidth]{Figure1_hAChE_structure.pdf}
+  \caption{\textbf{Human acetylcholinesterase and its catalytic gorge (PDB 4EY7).}
+    (A)~Overall fold, rainbow-coloured from N- to C-terminus; donepezil in the
+    crystal pose marks the gorge as black spheres. (B)~The architecture of the gorge, formed by Trp86 at
+    the catalytic anionic site, Trp286 at the peripheral anionic site, the swinging
+    Tyr337 gate between them, and the Ser203--His447--Glu334 catalytic triad.}
+  \label{fig:structure}
+\end{figure}
+
 The receptor model was prepared from the X-ray crystal structure of recombinant hAChE
 in complex with donepezil, with the PDB ID being 4EY7 \citep{cheung2012} and the
-resolution being \SI{2.35}{\angstrom}. Donepezil is itself a dual-binding-site
-inhibitor, which is why this structure was chosen. Chain~A was retained and the second
-copy in the asymmetric unit was discarded. In this complex the CZ3 atoms of the Trp86 and
-Trp286 indole rings were measured \SI{15.6}{\angstrom} apart, and donepezil spans that
-distance while contacting both residues, which is the span a dual-site inhibitor has
-to bridge. Preparation of the same receptor for simulation differs and is described in
+resolution being \SI{2.35}{\angstrom}. Chain~A was retained and the second copy in the
+asymmetric unit was discarded. The enzyme is shown in Figure~\ref{fig:structure}(A),
+where donepezil in its crystal pose marks the active site at the base of a narrow
+gorge, and the architecture of that gorge in Figure~\ref{fig:structure}(B), with an
+aromatic residue at each end, i.e. Trp86 at the catalytic anionic site (CAS) and
+Trp286 at the peripheral anionic site (PAS) near the mouth, and with Tyr337 between
+the two, which adopts different rotamers in different complexes and is therefore
+referred to as the gate. In this complex the CZ3 atoms of the two indole rings were
+measured \SI{15.6}{\angstrom} apart, and donepezil spans that distance while
+contacting both residues.
+
+Donepezil is itself a dual-binding-site inhibitor, which is why this structure was
+chosen. Inhibitors designed to span both ends of the gorge are an established design
+principle rather than a premise introduced here \citep{grabowska2025}, since the
+peripheral anionic site has been reported to accelerate the aggregation of
+$\beta$-amyloid alongside the catalytic function of the enzyme, and it is this
+principle that the descriptor sets of Section~\ref{sec:rungs} were constructed to
+test. Preparation of the same receptor for simulation differs and is described in
 Section~\ref{sec:md}, since it becomes relevant only once a force field is applied.
 
 \begin{figure}[tb]
