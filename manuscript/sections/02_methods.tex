@@ -2,9 +2,9 @@
 
 In this section, we introduce the procedures to construct and to evaluate the
 descriptor sets compared in this work. We first describe the target and its binding
-site, the construction of the activity-cliff dataset, the splits and the three
-framings in which every descriptor set was scored, and the four descriptor sets
-themselves. We then describe the two procedures that produce the more expensive of
+site, the construction of the activity-cliff dataset together with the splits on which
+everything was scored, the three framings in which every descriptor set was scored,
+and the four descriptor sets themselves. We then describe the two procedures that produce the more expensive of
 those sets, i.e. the docking and its validation and the molecular dynamics simulations,
 followed by the descriptors derived from the trajectories and the model suite on which
 all of the sets were scored.
@@ -56,10 +56,11 @@ descriptors were computed on the same positions. Preparation of the receptor for
 simulation is described in Section~\ref{sec:md}, since it becomes relevant only once a
 force field is applied.
 
-\subsection{Dataset and activity-cliff definition}\label{sec:dataset}
+\subsection{Dataset, activity-cliff definition and splits}\label{sec:dataset}
 
-The dataset was constructed in three steps, i.e. selection of the target, curation of
-its activity data, and assembly of the pairs. Pairs of near-identical ligands were
+The dataset was constructed in four steps, i.e. selection of the target, curation of
+its activity data, assembly of the pairs, and division into a development and a sealed
+test part. Pairs of near-identical ligands were
 divided according to whether their two members differ in constitution or only in
 stereochemistry, which was decided by comparing their canonical SMILES with the
 stereochemistry stripped, and only the constitutional pairs were treated as
@@ -123,16 +124,13 @@ protonation state at pH 7.4 was assigned by explicit rules, and every ligand car
 net positive charge, 170 at $+1$ and 101 at $+2$, consistent with the cation--$\pi$
 recognition at Trp86.
 
-\subsection{Splits}\label{sec:splits}
-
-The development and the test split were fixed once, in a separate step that wrote them
-to a file, and every descriptor set was scored on exactly those splits, with the
-random seed being 20260902. Recomputing the folds inside each model would have let the
-comparison measure the luck of the fold as much as the quality of the descriptors, and
-fixing the splits before any molecular-dynamics result existed removed the possibility
-of adjusting them, knowingly or otherwise, in a direction that flatters a conclusion.
-
-Splitting at the level of the ligand would have been incorrect, since each ligand
+This set was then divided into a development and a test part, once and in a separate
+step that wrote the assignment to a file, with the random seed being 20260902.
+Recomputing the folds inside each model would have let the comparison measure the luck
+of the fold as much as the quality of the descriptors, and fixing them before any
+molecular-dynamics result existed removed the possibility of adjusting them, knowingly
+or otherwise, in a direction that flatters a conclusion. Splitting at the level of the
+ligand would have been incorrect, since each ligand
 belongs to at least one pair and placing one member of a cliff pair in the training
 set and the other in the test set would allow a model to memorise the shared scaffold.
 The splits were therefore built from the connected components of the graph whose
@@ -176,7 +174,7 @@ improvement depends on what is being predicted. A descriptor set can predict pot
 well and still fail to tell two near-identical molecules apart, and a set that
 separates cliff pairs from control pairs need not predict the size of the difference
 within a pair. Three framings were therefore scored for every descriptor set, on the
-folds of Section~\ref{sec:splits} and with the same algorithms, so that the three
+folds of Section~\ref{sec:dataset} and with the same algorithms, so that the three
 results differ in the question being asked and in nothing else, and they are set out
 in Table~\ref{tab:framings}. Framing~B was designated the primary comparison before
 any molecular-dynamics descriptor had been scored, and that designation is recorded in
