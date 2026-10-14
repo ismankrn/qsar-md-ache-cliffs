@@ -455,11 +455,31 @@ features are chosen, which is the most common way such a comparison is made to l
 fair while being anything but.
 
 \subsection{Molecular dynamics}\label{sec:md}
-\TODO{OpenFF Sage 2.3.0 + amber14SB + TIP3P; system build; equilibration; 25 ns
-  production (45 ns for the first 55 runs); GPU-resident mdrun; 217 ligands.}
-\NOTE{Receptor preparation matters and belongs here: naive loop bridging in 4EY7
-  created fabricated bonds worth 90\% of the bond energy; MD uses the capped
-  4ey7\_rec\_md.pdb. Source: results/12b\_receptor\_chain\_breaks.md}
+
+The receptor used for simulation is not the one used for docking. The crystal
+structure does not resolve residues 259 to 264 and 495 to 497, and the force-field
+setup treated each chain as continuous and therefore created peptide bonds across both
+gaps, of 7.11 and \SI{4.05}{\angstrom}. Those two bonds carried 166{,}885 of the
+185{,}963~\si{\kilo\joule\per\mole} of bond energy in the system, i.e. 90 per cent of
+it, and an energy minimisation would have pulled the flanking segments together with a
+force of the order of $10^{5}$~\si{\kilo\joule\per\mole\per\nano\metre} and deformed
+the fold. Rebuilding the two missing loops was attempted and abandoned, since the best
+of four attempts produced four non-proline cis peptide bonds, a configuration that
+occurs in about 0.03 per cent of residues in solved structures and cannot plausibly
+occur four times in one loop of six residues.
+
+What had to be removed was the fabricated bond rather than the absence of the loop.
+The chain was therefore divided at the two breaks into the segments 4--258, 265--494
+and 498--541, each of which was given its own chain identifier and capped with an
+acetyl group at its N-terminal side and an N-methylamide group at its C-terminal side.
+Neutral caps were used rather than charged termini, which would have placed six
+artificial formal charges on the surface of the protein, and the caps were positioned
+by internal coordinates so that the procedure is deterministic and involves no
+minimisation of the protein. The bond energy fell from 185{,}963 to
+1{,}145~\si{\kilo\joule\per\mole} and the maximum force from $3.3\times10^{8}$ to
+$2.1\times10^{5}$~\si{\kilo\joule\per\mole\per\nano\metre}, while the atoms lining the
+gorge did not move at all, so that the docked poses of Section~\ref{sec:dock} remain
+valid against the capped receptor and nothing earlier in this work had to be repeated.
 
 \begin{table}[tb]
   \centering
@@ -470,60 +490,108 @@ fair while being anything but.
   \input{../results/27_system_composition.tex}
 \end{table}
 
-\TODO{Prose. Two numbers belong in the text rather than only in the table: every
-  system is electroneutral to $2.8\times10^{-13}\,e$, and the receptor--ligand
-  minimum distance at build time runs from 1.67 to 2.64 \AA{}. The lower end is
-  tight, and should be stated rather than glossed -- the systems were minimised and
-  equilibrated afterwards and ran stably, which is the evidence that it resolved.}
+One system was built per ligand rather than per trajectory, so that a replicate
+differs from its parent only in the velocity seed and therefore tests the sampling
+rather than the structure. The protein was described by the amber14SB force field, the
+ligand by OpenFF Sage 2.3.0 through a SMIRNOFF template generator, and the solvent by
+the TIP3P water model with sodium chloride at \SI{0.15}{\mole\per\litre}. This is the
+same combination that was used for the MM/GBSA calculation of
+Section~\ref{sec:rungs}, since a difference in force field between the two rungs would
+have turned their comparison into a comparison of force fields. Each ligand was placed
+in its docked pose in a cubic box of \SI{100.1}{\angstrom} per side, which gives
+systems of between 96{,}220 and 96{,}298 atoms, and the composition is reported in
+Table~\ref{tab:system}. Two quantities were checked for every system rather than
+assumed. The net charge after counterions is at most $2.8\times10^{-13}\,e$ across all
+217 systems, and the shortest receptor--ligand heavy-atom distance at build time runs
+from 1.67 to \SI{2.64}{\angstrom}. The lower end of that range is a tight contact and
+is stated rather than glossed, since what resolves it is the minimisation and
+equilibration that follow, and the evidence that it did resolve is the stability of
+the production runs reported below.
+
+Each system was energy-minimised by steepest descent to a maximum force of
+\SI{100}{\kilo\joule\per\mole\per\nano\metre}, equilibrated for \SI{100}{\pico\second}
+in the canonical ensemble with the solute position-restrained, and then for a further
+\SI{100}{\pico\second} in the isothermal-isobaric ensemble without restraints.
+Production used a \SI{2}{\femto\second} time step with the bonds to hydrogen
+constrained by LINCS, a Verlet neighbour list, particle-mesh Ewald electrostatics, a
+\SI{1.0}{\nano\metre} cutoff for both the real-space Coulomb and the van der Waals
+interactions with a long-range dispersion correction applied to the energy and the
+pressure, the velocity-rescaling thermostat at \SI{300}{\kelvin} with a coupling time
+of \SI{0.1}{\pico\second}, and the c-rescale barostat at \SI{1}{\bar}, isotropic, with
+a coupling time of \SI{2}{\pico\second} and a compressibility of
+$4.5\times10^{-5}$~\si{\per\bar}. Coordinates were written every
+\SI{10}{\pico\second}.
+
+The simulations were run with the GPU-resident mdrun of GROMACS, with batches
+submitted through its multi-directory interface, a wall-clock limit set per job and
+restarts taken from checkpoints, so that a job reaching its limit resumed where it had
+stopped rather than beginning again. 229 production runs were completed over the 217
+ligands, with 211 ligands simulated once and 6 simulated three times for the replicate
+pilot of Section~\ref{sec:filter}, which amounts to 6{,}965~ns in total. The
+production length was \SI{50}{\nano\second} for the first 56 runs and
+\SI{25}{\nano\second} thereafter, and 17 of those first 56 stopped between 34 and
+\SI{42}{\nano\second} on reaching their wall-clock limit. The mixture of lengths does
+not affect the descriptors, because the first \SI{5}{\nano\second} of every run was
+discarded and the descriptors were computed on the \SI{20}{\nano\second} of analysed
+trajectory that follows, which every run supplies in full.
 
 \begin{figure}[tb]
   \centering
   \includegraphics[width=\textwidth]{fig_thermo.pdf}
   \caption{\textbf{Production ensembles ran at the intended thermodynamic state.}
     (a)~Temperature, (b)~density, (c)~potential energy and (d)~the running mean of
-    the pressure, each shown as the median and the 5--95 percentile band across
-    runs. Mean temperature is
-    \SI{300.00}{\kelvin} with a run-to-run spread of \SI{0.02}{\kelvin}, density
-    \SI{1018.9}{\kilo\gram\per\metre\cubed} with a spread of
-    \SI{0.12}{\kilo\gram\per\metre\cubed}, and the pressure running mean ends at
-    \SI{1.00}{\bar} with a 5--95 band of $[-1.67, +3.57]$. Potential-energy drift is
-    \SI{-10.5}{\kilo\joule\per\mole\per\nano\second} at the median against a total
-    near $-1.3\times10^{6}$, so about two parts in $10^{5}$ per nanosecond.}
+    the pressure, each drawn as the median across runs with the 5--95 percentile
+    band. Panel~(d) shows a running mean rather than the instantaneous pressure,
+    which fluctuates by hundreds of bar from frame to frame.}
   \label{fig:thermo}
 \end{figure}
 
-\TODO{Prose.}
-\NOTE{Energy files survive for 64 usable runs of 229: the trajectories were deleted
-  after extraction and only the cluster block kept its \texttt{prod.edr}. A further
-  16 energy files exist but cover 0.4 ns -- the jobs that hung on trembesi[75-78]
-  and were cancelled -- and are excluded as abandoned rather than short. Say the
-  subset out loud; it is not used to compare descriptor sets, only to show the
-  simulations were well behaved.}
-\NOTE{Instantaneous pressure in a box this size has a spread near 89 bar and means
-  nothing frame by frame, which is why panel (d) is a running mean.}
+The production ensembles ran at the thermodynamic state they were set to, which is
+shown in Figure~\ref{fig:thermo}. The temperature in panel~(a) averages
+\SI{300.00}{\kelvin} with a run-to-run spread of \SI{0.02}{\kelvin}, the density in
+panel~(b) averages \SI{1018.9}{\kilo\gram\per\metre\cubed} with a run-to-run spread of
+\SI{0.12}{\kilo\gram\per\metre\cubed}, and the potential energy in panel~(c) drifts by
+\SI{-10.5}{\kilo\joule\per\mole\per\nano\second} at the median against a total near
+$-1.3\times10^{6}$~\si{\kilo\joule\per\mole}, i.e. by about two parts in $10^{5}$ per
+nanosecond. Panel~(d) shows the running mean of the pressure rather than its
+instantaneous value, since the instantaneous pressure of a box of this size has a
+within-run spread of about \SI{89}{\bar} and carries no information frame by frame,
+and that running mean ends at \SI{1.00}{\bar}. These four quantities were computed on
+64 of the 229 runs, which is worth stating rather than leaving to be discovered. The
+trajectories were deleted once the descriptors had been extracted and only the cluster
+block retained its energy files, and a further 16 energy files that cover
+\SI{0.4}{\nano\second}, from jobs that hung and were cancelled, were excluded as
+abandoned rather than counted as short. The subset is not used to compare descriptor
+sets and serves only to show that the simulations were well behaved.
 
 \begin{figure}[tb]
   \centering
   \includegraphics[width=\textwidth]{fig_md_stability.pdf}
   \caption{\textbf{Structural stability across all 229 production runs.}
-    (a)~Receptor C$\alpha$ RMSD and (b)~ligand RMSD from the equilibrated pose,
-    median and interquartile band across runs, split by the 25~ns and 50~ns
-    production designs. (c)~Per-residue C$\alpha$ fluctuation computed after the
-    first 5~ns; the fourteen gorge-lining residues are marked and none is unusually
-    mobile, the largest excursions being surface loops. Across the campaign the
-    receptor C$\alpha$ RMSD is 1.42~\AA{} at the median and 2.20~\AA{} at worst, and
-    the ligand RMSD 2.99~\AA{} at the median.}
+    (a)~Receptor C$\alpha$ RMSD and (b)~ligand RMSD from the equilibrated pose, each
+    drawn as the median and the interquartile band across runs and split by the
+    25~ns and 50~ns production designs. (c)~Per-residue C$\alpha$ fluctuation
+    computed after the first 5~ns, with the fourteen gorge-lining residues marked.}
   \label{fig:stability}
 \end{figure}
 
-\TODO{Prose.}
-\NOTE{Worth a sentence in the text: the reduced archives are written with
-  \texttt{trjconv -pbc mol}, which places each molecule independently, and this
-  receptor is three chains after capping. A naive RMSD over the archive returns
-  25.8~\AA{} for the receptor and up to 99~\AA{} for the ligand. The figure applies
-  the same unwrap, no-jump and superposition used for the descriptors, which is
-  what turns those numbers into 1.3 and 4.2~\AA{}. It is the same defect stage 16b
-  found in the descriptor pipeline, and the archive still carries it.}
+Structural stability across the campaign is shown in Figure~\ref{fig:stability}. The
+receptor C$\alpha$ RMSD in panel~(a) has a median of \SI{1.42}{\angstrom} across runs
+and reaches \SI{2.20}{\angstrom} at worst, and the ligand RMSD from its equilibrated
+pose in panel~(b) has a median of \SI{2.99}{\angstrom}, with the two production
+designs drawn separately rather than averaged into a single band whose composition
+would change partway along its own axis. The per-residue C$\alpha$ fluctuation in
+panel~(c), computed after the first \SI{5}{\nano\second}, shows that none of the
+fourteen gorge-lining residues is unusually mobile and that the largest excursions
+belong to surface loops. These three panels require the same treatment of the periodic
+boundary that the descriptors require. The reduced archives were written with
+molecule-wise wrapping, which makes each molecule whole but places each one
+independently, and the capped receptor is three chains, so an RMSD computed directly
+on the archive returns \SI{25.8}{\angstrom} for the receptor and as much as
+\SI{99}{\angstrom} for the ligand. Unwrapping the molecules, preventing them from
+jumping between frames, placing every molecule in the periodic image of the first
+frame and only then superposing is what turns those values into the ones reported
+here.
 
 \subsection{MD-derived descriptors}\label{sec:mddesc}
 \TODO{33 descriptors, three design classes -- persistence, fluctuation, event

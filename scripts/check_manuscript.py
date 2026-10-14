@@ -109,20 +109,40 @@ def strip_headings(t: str) -> str:
     return re.sub(r"\\(sub)*(section|paragraph)\*?\{[^}]*\}", " ", t)
 
 
-def drafted_subsections(text: str) -> dict:
-    """{subsection title: has real prose} -- a figure in a subsection that is still
-    scaffolding cannot yet reference its panels, and flagging it is noise."""
+def subsection_prose(text: str) -> dict:
+    """{subsection title: its prose}, with float environments and macros removed."""
     out, parts = {}, re.split(r"(\\subsection\*?\{[^}]*\})", text)
     cur = "(preamble)"
     for chunk in parts:
         m = re.match(r"\\subsection\*?\{([^}]*)\}", chunk)
         if m:
             cur = m.group(1)
-            out.setdefault(cur, False)
+            out.setdefault(cur, "")
             continue
-        if len(prose_of(chunk).split()) > 60:
-            out[cur] = True
+        out[cur] = out.get(cur, "") + " " + prose_of(chunk)
     return out
+
+
+def drafted_subsections(text: str) -> dict:
+    """{subsection title: has real prose} -- a figure in a subsection that is still
+    scaffolding cannot yet reference its panels, and flagging it is noise."""
+    return {k: len(v.split()) > 60 for k, v in subsection_prose(text).items()}
+
+
+def panels_cited(label: str, prose: str, sub_prose: str) -> set:
+    """Panels a reader is actually pointed at.
+
+    Two forms count. `Figure~\\ref{fig:x}(a)` anywhere, and a bare `panel~(a)` inside
+    the subsection that already names the figure. The second form was not accepted at
+    first, which failed two honest paragraphs: naming the figure once and then writing
+    "the temperature in panel~(a)" reads better than repeating "Figure~5(a)" four times
+    in four sentences, and it points the reader just as precisely.
+    """
+    cited = set(re.findall(r"\\ref\{" + re.escape(label) + r"\}\(([a-dA-D])\)", prose))
+    if re.search(r"\\ref\{" + re.escape(label) + r"\}", sub_prose):
+        # case-insensitive, since a sentence may open with "Panel~(d) shows ..."
+        cited |= set(re.findall(r"panels?~?\s*\(([a-dA-D])\)", sub_prose, re.I))
+    return cited
 
 
 def subsection_of(text: str, pos: int) -> str:
@@ -187,13 +207,14 @@ def main() -> None:
                                  f"...{line.strip()[max(0, m.start()-35):m.end()+15]}...")
 
         # rule 6 -- every panel referenced, but only once the subsection has prose
-        done = drafted_subsections(text)
+        subs = subsection_prose(text)
+        done = {k: len(v.split()) > 60 for k, v in subs.items()}
         for label, cap, blk in figure_blocks(text):
             panels = sorted(set(re.findall(r"\((?:~)?([a-dA-D])\)", cap)))
             if not panels:
                 continue
             sub = subsection_of(text, text.find(blk))
-            cited = set(re.findall(r"\\ref\{" + re.escape(label) + r"\}\(([a-dA-D])\)", prose))
+            cited = panels_cited(label, prose, subs.get(sub, ""))
             missing = [p for p in panels if p not in cited]
             if not missing:
                 continue
