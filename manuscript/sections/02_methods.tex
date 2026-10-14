@@ -2,10 +2,12 @@
 
 In this section, we introduce the procedures to construct and to evaluate the
 descriptor sets compared in this work. We first describe the target and its binding
-site, the docking protocol and its validation, and the construction of the
-activity-cliff dataset. We then describe the four descriptor sets, the molecular
-dynamics simulations from which the last of them was derived, and the model suite on
-which all of them were scored.
+site, the construction of the activity-cliff dataset, the splits and the three
+framings in which every descriptor set was scored, and the four descriptor sets
+themselves. We then describe the two procedures that produce the more expensive of
+those sets, i.e. the docking and its validation and the molecular dynamics simulations,
+followed by the descriptors derived from the trajectories and the model suite on which
+all of the sets were scored.
 
 \subsection{Target and binding site}\label{sec:site}
 
@@ -53,80 +55,6 @@ throughout this work, so that the pose-geometry, MM/GBSA and molecular-dynamics
 descriptors were computed on the same positions. Preparation of the receptor for
 simulation is described in Section~\ref{sec:md}, since it becomes relevant only once a
 force field is applied.
-
-\subsection{Docking protocol and its validation}\label{sec:dock}
-
-\begin{figure}[tb]
-  \centering
-  \includegraphics[width=\textwidth]{Figure2_redocking_validation.pdf}
-  \caption{\textbf{Redocking validation, and the limit of a rigid receptor.}
-    (A)~Donepezil redocked into its own structure reproduces the crystal pose to
-    0.75~\AA{} RMSD over five seeds. (B)~Huperzine~A docked into its own receptor
-    (4EY5) succeeds. (C)~The same ligand cross-docked into 4EY7 fails at
-    3.10~\AA{}, because the Tyr337 rotamer of this structure occludes the true
-    pose.}
-  \label{fig:redock}
-\end{figure}
-
-All ligands were docked into the prepared 4EY7 receptor by using AutoDock Vina
-\citep{vina}. The search box was a cube of \SI{30}{\angstrom} per side centred at
-$(-14.257, -42.544, 30.646)$~\AA{}, midway between the CAS and the PAS so that poses
-spanning the gorge were accessible, and the exhaustiveness was set to 32. Ligand
-structures were generated from the standardised SMILES by adding hydrogens, embedding
-a single conformer with the ETKDGv3 method under a fixed random seed and optimising it
-with the MMFF94 force field, all by using RDKit \citep{rdkit}, and were converted to
-the PDBQT format by using Meeko \citep{meeko}. Each ligand was docked with three
-independent seeds, and the pose-geometry descriptors were computed on the top-ranked
-pose of each seed and reduced to their median, with the spread across seeds retained
-so that unstable poses could be identified.
-
-The protocol was validated by redocking four ligands whose complexes with hAChE have
-been solved, with five seeds per ligand and a pose counted as successful below
-\SI{2.0}{\angstrom} RMSD from the crystal pose. Donepezil was reproduced at
-$0.745 \pm 0.009$~\AA{} in five of five runs, as shown in
-Figure~\ref{fig:redock}(A), and territrem~B at $0.740 \pm 0.012$~\AA{} in five of
-five. Galantamine gave $2.463 \pm 1.709$~\AA{} and succeeded in four of five, and
-huperzine~A gave $3.098 \pm 0.011$~\AA{} and failed in all five. That failure was
-systematic rather than stochastic, since the spread across seeds was
-\SI{0.011}{\angstrom}, and two explanations were tested. Repeating the docking with
-boxes of 18, 22, 26 and \SI{30}{\angstrom} per side left the RMSD of huperzine~A
-between 3.05 and \SI{3.18}{\angstrom}, so box size was not the cause. Docking each
-ligand into the structure of its own complex instead succeeded, with huperzine~A at
-\SI{0.23}{\angstrom} in 4EY5, as shown in Figure~\ref{fig:redock}(B), and galantamine
-at \SI{0.81}{\angstrom} in 4EY6, while the same ligand and the same protocol failed in
-4EY7, as shown in Figure~\ref{fig:redock}(C), so that the two panels differ only in
-the receptor. The Tyr337 side chain differs by \SI{2.53}{\angstrom} between 4EY5 and
-4EY7 and occludes the true huperzine~A pose in the latter. The limitation is therefore
-the rigidity of the receptor rather than the docking protocol, which is what motivates
-the ensemble docking of Section~\ref{sec:rungs} and the molecular dynamics of
-Section~\ref{sec:md}. Vina also proved strongly stochastic for small ligands, since
-galantamine gave 5.88 and \SI{1.60}{\angstrom} on different seeds under otherwise
-identical settings, which is why seeds were fixed and three replicates were run for
-every ligand.
-
-\begin{figure}[tb]
-  \centering
-  \includegraphics[width=\textwidth]{fig_interactions.pdf}
-  \caption{\textbf{The reference binding mode, and docking checked at the level of
-    contacts.} (a)~Donepezil in the crystal pose with the residues it contacts,
-    where the colour of each edge gives the type of interaction. (b)~The same
-    fingerprint calculated for the redocked pose.}
-  \label{fig:interactions}
-\end{figure}
-
-Since the pose-geometry and molecular-dynamics descriptors are defined in terms of
-residue contacts rather than RMSD, the protocol was validated a second time at the
-level of interactions. Interaction fingerprints were computed for the crystal pose and
-the redocked pose of donepezil by using ProLIF \citep{prolif2021}, with bond orders
-transferred from the docked structure so that the two poses carry identical chemistry
-and differ only in their coordinates. The crystal binding mode is shown in
-Figure~\ref{fig:interactions}(a) and the comparison between the two fingerprints in
-Figure~\ref{fig:interactions}(b). Six residues are contacted in both poses, five in
-the crystal pose only and two in the docked pose only, and every typed interaction at
-the three named sites is recovered, i.e. the hydrophobic and $\pi$-stacking contacts
-at Trp86 and at Trp286 and the cation--$\pi$ and hydrophobic contacts at Tyr337, while
-what is lost on docking is van der Waals contact alone with Ser203 and His447. The
-typing was used for validation only and enters no descriptor set.
 
 \subsection{Dataset and activity-cliff definition}\label{sec:dataset}
 
@@ -314,13 +242,14 @@ other rung was measured, in the direction that flatters the more expensive rungs
 
 The rung-2 descriptors were chosen to test the dual-site mechanism of
 Section~\ref{sec:site} rather than to cast a wide net, and each is the median over the
-three docking seeds, with the spread retained for diagnosis but not used as a feature.
+three docking seeds of Section~\ref{sec:dock}, with the spread retained for diagnosis
+but not used as a feature.
 The heavy-atom count is among them, which is worth stating plainly, since the two
 groups of pairs differ in size as reported in Section~\ref{sec:composition} and this
 rung is therefore able to use that difference. The same descriptors were also computed
 over an ensemble of receptor conformations and are reported separately as rung~2e,
-because Section~\ref{sec:dock} identified the rigidity of a single receptor rather
-than the protocol as the limitation of the docking. Eight structures, i.e. 4EY4, 4EY7,
+because what limits the docking is the rigidity of a single receptor rather than the
+protocol, which is established in Section~\ref{sec:dock}. Eight structures, i.e. 4EY4, 4EY7,
 4M0F, 6CQX, 6CQY, 6O4X, 6O5V and 6WUY, were selected by clustering on the side-chain
 positions of the gorge-lining residues after superposition, since selecting on
 resolution or on date of deposition would most likely have returned several copies of
@@ -349,6 +278,80 @@ difference between two rungs is therefore a difference between representations a
 their natural dimensionality, and a matched-dimensionality arm was scored as well, as
 a robustness check, with the feature selection performed inside each training fold so
 that the held-out fold can never influence which features are chosen.
+
+\subsection{Docking protocol and its validation}\label{sec:dock}
+
+\begin{figure}[tb]
+  \centering
+  \includegraphics[width=\textwidth]{Figure2_redocking_validation.pdf}
+  \caption{\textbf{Redocking validation, and the limit of a rigid receptor.}
+    (A)~Donepezil redocked into its own structure reproduces the crystal pose to
+    0.75~\AA{} RMSD over five seeds. (B)~Huperzine~A docked into its own receptor
+    (4EY5) succeeds. (C)~The same ligand cross-docked into 4EY7 fails at
+    3.10~\AA{}, because the Tyr337 rotamer of this structure occludes the true
+    pose.}
+  \label{fig:redock}
+\end{figure}
+
+All ligands were docked into the prepared 4EY7 receptor by using AutoDock Vina
+\citep{vina}. The search box was a cube of \SI{30}{\angstrom} per side centred at
+$(-14.257, -42.544, 30.646)$~\AA{}, midway between the CAS and the PAS so that poses
+spanning the gorge were accessible, and the exhaustiveness was set to 32. Ligand
+structures were generated from the standardised SMILES by adding hydrogens, embedding
+a single conformer with the ETKDGv3 method under a fixed random seed and optimising it
+with the MMFF94 force field, all by using RDKit \citep{rdkit}, and were converted to
+the PDBQT format by using Meeko \citep{meeko}. Each ligand was docked with three
+independent seeds, and the pose-geometry descriptors were computed on the top-ranked
+pose of each seed and reduced to their median, with the spread across seeds retained
+so that unstable poses could be identified.
+
+The protocol was validated by redocking four ligands whose complexes with hAChE have
+been solved, with five seeds per ligand and a pose counted as successful below
+\SI{2.0}{\angstrom} RMSD from the crystal pose. Donepezil was reproduced at
+$0.745 \pm 0.009$~\AA{} in five of five runs, as shown in
+Figure~\ref{fig:redock}(A), and territrem~B at $0.740 \pm 0.012$~\AA{} in five of
+five. Galantamine gave $2.463 \pm 1.709$~\AA{} and succeeded in four of five, and
+huperzine~A gave $3.098 \pm 0.011$~\AA{} and failed in all five. That failure was
+systematic rather than stochastic, since the spread across seeds was
+\SI{0.011}{\angstrom}, and two explanations were tested. Repeating the docking with
+boxes of 18, 22, 26 and \SI{30}{\angstrom} per side left the RMSD of huperzine~A
+between 3.05 and \SI{3.18}{\angstrom}, so box size was not the cause. Docking each
+ligand into the structure of its own complex instead succeeded, with huperzine~A at
+\SI{0.23}{\angstrom} in 4EY5, as shown in Figure~\ref{fig:redock}(B), and galantamine
+at \SI{0.81}{\angstrom} in 4EY6, while the same ligand and the same protocol failed in
+4EY7, as shown in Figure~\ref{fig:redock}(C), so that the two panels differ only in
+the receptor. The Tyr337 side chain differs by \SI{2.53}{\angstrom} between 4EY5 and
+4EY7 and occludes the true huperzine~A pose in the latter. The limitation is therefore
+the rigidity of the receptor rather than the docking protocol, which is the reason for
+the ensemble docking of Section~\ref{sec:rungs} and, ultimately, for the molecular
+dynamics of Section~\ref{sec:md}. Vina also proved strongly stochastic for small ligands, since
+galantamine gave 5.88 and \SI{1.60}{\angstrom} on different seeds under otherwise
+identical settings, which is why seeds were fixed and three replicates were run for
+every ligand.
+
+\begin{figure}[tb]
+  \centering
+  \includegraphics[width=\textwidth]{fig_interactions.pdf}
+  \caption{\textbf{The reference binding mode, and docking checked at the level of
+    contacts.} (a)~Donepezil in the crystal pose with the residues it contacts,
+    where the colour of each edge gives the type of interaction. (b)~The same
+    fingerprint calculated for the redocked pose.}
+  \label{fig:interactions}
+\end{figure}
+
+Since the pose-geometry and molecular-dynamics descriptors are defined in terms of
+residue contacts rather than RMSD, the protocol was validated a second time at the
+level of interactions. Interaction fingerprints were computed for the crystal pose and
+the redocked pose of donepezil by using ProLIF \citep{prolif2021}, with bond orders
+transferred from the docked structure so that the two poses carry identical chemistry
+and differ only in their coordinates. The crystal binding mode is shown in
+Figure~\ref{fig:interactions}(a) and the comparison between the two fingerprints in
+Figure~\ref{fig:interactions}(b). Six residues are contacted in both poses, five in
+the crystal pose only and two in the docked pose only, and every typed interaction at
+the three named sites is recovered, i.e. the hydrophobic and $\pi$-stacking contacts
+at Trp86 and at Trp286 and the cation--$\pi$ and hydrophobic contacts at Tyr337, while
+what is lost on docking is van der Waals contact alone with Ser203 and His447. The
+typing was used for validation only and enters no descriptor set.
 
 \subsection{Molecular dynamics}\label{sec:md}
 
