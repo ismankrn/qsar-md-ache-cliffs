@@ -285,10 +285,56 @@ scored on it. The condition for opening it was the selection of one descriptor s
 carry forward, that condition was not met, and the split therefore remains unused and
 available to a later study.
 
-\subsection{The three framings}
-\TODO{A: per-ligand $R^2$ on pChEMBL. B (primary): $R^2$ on the signed pair
-  difference, antisymmetric rows. C: cliff/control classification, ROC AUC,
-  order-invariant pair features $[d\_a+d\_b,\,|d\_a-d\_b|]$.}
+\subsection{Three framings of the prediction problem}\label{sec:framings}
+
+A comparison between descriptor sets has no single answer, because what counts as an
+improvement depends on what is being predicted. A descriptor set can predict potency
+well and still fail to tell two near-identical molecules apart, and a set that
+separates cliff pairs from control pairs need not predict the size of the difference
+within a pair. Three framings of the prediction problem were therefore scored for
+every descriptor set, on the folds fixed in Section~\ref{sec:splits} and with the same
+algorithms, so that the three results differ in the question being asked and in
+nothing else. Framing~B was designated the primary comparison before any
+molecular-dynamics descriptor had been scored, and that designation is recorded in the
+version history of the analysis code rather than being asserted after the fact.
+
+In framing~A the unit is the ligand, the target is its pChEMBL value, and the metric
+is the coefficient of determination computed over the out-of-fold predictions of the
+development ligands. This is ordinary potency prediction, i.e. the task on which the
+QSAR literature is calibrated, and it was included for two reasons. A descriptor set
+that cannot predict potency at all is not a serious candidate for predicting a
+difference in potency, and a result on this task can be placed beside published models
+in a way that a pairwise result cannot.
+
+In framing~B the unit is the pair and the target is the signed difference in pChEMBL
+between its two members, so that the quantity predicted is the quantity that defines
+an activity cliff. Each pair contributes two training rows, formed by taking the
+difference of the two descriptor vectors in both orders together with the
+corresponding difference in potency, so that the data are antisymmetric and the
+arbitrary decision of which member of a pair is written first cannot influence what
+the model learns. The metric is again the coefficient of determination, computed over
+the out-of-fold predictions of all rows. This framing is the primary one because the
+question of this study is whether a descriptor set can distinguish two molecules that
+a fingerprint declares identical, and that distinction is the signed difference within
+a pair and nothing else.
+
+In framing~C the unit is again the pair, but the label is categorical, i.e. whether
+the pair is a cliff or a matched control, and the metric is the area under the
+receiver operating characteristic curve. The features of a pair have to be invariant
+to the order of its two members here, because whether a pair is a cliff does not
+depend on which of its ligands is written first, and the antisymmetric rows of
+framing~B would leave the label ambiguous. Each pair was therefore described by the
+concatenation of the elementwise sum and the elementwise absolute difference of the
+descriptor vectors of its two ligands, which is symmetric under exchange of the two by
+construction. Five algorithm families were used in this framing rather than six, since
+the partial least squares regression of the other two framings has no classification
+counterpart.
+
+A pair is indivisible in both pair framings. The two rows that a pair contributes to
+framing~B were assigned to the same fold and were resampled together, and the pair is
+also the unit of the interval estimates described in Section~\ref{sec:eval}. Treating
+the two rows of a pair as independent observations would count every pair twice and
+would narrow every interval by a factor that has nothing to do with the data.
 
 \subsection{Descriptor rungs}\label{sec:rungs}
 \NOTE{Say here why the two-dimensional descriptors are carried in two
@@ -425,7 +471,7 @@ available to a later study.
   are seed-dominated; the filter keeps 11 at the 20 ns window.}
 \NOTE{Source: results/18\_replicate\_pilot.md and 18\_replicate\_pilot.csv}
 
-\subsection{Model suite and evaluation}
+\subsection{Model suite and evaluation}\label{sec:eval}
 \TODO{Six regression and five classification families; preprocessing fitted inside
   each fold; best-of-family reported; bootstrap over units with the algorithm --
   and, for rung 1, the feature set -- re-selected inside every replicate.}
