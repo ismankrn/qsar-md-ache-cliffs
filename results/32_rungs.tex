@@ -1,0 +1,11 @@
+\begin{tabular}{l>{\raggedright\arraybackslash}p{2.6cm}>{\raggedright\arraybackslash}p{5.2cm}>{\raggedright\arraybackslash}p{1.7cm}>{\raggedright\arraybackslash}p{2.4cm}}
+\toprule
+Rung & Input required & What the descriptors capture & Features & Cost per ligand \\
+\midrule
+1 & Molecular graph & ECFP4 substructure fingerprint, with physicochemical descriptors in the second feature set & 2{,}048 or 2{,}265 & 6 ms \\[2pt]
+2 & One docked pose in 4EY7 & Distances to the two sites and to the gate, bridging along the axis between them, cation--$\pi$ contacts, per-residue contacts, ligand shape and size & 34 & 140 s, 3 seeds \\[2pt]
+2e & Docked poses in 8 receptor conformations & As rung 2 without the axis descriptors, reduced to the median over the ensemble & 29 & 378 s, 8 receptors \\[2pt]
+3 & The rung-2 pose & MM/GBSA total with its molecular-mechanics, polar and non-polar components, buried surface area, per-residue decomposition & 22 & rung 2, plus one energy evaluation \\[2pt]
+4 & A 25 ns trajectory & Contact occupancy at each end of the gorge, position along the axis, behaviour of the Tyr337 gate, fluctuation of ligand and residues & 33, or 12 filtered & $\approx$18 h on one GPU \\[2pt]
+\bottomrule
+\end{tabular}

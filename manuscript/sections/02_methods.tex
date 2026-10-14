@@ -351,6 +351,21 @@ would narrow every interval by a factor that has nothing to do with the data.
 \subsection{Four descriptor sets of increasing computational
 cost}\label{sec:rungs}
 
+\begin{table}[tb]
+  \centering
+  \small
+  \caption{\textbf{The four descriptor sets.} For each rung, the input it requires,
+    what its descriptors capture, the number of features it was scored with, and the
+    cost of producing it for one ligand. The feature counts are the two feature sets
+    of rung~1 and, for rung~4, the full set and the set that survives the reliability
+    filter. The costs are median measured values for one ligand, given as
+    processor time for the first three rungs and as wall-clock time on one GPU for
+    the simulation, which are not the same unit and are not comparable beyond their
+    order of magnitude.}
+  \label{tab:rungs}
+  \input{../results/32_rungs.tex}
+\end{table}
+
 Four descriptor families were compared, ordered by the cost of producing them, and
 each one is referred to below as a rung of that ladder. The first rung needs only the
 molecular graph, the second needs a docked pose, the third adds an energy evaluation
@@ -359,7 +374,9 @@ the point of the comparison, since the question is not whether a more expensive
 representation can be built but whether it buys anything, so every rung was scored
 with the same algorithms, on the same folds, and in the three framings of
 Section~\ref{sec:framings}. A difference between two rungs is therefore a difference
-between representations rather than between model families.
+between representations rather than between model families. The four rungs are set out
+in Table~\ref{tab:rungs}, which gives the input each one requires, what its
+descriptors capture, how many features it carries and what it cost to produce.
 
 Rung~1 is the two-dimensional baseline and uses no three-dimensional information at
 all. Two feature sets were carried rather than one. The first is a binary ECFP4
