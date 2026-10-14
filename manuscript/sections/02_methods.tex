@@ -66,7 +66,7 @@ receptor, including the treatment of the loops that are not resolved in the crys
 structure, is described in Section~\ref{sec:md}, since it became relevant only once a
 force field was applied.
 
-\subsection{Docking protocol and its validation}
+\subsection{Docking protocol and its validation}\label{sec:dock}
 
 \begin{figure}[tb]
   \centering
@@ -348,17 +348,94 @@ also the unit of the interval estimates described in Section~\ref{sec:eval}. Tre
 the two rows of a pair as independent observations would count every pair twice and
 would narrow every interval by a factor that has nothing to do with the data.
 
-\subsection{Descriptor rungs}\label{sec:rungs}
-\NOTE{Say here why the two-dimensional descriptors are carried in two
-  representations rather than one. Binary ECFP4 saturates at Tanimoto 1.000 for half
-  the cliff pairs, so scoring only that representation would hand the comparison to
-  the structure-based sets, while scoring only the count-based one would discard the
-  representation that wins on the signed pair difference. Both are scored and the
-  stronger is taken. The measurement itself belongs in Section~\ref{sec:composition}.}
-\TODO{Rung 1: binary ECFP4, and count ECFP4 + RDKit2D -- both, because the winner
-  depends on the framing. Rung 2: pose geometry on 4EY7 plus bridging features.
-  Rung 2e: median over eight receptor conformations. Rung 3: single-snapshot
-  MM/GBSA, energy and per-residue terms only. Rung 4: MD descriptors, below.}
+\subsection{Four descriptor sets of increasing computational
+cost}\label{sec:rungs}
+
+Four descriptor families were compared, ordered by the cost of producing them, and
+each one is referred to below as a rung of that ladder. The first rung needs only the
+molecular graph, the second needs a docked pose, the third adds an energy evaluation
+on that pose, and the fourth needs a molecular-dynamics trajectory. The ordering is
+the point of the comparison, since the question is not whether a more expensive
+representation can be built but whether it buys anything, so every rung was scored
+with the same algorithms, on the same folds, and in the three framings of
+Section~\ref{sec:framings}. A difference between two rungs is therefore a difference
+between representations rather than between model families.
+
+Rung~1 is the two-dimensional baseline and uses no three-dimensional information at
+all. Two feature sets were carried rather than one. The first is a binary ECFP4
+fingerprint of 2{,}048 bits, i.e. the representation that defined the cliffs in
+Section~\ref{sec:dataset}, and the second is a count-based ECFP4 fingerprint of the
+same width combined with the 217 physicochemical descriptors of RDKit, which gives
+2{,}265 features. Both were scored in every framing and the better of the two was
+taken, because neither of them dominates the other. Scoring only one would have
+handicapped the baseline against which every other rung was measured, and in a
+direction that flatters the more expensive rungs.
+
+Rung~2 was computed from the top-ranked docked pose and consists of 34 descriptors.
+They were chosen to test the dual-site mechanism described in Section~\ref{sec:site}
+rather than to cast a wide net, and they fall into four groups. The first group holds
+the distances from the ligand to Trp86, to Trp286 and to the Tyr337 gate, together
+with five descriptors of how far the ligand reaches along the axis between the two
+sites and what fraction of that axis it spans. The second holds the cation--$\pi$
+contacts at each of the two tryptophans and at both of them simultaneously. The third
+is a contact count for each of the fourteen gorge-lining residues. The fourth
+describes the ligand itself through its radius of gyration, its end-to-end distance,
+its buried fraction and its heavy-atom count. Every descriptor is the median over the
+three docking seeds, and the spread across seeds was retained for diagnosis but was
+not used as a feature. The heavy-atom count is among the features, which is worth
+stating plainly, since the two groups of pairs differ in size as reported in
+Section~\ref{sec:composition} and this rung is therefore able to use that difference.
+
+The same descriptors were also computed over an ensemble of receptor conformations,
+which is reported separately as rung~2e. The rigidity of a single receptor was
+identified in Section~\ref{sec:dock} as a limitation of the docking rather than of the
+protocol, so eight crystal structures of hAChE, i.e. 4EY4, 4EY7, 4M0F, 6CQX, 6CQY,
+6O4X, 6O5V and 6WUY, were selected by clustering on the side-chain positions of the
+gorge-lining residues after superposition. Selecting on conformational difference
+rather than on resolution or on date of deposition is what makes an ensemble useful,
+since the best-resolved structures would most likely have returned several copies of
+the same conformation. Each ligand was docked into all eight receptors and each
+descriptor was reduced to its median across them, which gives 29 descriptors, i.e.
+those of rung~2 without the five axis descriptors, which are defined against the
+single 4EY7 geometry.
+
+Rung~3 evaluated an MM/GBSA interaction energy on the same docked pose and consists of
+22 features, i.e. the total together with its molecular-mechanics, polar-solvation and
+non-polar components, the buried surface area, the interface atom counts, and a
+per-residue decomposition over the same fourteen residues. The calculation is
+single-trajectory, i.e. the complex, the protein and the ligand were taken from the same
+coordinates and nothing is re-minimised after separation, so that the internal bonded
+terms cancel exactly and only the intermolecular interaction and the desolvation
+remain. The receptor was rigid during docking, so the protein term is identical for
+every ligand and was computed once. This is not a rigorous binding free energy and is
+not presented as one, since absolute values obtained from a single post-docking
+snapshot are not defensible. It is on the ladder because it is what a structure-based
+study routinely does at this cost, and the question of this work is whether that
+routine step buys anything.
+
+Rung~4 was derived from molecular-dynamics trajectories, which are described in
+Section~\ref{sec:md}, and the descriptors themselves are defined in
+Section~\ref{sec:mddesc}. Thirty-three descriptors were computed, covering how
+persistently the ligand contacts each end of the gorge, where it sits on the axis
+between the two ends, how the Tyr337 gate behaves while it is bound, and how much the
+ligand and the surrounding residues fluctuate. Twelve of the thirty-three survived the
+reliability filter described in Section~\ref{sec:filter}, which removes descriptors
+whose variation between repeated simulations of the same ligand is comparable to their
+variation between ligands. Both the full set and the filtered set were scored, since
+reporting only one of them would leave open whether a result is a property of the
+descriptors or of the filter.
+
+The number of features is not matched across the rungs, since the two-dimensional sets
+carry 2{,}048 and 2{,}265 features against between 12 and 34 for every structure-based
+set. This is deliberate, because each rung was scored in the form in which it would
+actually be used, and a comparison that first cut a fingerprint down to 34 features
+would not describe what any practitioner does. The consequence is that a difference
+between two rungs is a difference between representations at their natural
+dimensionality rather than a controlled test of how much information each one carries.
+A matched-dimensionality arm was therefore scored as well, with the feature selection
+performed inside each training fold so that the held-out fold can never influence which
+features are chosen, which is the most common way such a comparison is made to look
+fair while being anything but.
 
 \subsection{Molecular dynamics}\label{sec:md}
 \TODO{OpenFF Sage 2.3.0 + amber14SB + TIP3P; system build; equilibration; 25 ns
@@ -477,7 +554,7 @@ would narrow every interval by a factor that has nothing to do with the data.
   fixed, with the A/B test as evidence the QC catches real defects.}
 \NOTE{Source: results/16b\_rung4\_pbc\_fix.md}
 
-\subsection{Replicate pilot and the descriptor filter}
+\subsection{Replicate pilot and the descriptor filter}\label{sec:filter}
 \TODO{Reliability $\sigma^2\_{\mathrm{lig}}/(\sigma^2\_{\mathrm{lig}}+2\sigma^2\_{\mathrm{rep}})$;
   12 replicate runs over 5 ligands; 81 of 160 descriptor$\times$window combinations
   are seed-dominated; the filter keeps 11 at the 20 ns window.}

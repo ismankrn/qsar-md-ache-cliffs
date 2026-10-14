@@ -31,7 +31,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 SEC = ROOT/"manuscript"/"sections"
-RUNG_DEFINED_IN = "Descriptor rungs"      # the subsection that introduces the term
+RUNG_DEFINED_IN = "increasing computational"   # the subsection that introduces the term
 SHORT_PARA_WORDS = 45
 
 # Rule 7. Methods describes what was done, so a present-tense passive there is
