@@ -3,25 +3,18 @@
   number it rests on. The cross-cutting argument is gathered in
   Section~\ref{sec:synthesis} at the end, and limitations after it.}
 
-\subsection{Dataset composition}
+\subsection{Dataset composition}\label{sec:composition}
 \begin{figure}[tb]
   \centering
   \includegraphics[width=\textwidth]{fig1_dataset.pdf}
-  \caption{\textbf{Target selection, the cliff definition, and two confounds it
-    carries.} (a)~Six ChEMBL targets screened for activity cliffs, split into
-    constitutional and stereochemical pairs. Only stereoisomer-free constitutional
-    cliffs are a fair test of a 2D descriptor, because no stereo-blind fingerprint can
-    resolve a stereoisomer pair by construction, while any 3D method resolves it
-    trivially, so a benchmark dominated by them favours structure before a single
-    model is fitted. Acetylcholinesterase is the only target screened where
-    constitutional cliffs dominate, 100 against 10; BACE1 inverts that at 5
-    against 101. (b)~All 97 cliff pairs in the final set are constitutional and
-    differ by 1--10 heavy atoms, yet binary ECFP4 reports Tanimoto exactly 1.000
-    for 49 of them. Count-based ECFP4 separates the same pairs at a median of
-    0.878. (c)~The cliff definition on the selected set; the similarity axis is
-    the binary fingerprint, which is the criterion that selected the pairs.
-    (d)~Cliff partners differ by 4.4 heavy atoms on average against 1.8 for
-    controls.}
+  \caption{\textbf{Target selection, the cliff definition, and two limitations it
+    carries.} (a)~The activity-cliff pairs of the six ChEMBL targets screened,
+    divided into constitutional and stereochemical ones. (b)~The 97 cliff pairs of
+    the selected set, each placed by its binary and its count-based ECFP4 Tanimoto
+    coefficient and coloured by the heavy-atom difference between its two members.
+    (c)~The selected pairs in the plane of the cliff definition, with similarity
+    measured by the binary fingerprint that performed the selection. (d)~The
+    heavy-atom difference within a pair, for the cliff pairs and for the controls.}
   \label{fig:dataset}
 \end{figure}
 
@@ -33,27 +26,60 @@
   \input{../results/23_dataset_composition.tex}
 \end{table}
 
-\TODO{Prose. Composition from Table~\ref{tab:dataset}; the two confounds from
-  Figure~\ref{fig:dataset}.}
-\NOTE{The saturation in panel (b) is not only an observation about the pairs: the
-  selection criterion is that same binary fingerprint, verified identical to the
-  audit's t\_bit column. So the measure that chose the pairs is the one that
-  cannot tell molecules eight heavy atoms apart from identical. Say that plainly
-  -- it affects how the cliff set itself should be read, and it is a property of a
-  default representation rather than of this target.}
-\NOTE{Size confound: stage 10 found 0 of 19 descriptors survive a size adjustment,
-  and four that looked significant are size artefacts.}
+\TODO{One paragraph on the composition itself, from Table~\ref{tab:dataset}.}
 
-\NOTE{Discussion. Two artefacts in this figure bias a cliff study in \emph{opposite}
-  directions, and that is the point of measuring both. Stereochemical cliffs favour
-  structure-based methods, because no stereo-blind fingerprint can resolve a
-  stereoisomer pair by construction while any 3D method resolves it trivially; they
-  are why four of six targets were rejected. Binary saturation favours nothing in
-  particular but corrupts the pair selection itself, since the criterion that chose
-  these pairs cannot tell molecules eight heavy atoms apart from identical. Neither
-  is specific to this target or to MD.}
+The six targets screened differed sharply in the kind of cliff they offered, which is
+shown in Figure~\ref{fig:dataset}(a), where the cliff pairs of each target are divided
+into constitutional and stereochemical ones. BACE1 returned 101 stereochemical pairs
+against 5 constitutional ones, and the three other rejected targets returned between 9
+and 17 constitutional pairs, so that four of the six fell below the entry criterion of
+25 constitutional cliffs although all six satisfied the criteria on compound count and
+on potency range. Acetylcholinesterase inverted that ratio at 100 constitutional pairs
+against 10 stereochemical ones, and coagulation factor Xa was the only other target to
+pass, at 33 against 16. Every pair that reached the final set is constitutional, since
+the two members differ in molecular formula in all 97 pairs and the smallest
+difference in heavy-atom count is one, so that no result reported below rests on a
+pair that a stereo-blind fingerprint is barred from resolving by construction.
 
-% ---------------------------------------------------------------------------
+The fingerprint also fails to separate pairs that did enter the set, which is shown in
+Figure~\ref{fig:dataset}(b) for all 97 cliff pairs. Binary ECFP4 reported a Tanimoto
+coefficient of exactly 1.000 for 49 of the 97, although the two members of those pairs
+differ by a median of 4 and by as many as 8 heavy atoms and differ in potency by a
+median of 2.51 log units. Count-based ECFP4, which retains how often each substructure
+occurs rather than only whether it occurs at all, separated the same 49 pairs at a
+median coefficient of 0.878, so that folding counts to bits discards exactly the
+multiplicity that distinguishes a molecule from its longer homologue. This is not only
+a statement about the descriptors, because the criterion that selected these pairs is
+the binary fingerprint itself. The similarity recorded at selection was compared with
+the audited binary coefficient over all 97 pairs and the two agree exactly, with a
+maximum absolute difference of zero, so that the measure which chose the pairs is the
+measure that cannot tell their two members apart. A model given that representation
+alone has no feature on which to place the two members differently, whatever algorithm
+is fitted on top of it.
+
+The consequences of the definition for the selected set are shown in the lower two
+panels. Figure~\ref{fig:dataset}(c) places the pairs in the plane of the definition
+itself, with similarity on the axis measured by the binary fingerprint that performed
+the selection, and the empty band between the cliff pairs above 2.0 log units and the
+control pairs below 0.30 is imposed by the criterion rather than being a property of
+the chemistry. Figure~\ref{fig:dataset}(d) shows that the two groups also differ in
+size, since the two members of a cliff pair differ by 4.4 heavy atoms on average
+against 1.8 for a control pair, which means that any descriptor correlated with
+molecular size separates the groups for a reason that has nothing to do with the
+cliff. The 19 pose-geometry and energy descriptors were therefore tested again with
+that difference adjusted for, and although 4 of them separated the two groups in a raw
+test, none of the 19 survived either a stratified or a residual adjustment.
+
+The two limitations above act differently and are worth keeping apart. The
+stereochemical one favours descriptors derived from three-dimensional structure, since
+a stereoisomer pair is unresolvable by a stereo-blind fingerprint and trivial for any
+method that uses coordinates, and it is the reason that four of the six candidate
+targets were rejected. The saturation of the binary fingerprint favours no method in
+particular and instead corrupts the selection of the pairs themselves. Neither is
+specific to this target or to molecular dynamics, since both follow from a default
+molecular representation, and both are therefore inherited by any activity-cliff
+benchmark assembled in the usual way.
+
 \subsection{The ladder}
 \label{sec:ladder}
 

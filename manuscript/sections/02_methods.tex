@@ -161,18 +161,22 @@ used only for validation here and was not carried into any descriptor set.
 The dataset was constructed in three steps, i.e. the selection of the target, the
 curation of its activity data, and the assembly of pairs of near-identical ligands
 that differ sharply in potency together with pairs that are equally similar but do
-not. Six candidate targets were screened against three entry criteria, namely at
-least 80 compounds surviving curation, a potency range of at least 3 log units, and
-at least 25 activity cliffs. Two of the six satisfied all three criteria, with the
-remaining four failing on the number of cliffs. Among the pairs that satisfied the
-similarity and potency criteria, those whose two members are stereoisomers of one
-another were counted separately from those that differ in constitution, for the
-reason given in Section~\ref{sec:artefacts}, and only the latter were informative for
-the comparison made in this work. Acetylcholinesterase was selected because it was
-the only target screened in which the constitutional pairs dominated, i.e. 100
-constitutional pairs against 10 stereochemical ones, and because the dual-site
-architecture described in Section~\ref{sec:site} gives a mechanistic reason to expect
-its cliffs to be geometric in origin.
+not. Pairs of the first kind were further divided according to whether their two
+members differ in constitution or only in stereochemistry, which was decided by
+comparing the canonical SMILES of the two members with the stereochemistry stripped,
+and only the constitutional pairs were treated as informative. The reason is that
+ECFP does not encode stereochemistry, so that no stereo-blind fingerprint can resolve
+a stereoisomer pair by construction while any method that uses three-dimensional
+coordinates resolves it trivially, and a set dominated by such pairs would favour
+structure-based descriptors before a single model had been fitted. Six candidate
+targets were then screened against three entry criteria, namely at least 80 compounds
+surviving curation, a potency range of at least 3 log units, and at least 25
+constitutional activity cliffs. All six satisfied the first two criteria and two of
+them satisfied the third, and acetylcholinesterase was selected from those two
+because it was the target in which the constitutional pairs dominated most strongly
+and because the dual-site architecture described in Section~\ref{sec:site} gives a
+mechanistic reason to expect its cliffs to be geometric in origin. The counts behind
+this choice are reported in Section~\ref{sec:composition}.
 
 Activity data for CHEMBL220 were retrieved from ChEMBL, and a record was retained
 only when it came from a binding assay, reported IC\textsubscript{50},
@@ -233,58 +237,6 @@ $+2$, which is consistent with the cation--$\pi$ recognition at Trp86 described 
 Section~\ref{sec:site}. The division of this set into a development part and a sealed
 test part is described in Section~\ref{sec:splits}.
 
-\subsection{Limitations of the fingerprint that defines an activity
-cliff}\label{sec:artefacts}
-
-The criterion that defines an activity cliff in this work combines a difference in
-potency with a structural similarity, and that similarity is a fingerprint, so the
-set of cliffs that the criterion returns inherits whatever the fingerprint cannot
-see. Two such limitations act at two different stages of the construction described
-in Section~\ref{sec:dataset}, and both of them were measured rather than assumed. The
-first is that ECFP does not encode stereochemistry, so that a pair of enantiomers or
-of diastereomers reaches a Tanimoto coefficient of exactly 1.0 and a criterion that
-combines similarity with a potency difference counts such a pair as a
-maximal-similarity cliff. No stereo-blind fingerprint can resolve such a pair by
-construction, while any method that uses three-dimensional coordinates resolves it
-trivially, so a benchmark dominated by these pairs favours structure-based
-descriptors before a single model has been fitted. Pairs were therefore classified by
-comparing the canonical SMILES of their two members with stereochemistry stripped,
-and it was this classification that disqualified four of the six targets screened,
-since BACE1 returned 101 stereochemical pairs against 5 constitutional ones.
-Acetylcholinesterase inverts that ratio at 100 against 10, and every pair in the final
-set is constitutional, since the two members differ in molecular formula in all 97
-pairs and the smallest difference in heavy-atom count is one.
-
-The second limitation affects the pairs that do enter the set. Binary ECFP4 reports a
-Tanimoto coefficient of exactly 1.000 for 49 of the 97 constitutional cliff pairs,
-although the two members of those pairs differ by a median of 4 and by as many as 8
-heavy atoms and differ in potency by a median of 2.51 log units. Count-based ECFP4,
-which retains the number of times each substructure occurs rather than only whether
-it occurs at all, separates the same 49 pairs at a median coefficient of 0.878.
-Folding counts to bits therefore discards exactly the multiplicity that distinguishes
-a molecule from its longer homologue. This is not only an observation about the
-pairs, because the criterion that selected them is the binary fingerprint itself, and
-the similarity recorded at selection was verified to be identical to the audited
-binary coefficient for all 97 pairs. The measure that chose these pairs is thus the
-measure that cannot tell their two members apart, and a model given only that measure
-has no feature on which to place them differently.
-
-Both limitations were carried forward rather than removed, and they were handled in
-different ways because they are not the same kind of problem. Stereochemical pairs
-were excluded at target screening and again at control selection, so that no pair in
-this work rests on them. The saturation of the binary fingerprint was retained,
-because removing it would have meant changing the definition of the set after the set
-had been selected, and the two-dimensional descriptors defined in
-Section~\ref{sec:rungs} were instead scored as binary ECFP4 and as count-based ECFP4
-combined with physicochemical descriptors, with the stronger of the two taken, so
-that the comparison does not rest on whichever representation happens to suit the
-quantity being predicted. The two limitations are also worth separating because they
-bias in opposite directions. The stereochemical one favours descriptors derived from
-three-dimensional structure, while the confound examined in Section~\ref{sec:subset}
-favours an expensive descriptor set that is available for only part of the data, and
-measuring both in a single study is what allows each of them to be reported with a
-direction rather than only as a caveat.
-
 \subsection{Splits}\label{sec:splits}
 \TODO{Connected-component splits over the similarity graph, seed 20260902, five
   CV folds, sealed test set of 54 ligands. State that the test split has not been
@@ -296,6 +248,12 @@ direction rather than only as a caveat.
   order-invariant pair features $[d\_a+d\_b,\,|d\_a-d\_b|]$.}
 
 \subsection{Descriptor rungs}\label{sec:rungs}
+\NOTE{Say here why the two-dimensional descriptors are carried in two
+  representations rather than one. Binary ECFP4 saturates at Tanimoto 1.000 for half
+  the cliff pairs, so scoring only that representation would hand the comparison to
+  the structure-based sets, while scoring only the count-based one would discard the
+  representation that wins on the signed pair difference. Both are scored and the
+  stronger is taken. The measurement itself belongs in Section~\ref{sec:composition}.}
 \TODO{Rung 1: binary ECFP4, and count ECFP4 + RDKit2D -- both, because the winner
   depends on the framing. Rung 2: pose geometry on 4EY7 plus bridging features.
   Rung 2e: median over eight receptor conformations. Rung 3: single-snapshot
