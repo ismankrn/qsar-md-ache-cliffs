@@ -238,9 +238,52 @@ Section~\ref{sec:site}. The division of this set into a development part and a s
 test part is described in Section~\ref{sec:splits}.
 
 \subsection{Splits}\label{sec:splits}
-\TODO{Connected-component splits over the similarity graph, seed 20260902, five
-  CV folds, sealed test set of 54 ligands. State that the test split has not been
-  scored by any model and when it will be.}
+
+The development and the test split were fixed once, in a separate step that wrote them
+to a file, and every descriptor set described below was scored on exactly those
+splits. Recomputing the folds inside each model would have let the comparison measure
+the luck of the fold as much as the quality of the descriptors, since a difference
+between two descriptor sets scored on two different partitions of the same data is not
+attributable to either of them. Fixing the splits before any molecular-dynamics result
+had been produced also removed the possibility of adjusting them, knowingly or
+otherwise, in a direction that flatters a conclusion. The random seed was 20260902 and
+was recorded together with the split assignment.
+
+Splitting at the level of the ligand would have been incorrect here, because the
+ligands are not independent units. Each ligand belongs to at least one pair, and
+placing one member of a cliff pair in the training set and the other in the test set
+would allow a model to memorise the shared scaffold and to recover the difference
+within the pair without having represented anything about the cliff. The splits were
+therefore built from the connected components of the graph whose vertices are the
+ligands and whose edges are the pairs, so that a component is the smallest unit that
+can be moved from one split to another without separating the two members of a pair.
+The 271 ligands formed 110 such components, of between 2 and 9 ligands with a median
+of 2. The components were stratified by whether they contained a cliff pair and by
+their mean potency in three bins, and 20 per cent of the components of each stratum
+were assigned to the test split. The components remaining in the development split
+were distributed over five cross-validation folds by greedy bin packing, taking the
+largest components first and assigning each one to the fold with the lowest combined
+load of cliff pairs and of ligands.
+
+Balancing on either quantity alone had been tried first and failed in both directions.
+Assigning components in rotation produced folds holding 25 cliff pairs against 4, which
+leaves a cliff metric computed per fold too noisy to interpret, while balancing the
+number of cliff pairs alone produced folds of 13 ligands against 63, because the dense
+cliff clusters are small while the large components contain no cliff at all. The joint
+criterion gave a development split of 217 ligands and 145 pairs and a test split of 54
+ligands and 38 pairs, of which 20 are cliff pairs and 18 are controls, with the five
+folds holding between 40 and 45 ligands, between 15 and 17 cliff pairs and between 13
+and 14 control pairs. No pair has its two members on opposite sides of the test
+boundary or of any fold boundary, which was verified on the written splits rather than
+assumed from the construction.
+
+The test split was sealed, i.e. it was to be scored only after a single descriptor set
+and a single algorithm had been selected on the development split, since with several
+descriptor sets and six algorithm families the number of comparisons is large enough
+that a winner can be selected on noise alone. No model reported in this work has been
+scored on it. The condition for opening it was the selection of one descriptor set to
+carry forward, that condition was not met, and the split therefore remains unused and
+available to a later study.
 
 \subsection{The three framings}
 \TODO{A: per-ligand $R^2$ on pChEMBL. B (primary): $R^2$ on the signed pair
