@@ -1,0 +1,9 @@
+\begin{tabular}{ll>{\raggedright\arraybackslash}p{2.9cm}>{\raggedright\arraybackslash}p{4.3cm}ll}
+\toprule
+Framing & Unit & Quantity predicted & Features of one row & Metric & Algorithms \\
+\midrule
+A & Ligand (217) & pChEMBL & $\mathbf{d}_a$, the vector of the ligand itself & $R^2$ & 6 \\
+B & Pair (145) & Signed difference in pChEMBL & $\mathbf{d}_a-\mathbf{d}_b$ and $\mathbf{d}_b-\mathbf{d}_a$, two rows per pair & $R^2$ & 6 \\
+C & Pair (145) & Cliff or matched control & $[\,\mathbf{d}_a+\mathbf{d}_b,\ |\mathbf{d}_a-\mathbf{d}_b|\,]$, one row per pair & ROC AUC & 5 \\
+\bottomrule
+\end{tabular}

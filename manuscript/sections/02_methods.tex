@@ -287,6 +287,18 @@ available to a later study.
 
 \subsection{Three framings of the prediction problem}\label{sec:framings}
 
+\begin{table}[tb]
+  \centering
+  \small
+  \caption{\textbf{The three framings.} The unit of each framing, the quantity it
+    predicts, how one row is built from the descriptor vectors $\mathbf{d}_a$ and
+    $\mathbf{d}_b$ of the two ligands of a pair, the metric, and the number of
+    algorithm families. The number in parentheses is the count of units available in
+    the development split.}
+  \label{tab:framings}
+  \input{../results/31_framings.tex}
+\end{table}
+
 A comparison between descriptor sets has no single answer, because what counts as an
 improvement depends on what is being predicted. A descriptor set can predict potency
 well and still fail to tell two near-identical molecules apart, and a set that
@@ -294,7 +306,7 @@ separates cliff pairs from control pairs need not predict the size of the differ
 within a pair. Three framings of the prediction problem were therefore scored for
 every descriptor set, on the folds fixed in Section~\ref{sec:splits} and with the same
 algorithms, so that the three results differ in the question being asked and in
-nothing else. Framing~B was designated the primary comparison before any
+nothing else, and the three are set side by side in Table~\ref{tab:framings}. Framing~B was designated the primary comparison before any
 molecular-dynamics descriptor had been scored, and that designation is recorded in the
 version history of the analysis code rather than being asserted after the fact.
 
