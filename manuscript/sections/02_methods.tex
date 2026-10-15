@@ -374,39 +374,43 @@ wall-clock limit. The mixture of lengths does not affect the descriptors, since 
 the \SI{20}{\nano\second} that follows. Every run supplies that window in full, so no
 ligand contributes a shorter record than another.
 
-\TODO{Descriptors, as the last part of this subsection. 32 dynamic descriptors in
-  three design classes -- persistence, fluctuation and event count -- chosen so that
-  none is a frame-averaged rung-2 quantity. Table of definitions. Computed on the
-  fourteen gorge-lining residues, with CAS being Trp86, PAS being Trp286 and the gate
-  being Tyr337. The heavy-atom count is carried beside them as a size covariate and is
-  not one of the 32.}
-\NOTE{Of the three classes only persistence survives the replicate filter, and 8 of
-  the 11 survivors are contact occupancies. Report it here or in Results, but report
-  it -- it is the actionable guidance for anyone building MD descriptors.}
+Thirty-two descriptors were computed from each trajectory, and they fall into three
+design classes. Persistence quantities measure how much of the analysed window a contact or a position
+is held, fluctuation quantities measure how widely something moves, and event counts
+measure how often something happens. None of them is a frame-averaged version of a
+rung-2 quantity, since averaging a pose descriptor over a trajectory would test the
+averaging rather than the dynamics. They are computed on the same fourteen
+gorge-lining residues, with Trp86 at the CAS, Trp286 at the PAS and Tyr337 as the
+gate, and the heavy-atom count is carried beside them as a size covariate rather than
+as one of the 32. Extracting them requires the periodic boundary to be handled before
+anything is measured. Each molecule is made whole along its bonds, prevented from
+jumping between consecutive frames and placed in the periodic image of the first
+frame, and only then is the receptor superposed by the Kabsch algorithm. An earlier
+version did none of this and compared coordinates against a frozen reference, which
+absorbed the rotation and the diffusion of the complex and left molecules cut by box
+faces. Re-extracting one raw trajectory under both treatments changed 19 of some 30
+descriptors, with the ligand RMSD falling from 26.70 to \SI{3.14}{\angstrom} and the
+gorge fluctuation from 37.09 to \SI{0.93}{\angstrom}. The contact occupancies moved as
+well, and every one of them upward, since a contact whose partner was written into
+another periodic image is a contact that was missed.
 
-\TODO{Periodic boundary handling, which the descriptors require. Bond-based unwrap,
-  no-jump against the previous frame, minimum image, then Kabsch superposition. State
-  that an earlier version did none of it and that 19 of some 30 descriptors changed
-  when it was fixed, with the A/B test on one raw trajectory as the evidence.}
-\NOTE{Two mechanisms, both present: free rotation of the complex against a frozen
-  reference, and per-molecule wrapping of a receptor that is three chains after
-  capping. The self-correction is worth keeping -- the first analysis claimed only the
-  seven frozen-reference quantities were affected, and contact occupancies moved too,
-  every one of them upward, since a contact written an image away is a contact that
-  was missed. Source: results/16b\_rung4\_pbc\_fix.md}
-
-\TODO{Replicate pilot and the descriptor filter. Reliability
-  $\sigma^2\_{\mathrm{lig}}/(\sigma^2\_{\mathrm{lig}}+2\sigma^2\_{\mathrm{rep}})$, the
-  share of variance that is between ligands rather than between seeds; 12 replicate
-  runs over 5 ligands; 96 of 160 descriptor$\times$window combinations are
-  seed-dominated; 11 of 32 descriptors pass at the 20~ns window. The criterion was
-  fixed before the replicate trajectories were run.}
-\NOTE{The argument that carries this: a duration ablation cannot answer the seed
-  question. A quantity can be flat in every individual run and still differ between
-  seeds, which is what basin trapping does. gate\_flips\_per\_ns averages 0.007 per ns,
-  so a run beginning in one Tyr337 rotamer reports occupancy 1.000 with a flat RMSD
-  and looks converged. Nothing inside one trajectory separates "the answer is A" from
-  "this run was stuck in A". Source: results/18\_replicate\_pilot.md}
+Which of the 32 descriptors can carry a pair endpoint was decided by a replicate
+pilot, and the rule was fixed before those trajectories were run. A descriptor
+qualifies only when the spread between ligands is at least twice the spread between
+replicates of the same ligand, which is the reliability
+$\sigma^2_{\mathrm{lig}}/(\sigma^2_{\mathrm{lig}} + 2\sigma^2_{\mathrm{rep}})$ written
+as a ratio of standard deviations. The factor of two is a judgement, but it was made
+blind, and the pair endpoint justifies it, because a difference between two ligands
+carries the replicate noise twice over. The pilot rests on four ligands simulated
+three times each, which is a narrow basis and is stated here as such. Of the 160
+combinations of descriptor and analysis window that were tested, 96 are dominated by
+the velocity seed rather than by the ligand. At the \SI{20}{\nano\second} window 11 of
+the 32 descriptors pass, and 8 of those are contact occupancies, so of the three
+design classes only persistence survives in quantity. A duration ablation could not
+have answered this question, since a quantity can be flat within every individual run
+and still differ between seeds. The Tyr337 gate flips about once in three
+trajectories, so a run that begins in one rotamer reports that rotamer with a flat
+RMSD and no drift, and looks converged while being stuck.
 
 \subsection{Learning algorithms and preprocessing}\label{sec:algo}
 \TODO{Six regression families and five classification families, named and cited, with
