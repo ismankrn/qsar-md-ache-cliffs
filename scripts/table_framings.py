@@ -24,8 +24,8 @@ import pandas as pd
 ROOT = Path(__file__).resolve().parent.parent
 RES = ROOT/"results"
 TARGET = "CHEMBL220"
-# Framing C drops PLS, which has no classification counterpart; see rung4_model.CLF.
-N_REG_FAMILIES, N_CLF_FAMILIES = 6, 5
+# The algorithm suite is described in the model-suite subsection, not here: a count in
+# this table read as though each framing had its own algorithms.
 
 
 def main() -> None:
@@ -40,27 +40,23 @@ def main() -> None:
     # around the operators.
     rows = [
         ("A", f"Ligand ({n_lig})", "pChEMBL",
-         r"$\mathbf{d}_a$, the vector of the ligand itself",
-         "$R^2$", N_REG_FAMILIES),
+         r"$\mathbf{d}_a$, the vector of the ligand itself", "$R^2$"),
         ("B", f"Pair ({n_pair})", "Signed difference in pChEMBL",
          r"$\mathbf{d}_a-\mathbf{d}_b$ and $\mathbf{d}_b-\mathbf{d}_a$, "
-         r"two rows per pair",
-         "$R^2$", N_REG_FAMILIES),
+         r"two rows per pair", "$R^2$"),
         ("C", f"Pair ({n_pair})", "Cliff or matched control",
          r"$[\,\mathbf{d}_a+\mathbf{d}_b,\ |\mathbf{d}_a-\mathbf{d}_b|\,]$, "
-         r"one row per pair",
-         "ROC AUC", N_CLF_FAMILIES),
+         r"one row per pair", "ROC AUC"),
     ]
     # >{\raggedright\arraybackslash}p{} rather than a bare p{}, because a justified
     # 2.9 cm column stretches "Signed difference" across the cell. Spelled out rather
     # than hidden behind a \newcommand, since this fragment is \input and a macro
     # definition travelling with it would be defined in the caller's scope.
     col = r">{\raggedright\arraybackslash}p"
-    tex = [r"\begin{tabular}{ll" + col + "{2.9cm}" + col + r"{4.3cm}ll}", r"\toprule",
+    tex = [r"\begin{tabular}{ll" + col + "{3.2cm}" + col + r"{5.2cm}l}", r"\toprule",
            r"Framing & Unit & Quantity predicted & Features of one row "
-           r"& Metric & Algorithms \\", r"\midrule"]
-    tex += [" & ".join([f, u, q, feat, m, str(n)]) + r" \\"
-            for f, u, q, feat, m, n in rows]
+           r"& Metric \\", r"\midrule"]
+    tex += [" & ".join([f, u, q, feat, m]) + r" \\" for f, u, q, feat, m in rows]
     tex += [r"\bottomrule", r"\end{tabular}"]
     (RES/"31_framings.tex").write_text("\n".join(tex) + "\n")
     print("  -> results/31_framings.tex")

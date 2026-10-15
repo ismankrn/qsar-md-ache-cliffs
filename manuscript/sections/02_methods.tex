@@ -118,7 +118,7 @@ it.
   \centering
   \small
   \caption{\textbf{The three framings.} The unit of each, the quantity it predicts,
-    the features of one row, the metric, and the number of algorithm families.}
+    the features of one row, and the metric.}
   \label{tab:framings}
   \input{../results/31_framings.tex}
 \end{table}
@@ -162,10 +162,10 @@ the pair is a cliff or a matched control, and the metric is the area under the
 receiver operating characteristic curve. The features of a pair have to be invariant
 to the order of its two members here, as the label is, and the antisymmetric rows of
 framing~B would leave it ambiguous. A pair was therefore described by the elementwise
-sum and the elementwise absolute difference concatenated. This framing uses five algorithm families, not six, as partial least squares
-regression has no classification counterpart. The two classes are close to balanced in
-the development split, at 77 cliff pairs against 68 controls, so the metric is not
-distorted by a rare positive. A pair is indivisible in both of the pair framings, so
+sum and the elementwise absolute difference concatenated. The two classes are close to
+balanced in the development split, at 77 cliff pairs against 68 controls, so the
+metric is not distorted by a rare positive. The algorithms applied to all three
+framings are described together in Section~\ref{sec:eval}. A pair is indivisible in both of the pair framings, so
 its rows were assigned to the same fold and resampled together, and the pair is also
 the unit of the intervals of Section~\ref{sec:eval}. Treating its two rows as
 independent observations would count every pair twice and would narrow every interval
@@ -543,9 +543,12 @@ the receptor and as much as \SI{99}{\angstrom} for the ligand.
 \NOTE{Source: results/18\_replicate\_pilot.md and 18\_replicate\_pilot.csv}
 
 \subsection{Model suite and evaluation}\label{sec:eval}
-\TODO{Six regression and five classification families; preprocessing fitted inside
-  each fold; best-of-family reported; bootstrap over units with the algorithm --
-  and, for rung 1, the feature set -- re-selected inside every replicate.}
+\TODO{Six regression and five classification families, named and cited, with the note
+that the classification suite has five because partial least squares has no
+classification counterpart. The same suite is applied to all three framings, which
+Section~\ref{sec:framings} now defers to here. Preprocessing fitted inside each fold;
+best-of-family reported; bootstrap over units with the algorithm -- and, for rung 1,
+the feature set -- re-selected inside every replicate.}
 \NOTE{State the bootstrap's known bias: resampling units and then running the
   frozen folds puts duplicates on both sides of the split and inflates the levels.
   It applies identically to both sides, so the gap is the quantity to read.
