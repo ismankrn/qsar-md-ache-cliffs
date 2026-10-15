@@ -4,25 +4,39 @@
 
 The dataset was built in three steps, i.e. the curation of the activity data, the
 definition of the activity cliffs, and the assembly of the pairs followed by their
-division into a development and a sealed test part. 
-Before the curation step was performed, we first determined the target by applying
-three entry criteria, i.e. at least 80 compounds surviving curation, a potency range
-of at least 3 log units, and at least 25 constitutional activity cliffs. Under those
+division into a development and a sealed test part. Before the curation step was
+performed, we first determined the target by applying three entry criteria, i.e. at
+least 80 compounds surviving curation, a potency range of at least 3 log units, and at
+least 25 constitutional activity cliffs. The third of those criteria rests entirely on
+the cliff definition below, and the same thresholds were applied to all six
+candidates, so the definition was fixed before any target was chosen. All six
+satisfied the first two criteria and two of them satisfied the third. Under those
 criteria the selected target was human acetylcholinesterase (hAChE), a therapeutic
-target in Alzheimer's disease, with the ChEMBL target identifier being CHEMBL220. Its activity data were then retrieved, and only records from binding assays were kept.
+target in Alzheimer's disease, with the ChEMBL target identifier being CHEMBL220. It
+was taken from those two for two reasons, the first being that its constitutional
+pairs dominate most strongly, at 100 against 10 stereochemical ones. The second is
+that its binding site gives a mechanistic reason to expect geometric cliffs, since its
+two recognition sites sit at opposite ends of a narrow gorge and its inhibitors are
+designed to span them, as described in Section~\ref{sec:dock}.
+Section~\ref{sec:composition} names all six proteins and reports the counts behind the
+choice. We examined these six and did not search ChEMBL systematically, so any
+comparison between targets holds among them and not in general.
+
+Its activity data were then retrieved, and only records from binding assays were kept.
 A record also had to report IC\textsubscript{50}, $K_\mathrm{i}$ or $K_\mathrm{d}$
 with an exact relation in nanomolar units, to carry a pChEMBL value, to be free of
-ChEMBL's own data-validity flags and not to be marked a potential duplicate. A single assay type was then kept, the most
-frequent one, which is IC\textsubscript{50} here. Mixing assay types is unsafe,
-as a pair formed from an IC\textsubscript{50} and a $K_\mathrm{i}$ measurement can
-satisfy a cliff criterion by virtue of the assay alone. Structures were standardised
-by stripping salts, keeping the largest covalent fragment and neutralising formal
-charges from the deposited representation, and those below six heavy atoms were
-removed. Replicate measurements of one standardised structure were collapsed to their median,
-and a structure whose replicates disagreed by more than one log unit in standard
-deviation was discarded instead of being averaged. A compound measured inconsistently
-can otherwise enter a cliff pair on the strength of its own measurement error. The curated set holds 5{,}609 compounds spanning pChEMBL
-4.00 to 10.96.
+ChEMBL's own data-validity flags and not to be marked a potential duplicate. A single
+assay type was then kept, the most frequent one, which is IC\textsubscript{50} here.
+Mixing assay types is unsafe, as a pair formed from an IC\textsubscript{50} and a
+$K_\mathrm{i}$ measurement can satisfy a cliff criterion by virtue of the assay alone.
+Structures were standardised by stripping salts, keeping the largest covalent fragment
+and neutralising formal charges from the deposited representation, and those below six
+heavy atoms were removed. Replicate measurements of one standardised structure were
+collapsed to their median, and a structure whose replicates disagreed by more than one
+log unit in standard deviation was discarded instead of being averaged. A compound
+measured inconsistently can otherwise enter a cliff pair on the strength of its own
+measurement error. The curated set holds 5{,}609 compounds spanning pChEMBL 4.00 to
+10.96.
 
 Similarity was computed as the Tanimoto coefficient on binary ECFP4, i.e. Morgan
 fingerprints of radius 2 folded to 2{,}048 bits. A pair was treated as near-identical
@@ -36,17 +50,6 @@ stereoisomer pair at all, while any method that uses three-dimensional coordinat
 resolves it trivially. Within the curated hAChE set, 421 pairs cleared the similarity
 criterion with a difference of at least one log unit, 110 of them reached the
 hundredfold criterion, and 100 of those were constitutional.
-
-The third of those criteria rests entirely on the cliff definition above, and the same
-thresholds were applied to all six candidates, so the definition was fixed before any
-target was chosen. All six satisfied the first two criteria, and two of them satisfied
-the third. hAChE was taken from those two for two reasons, the first being that its
-constitutional pairs dominate most strongly, at 100 against 10 stereochemical ones. The second is that its binding site gives a
-mechanistic reason to expect geometric cliffs, since its two recognition sites sit at
-opposite ends of a narrow gorge and its inhibitors are designed to span them, as
-described in Section~\ref{sec:dock}. Section~\ref{sec:composition} names all six proteins and reports the counts behind the
-choice. We examined these six and did not search ChEMBL systematically, so any
-comparison between targets holds among them and not in general.
 
 The compound pool was then filtered for simulation feasibility, and a compound was
 kept only when it met five conditions. It had to be composed of the elements H, C, N, O, F, S, Cl, Br, I and P, and to carry
