@@ -192,47 +192,45 @@ as the question is not whether a more expensive representation can be built but
 whether it buys anything. We therefore scored every rung with the same algorithms, on
 the same folds and in the three framings of Section~\ref{sec:framings}, so that a
 difference between two rungs is a difference between representations and not between
-model families. Two columns of Table~\ref{tab:rungs} carry a qualification, the first being that the
-feature counts are the two feature sets of rung~1 and, for rung~4, the full set beside
-the set that survives the reliability filter. The costs are median measured values, given as
-processor time for the first three rungs and as wall-clock time on one GPU for the
-simulation, which are not the same unit and are not comparable beyond their order of
-magnitude.
+model families. Table~\ref{tab:rungs} gives the input each rung requires, what its
+descriptors capture, the feature count and the cost, with two columns that carry a
+qualification. The feature counts are the two feature sets of rung~1 and, for rung~4, the full set
+beside the set that survives the reliability filter. The costs are median measured
+values, given as processor time for the first three rungs and as wall-clock time on
+one GPU for the simulation, which are not the same unit and are not comparable beyond
+their order of magnitude.
 
 Rung~1 uses no three-dimensional information, and it is computed on the standardised
 neutral structures, while every structure-based rung uses the protonated form of
-Section~\ref{sec:dataset}. The ladder therefore does not describe one
-chemical species throughout, so we rescored rung~1 on the protonated structures as
-well. It does not fall, gaining 0.018 on \framingA{} and 0.010 on \framingC{} and
-changing by less than $10^{-6}$ on \framingB{}, so the published baseline is if
-anything slightly understated. Two feature sets were carried here, the
-binary ECFP4 that defined the cliffs in Section~\ref{sec:dataset} and a count-based
-ECFP4 of the same width combined with the 217 physicochemical descriptors of RDKit,
-and we took the better of the two in every framing. Neither dominates the other, and
-scoring only one would have handicapped the baseline against which every other rung
-was measured, in the direction that flatters the more expensive rungs.
+Section~\ref{sec:dataset}. The ladder therefore does not describe one chemical species
+throughout, so we rescored rung~1 on the protonated structures as well. It does not
+fall, gaining 0.018 on \framingA{} and 0.010 on \framingC{} and changing by less than
+$10^{-6}$ on \framingB{}, so the published baseline is if anything slightly
+understated. Two feature sets were carried here, the binary ECFP4 that defined the
+cliffs in Section~\ref{sec:dataset} and a count-based ECFP4 of the same width combined
+with the 217 physicochemical descriptors of RDKit, and we took the better of the two
+in every framing. Neither dominates the other, and scoring only one would have
+handicapped the baseline against which every other rung was measured, in the direction
+that flatters the more expensive rungs.
 
 We chose the rung-2 descriptors to test one mechanism and not to cast a wide net. That
 mechanism is the proposal that two closely related inhibitors are distinguished by how
 persistently each of them engages the two ends of the gorge, and by its position along
-the axis between them. A fixed panel of fourteen gorge-lining residues, i.e. residues 72, 74, 86, 121,
-124, 203, 286, 295, 297, 334, 337, 338, 341 and 447, is used from here on, so that the
-pose-geometry, MM/GBSA and molecular-dynamics descriptors are computed on the same
-positions. Each rung-2 descriptor is the median over the three docking seeds of
-Section~\ref{sec:dock}, and we kept the spread across seeds for diagnosis but did not
-use it as a feature. The fourteen residues of that panel are the same ones on which
-the MM/GBSA decomposition and the trajectory descriptors are computed, so the three
-structure-based rungs describe the same positions.
-
-The same descriptors were also computed over an ensemble of receptor conformations
-and are reported separately as rung~2e. What limits the docking is the rigidity of a single
-receptor and not the protocol, which is established in Section~\ref{sec:dock}. We
-selected eight structures, namely 4EY4, 4EY7, 4M0F, 6CQX, 6CQY, 6O4X, 6O5V and 6WUY,
-by clustering on the side-chain positions of the gorge-lining residues after
-superposition. Selecting on resolution or on date of deposition would most likely have
-returned several copies of one conformation. Each descriptor is the median across the
-eight, and the five axis descriptors are dropped, being defined against the single
-4EY7 geometry.
+the axis between them. A fixed panel of fourteen gorge-lining residues, i.e. residues
+72, 74, 86, 121, 124, 203, 286, 295, 297, 334, 337, 338, 341 and 447, is used from
+here on, so that the pose-geometry, MM/GBSA and molecular-dynamics descriptors are
+computed on the same positions. Each rung-2 descriptor is the median over the three
+docking seeds of Section~\ref{sec:dock}, and we kept the spread across seeds for
+diagnosis but did not use it as a feature. The same descriptors were also computed
+over an ensemble of receptor conformations and are reported separately as rung~2e,
+because what limits the docking is the rigidity of a single receptor and not the
+protocol, which is established in Section~\ref{sec:dock}. We selected eight
+structures, namely 4EY4, 4EY7, 4M0F, 6CQX, 6CQY, 6O4X, 6O5V and 6WUY, by clustering on
+the side-chain positions of the gorge-lining residues after superposition, since
+selecting on resolution or on date of deposition would most likely have returned
+several copies of one conformation. Each descriptor is the median across the eight,
+and the five axis descriptors are dropped, being defined against the single 4EY7
+geometry.
 
 Rung~3 is single-trajectory, in that the complex, the protein and the ligand were
 taken from the same coordinates with no re-minimisation after separation. The internal
@@ -240,27 +238,21 @@ bonded terms therefore cancel exactly and only the intermolecular interaction an
 desolvation remain, while the protein term, which is identical for every ligand under
 a rigid receptor, was computed once. This is not a rigorous binding free energy and we
 do not present it as one, as absolute values obtained from a single post-docking
-snapshot are not defensible. It is on the ladder because it is what a structure-based study routinely does at this
-cost, and the question is whether that routine step buys anything. It was computed on
-the same pose as rung~2, so the two differ by the energy evaluation and by nothing
-else.
-
-Rung~4 is described in Sections~\ref{sec:md} and \ref{sec:mddesc}, where the
-simulations and their descriptors are set out. Both the splits of
+snapshot are not defensible. It is on the ladder because it is what a structure-based
+study routinely does at this cost, and it was computed on the same pose as rung~2, so
+the two differ by the energy evaluation and by nothing else. Rung~4 is described in
+Sections~\ref{sec:md} and \ref{sec:mddesc}, and twelve of its 33 descriptors survived
+the reliability filter of Section~\ref{sec:filter}, which removes those whose
+variation between repeated simulations of one ligand is comparable to their variation
+between ligands. We scored both sets, as reporting only one would leave open whether a result is a
+property of the descriptors or of the filter. Both the splits of
 Section~\ref{sec:dataset} and the designation of framing~B as the primary comparison
-predate the first of its scores by more than a fortnight, which the version history of
-the analysis code records, so neither was chosen once the expensive answer was known. Twelve of its 33
-descriptors survived the reliability filter of Section~\ref{sec:filter}, which removes
-those whose variation between repeated simulations of one ligand is comparable to
-their variation between ligands. Both sets were scored, as reporting only one would
-leave open whether a result is a property of the descriptors or of the filter. The
-number of features is not matched across the rungs, and that is deliberate. Each was
-scored in the form in which it would actually be used, and a comparison that first cut
-a fingerprint down to 34 features would describe nothing that anyone does. A
-difference between two rungs is therefore a difference between representations at
-their natural dimensionality. A matched-dimensionality arm was also scored as a robustness
-check, with the feature selection performed inside each training fold so that
-the held-out fold can never influence which features are chosen.
+predate the first of these scores by more than a fortnight, so neither was chosen once
+the expensive answer was known. The number of features is not matched across the rungs, and that is deliberate. Each
+was scored in the form in which it would actually be used, and a comparison that first
+cut a fingerprint down to 34 features would describe nothing that anyone does. We also scored a matched-dimensionality arm
+as a robustness check, performing the feature selection inside each training fold so
+that the held-out fold can never influence which features are chosen.
 
 \subsection{Receptor model, docking protocol and its
 validation}\label{sec:dock}
