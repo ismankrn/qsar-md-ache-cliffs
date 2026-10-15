@@ -134,6 +134,59 @@ namely the hydrophobic and $\pi$-stacking contacts at Trp86 and at Trp286 and th
 cation--$\pi$ and hydrophobic contacts at Tyr337, while what is lost on docking is van
 der Waals contact alone with Ser203 and His447. We used the typing for validation only, and it enters no descriptor set.
 
+\subsection{The simulations were well behaved}\label{sec:simqc}
+
+\begin{figure}[tb]
+  \centering
+  \includegraphics[width=\textwidth]{fig_thermo.pdf}
+  \caption{\textbf{Production ensembles ran at the intended thermodynamic state.}
+    (a)~Temperature, (b)~density, (c)~potential energy and (d)~the running mean of
+    the pressure, each drawn as the median across runs with the 5--95 percentile
+    band. Panel~(d) shows a running mean rather than the instantaneous pressure,
+    which fluctuates by hundreds of bar from frame to frame.}
+  \label{fig:thermo}
+\end{figure}
+
+The production ensembles ran at the thermodynamic state they were set to, as shown in
+Figure~\ref{fig:thermo}. The temperature in panel~(a) averages \SI{300.00}{\kelvin} with a run-to-run spread of
+\SI{0.02}{\kelvin}, and the density in panel~(b) averages
+\SI{1018.9}{\kilo\gram\per\metre\cubed} with a spread of
+\SI{0.12}{\kilo\gram\per\metre\cubed}. The potential energy in panel~(c) drifts by
+\SI{-10.5}{\kilo\joule\per\mole\per\nano\second} at the median, against a total near
+$-1.3\times10^{6}$~\si{\kilo\joule\per\mole}, which is two parts in $10^{5}$ per
+nanosecond. Panel~(d) shows the running mean of the pressure, which ends at
+\SI{1.00}{\bar}, since the instantaneous pressure of a box of this size has a
+within-run spread of about \SI{89}{\bar} and carries no information frame by frame.
+These four quantities were computed on 64 of the 229 runs, because the trajectories
+were deleted once the descriptors had been extracted and only the cluster block
+retained its energy files,
+and 16 further files covering \SI{0.4}{\nano\second}, from cancelled jobs, were
+excluded as abandoned. The subset shows only that the simulations were well behaved, and we do
+not use it to compare descriptor sets.
+
+\begin{figure}[tb]
+  \centering
+  \includegraphics[width=\textwidth]{fig_md_stability.pdf}
+  \caption{\textbf{Structural stability across all 229 production runs.}
+    (a)~Receptor C$\alpha$ RMSD and (b)~ligand RMSD from the equilibrated pose, each
+    drawn as the median and the interquartile band across runs and split by the
+    25~ns and 50~ns production designs. (c)~Per-residue C$\alpha$ fluctuation
+    computed after the first 5~ns, with the fourteen gorge-lining residues marked.}
+  \label{fig:stability}
+\end{figure}
+
+Structural stability across the campaign is shown in Figure~\ref{fig:stability}, where
+the receptor C$\alpha$ RMSD in panel~(a) has a median of \SI{1.42}{\angstrom} across
+runs and reaches \SI{2.20}{\angstrom} at worst. The ligand RMSD from its equilibrated
+pose in panel~(b) has a median of \SI{2.99}{\angstrom}, and the two production designs
+are drawn separately instead of being averaged into a single band whose composition
+would change partway along its own axis. The per-residue C$\alpha$ fluctuation in panel~(c),
+computed after the first \SI{5}{\nano\second}, shows no gorge-lining residue to be
+unusually mobile, the largest excursions belonging to surface loops. All three panels require the treatment of the periodic boundary that the descriptors
+require. The reduced archives wrap molecule-wise and the capped receptor is three
+chains, so an RMSD computed directly on the archive returns \SI{25.8}{\angstrom} for
+the receptor and as much as \SI{99}{\angstrom} for the ligand.
+
 \subsection{The ladder}\label{sec:ladder}
 \NOTE{Protonation robustness, from results/33\_rung1\_protonation.md. Rung 1 rescored
   on the protonated SMILES gains 0.018 on \framingA{} and 0.010 on \framingC{} and is
@@ -260,6 +313,40 @@ der Waals contact alone with Ser203 and His447. We used the typing for validatio
   $-0.054$ unfiltered; \framingC{} $0.793$ against $0.721$.}
 
 % ---------------------------------------------------------------------------
+\subsection{What the distance-only occupancies summarise}\label{sec:typed}
+
+\begin{figure}[tb]
+  \centering
+  \includegraphics[width=\textwidth]{fig_dynamic_interactions.pdf}
+  \caption{\textbf{Typed interaction occupancy over the trajectories, and what the
+    distance-only descriptors summarise.} (a)~Median occupancy of each interaction
+    type at each gorge-lining residue across 221 runs. Trp86 and Trp286 are
+    hydrophobically engaged in every frame and $\pi$-stack in 70\% and 57\%;
+    Glu334 forms a salt bridge with the protonated ligand amine in 87\%.
+    (b)~ProLIF's typed occupancy at Trp86 and Trp286 against this study's
+    distance-only \texttt{occ\_cas} and \texttt{occ\_pas}, one point per run. Points
+    lie on or below the diagonal, and many sit at 100\% on the distance axis while
+    the typed occupancy falls as low as 20\%.}
+  \label{fig:dyninteractions}
+\end{figure}
+
+\TODO{Prose. State the ceiling honestly before quoting any correlation.}
+\NOTE{Both measures are at 100\% for 77\% of runs at Trp86 and 56\% at Trp286, so
+  the overall Spearman values of 0.61 and 0.55 are mostly ties. Among the runs where
+  at least one measure is below saturation they fall to 0.39 and 0.22. The
+  informative statistic is the signed difference: distance-only minus typed has a
+  median of zero but reaches $+75$ and $+77$ percentage points. There are runs in
+  which the ligand sits within 4.5~\AA{} of the tryptophan for nearly every frame
+  while no typed interaction is detected there at all -- proximity without a
+  recognised chemical interaction.}
+\NOTE{This names a gap rather than fixing one: \texttt{occ\_cas} and
+  \texttt{occ\_pas} count proximity, and for the ligands that are not simply pinned
+  to the site -- exactly the ones a cliff comparison depends on -- they overstate
+  engagement. Descriptive only; nothing here enters any model, and a typed
+  descriptor family introduced after the ladder was scored would be post hoc.}
+\NOTE{8 of 229 runs failed with a ProLIF fragmented-residue error and are excluded;
+  report the number.}
+
 \subsection{Trajectory length}
 
 \begin{figure}[tb]
