@@ -1,0 +1,69 @@
+form,framing,features,algorithm,score
+neutral,A,binary ECFP4,Ridge (linear),0.17463966846305656
+neutral,A,binary ECFP4,PLS,0.3857705054795837
+neutral,A,binary ECFP4,k-NN (k=5),0.10353683732655239
+neutral,A,binary ECFP4,SVM (RBF),0.3828811380860453
+neutral,A,binary ECFP4,Random Forest,0.32892270205913776
+neutral,A,binary ECFP4,Gradient Boosting,0.37524648401626104
+neutral,B,binary ECFP4,Ridge (linear),0.10636016641545742
+neutral,B,binary ECFP4,PLS,0.0996458775711827
+neutral,B,binary ECFP4,k-NN (k=5),0.0990965708056274
+neutral,B,binary ECFP4,SVM (RBF),0.12427244781310043
+neutral,B,binary ECFP4,Random Forest,0.18416505788683246
+neutral,B,binary ECFP4,Gradient Boosting,0.20045508443869064
+neutral,C,binary ECFP4,Logistic regression,0.5972116119174943
+neutral,C,binary ECFP4,k-NN (k=5),0.5902406417112299
+neutral,C,binary ECFP4,SVM (RBF),0.6569900687547747
+neutral,C,binary ECFP4,Random Forest,0.6475362872421696
+neutral,C,binary ECFP4,Gradient Boosting,0.5198624904507257
+neutral,A,count ECFP4 + RDKit2D,Ridge (linear),0.07660082471854368
+neutral,A,count ECFP4 + RDKit2D,PLS,0.3570693082110805
+neutral,A,count ECFP4 + RDKit2D,k-NN (k=5),0.08115456371563234
+neutral,A,count ECFP4 + RDKit2D,SVM (RBF),0.37951764652073505
+neutral,A,count ECFP4 + RDKit2D,Random Forest,0.35883587235453696
+neutral,A,count ECFP4 + RDKit2D,Gradient Boosting,0.3356009873832462
+neutral,B,count ECFP4 + RDKit2D,Ridge (linear),-513.6206789018232
+neutral,B,count ECFP4 + RDKit2D,PLS,-687.7401826498768
+neutral,B,count ECFP4 + RDKit2D,k-NN (k=5),-0.6365173665311774
+neutral,B,count ECFP4 + RDKit2D,SVM (RBF),-0.5193091617943459
+neutral,B,count ECFP4 + RDKit2D,Random Forest,-0.32832585008591386
+neutral,B,count ECFP4 + RDKit2D,Gradient Boosting,-0.0070428693407056375
+neutral,C,count ECFP4 + RDKit2D,Logistic regression,0.6088617265087853
+neutral,C,count ECFP4 + RDKit2D,k-NN (k=5),0.6828686019862491
+neutral,C,count ECFP4 + RDKit2D,SVM (RBF),0.6059969442322384
+neutral,C,count ECFP4 + RDKit2D,Random Forest,0.8053857906799082
+neutral,C,count ECFP4 + RDKit2D,Gradient Boosting,0.575057295645531
+protonated,A,binary ECFP4,Ridge (linear),0.21404541858499415
+protonated,A,binary ECFP4,PLS,0.40327653595330326
+protonated,A,binary ECFP4,k-NN (k=5),-0.011224923082414406
+protonated,A,binary ECFP4,SVM (RBF),0.3892668577618672
+protonated,A,binary ECFP4,Random Forest,0.36170171883416413
+protonated,A,binary ECFP4,Gradient Boosting,0.2780892880862216
+protonated,B,binary ECFP4,Ridge (linear),0.08877302254757535
+protonated,B,binary ECFP4,PLS,0.07898564711767286
+protonated,B,binary ECFP4,k-NN (k=5),0.08920669110775992
+protonated,B,binary ECFP4,SVM (RBF),0.1067757113687533
+protonated,B,binary ECFP4,Random Forest,0.18030351693740165
+protonated,B,binary ECFP4,Gradient Boosting,0.20045508443869064
+protonated,C,binary ECFP4,Logistic regression,0.6027501909854851
+protonated,C,binary ECFP4,k-NN (k=5),0.6000763941940411
+protonated,C,binary ECFP4,SVM (RBF),0.6671122994652408
+protonated,C,binary ECFP4,Random Forest,0.6522154316271963
+protonated,C,binary ECFP4,Gradient Boosting,0.5191940412528648
+protonated,A,count ECFP4 + RDKit2D,Ridge (linear),0.03358200100122022
+protonated,A,count ECFP4 + RDKit2D,PLS,0.3610850459849918
+protonated,A,count ECFP4 + RDKit2D,k-NN (k=5),0.09688152573715458
+protonated,A,count ECFP4 + RDKit2D,SVM (RBF),0.3778483532046254
+protonated,A,count ECFP4 + RDKit2D,Random Forest,0.3209380327191843
+protonated,A,count ECFP4 + RDKit2D,Gradient Boosting,0.28388422989531115
+protonated,B,count ECFP4 + RDKit2D,Ridge (linear),-343.8413503114656
+protonated,B,count ECFP4 + RDKit2D,PLS,-442.4274134889937
+protonated,B,count ECFP4 + RDKit2D,k-NN (k=5),-0.41418854596741506
+protonated,B,count ECFP4 + RDKit2D,SVM (RBF),-0.28054315452902934
+protonated,B,count ECFP4 + RDKit2D,Random Forest,-0.10546951899662904
+protonated,B,count ECFP4 + RDKit2D,Gradient Boosting,0.026777887441271964
+protonated,C,count ECFP4 + RDKit2D,Logistic regression,0.6189839572192514
+protonated,C,count ECFP4 + RDKit2D,k-NN (k=5),0.687070282658518
+protonated,C,count ECFP4 + RDKit2D,SVM (RBF),0.6310160427807486
+protonated,C,count ECFP4 + RDKit2D,Random Forest,0.8155080213903743
+protonated,C,count ECFP4 + RDKit2D,Gradient Boosting,0.6844919786096256

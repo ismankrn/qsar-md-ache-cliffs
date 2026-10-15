@@ -81,6 +81,14 @@ molecular representation, and both are therefore inherited by any activity-cliff
 benchmark assembled in the usual way.
 
 \subsection{The ladder}
+\NOTE{Protonation robustness, from results/33\_rung1\_protonation.md. Rung 1 rescored
+  on the protonated SMILES gains 0.018 on \framingA{} and 0.010 on \framingC{} and is
+  unchanged to six decimals on \framingB{}, so no gap in this subsection narrows. The
+  \framingB{} result is worth a sentence of its own: protonation flips a median of 22
+  ECFP4 bits per ligand, but the difference vector is unchanged for 130 of the 145 dev
+  pairs, because the two members of a near-identical pair protonate alike. On the
+  endpoint that defines a cliff, protonation is invisible to a 2D fingerprint by
+  construction.}
 \label{sec:ladder}
 
 \begin{figure}[tb]

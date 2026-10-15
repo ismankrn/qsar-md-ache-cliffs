@@ -188,7 +188,13 @@ difference between two rungs is a difference between representations and not bet
 model families. Table~\ref{tab:rungs} gives the input each rung requires, what its
 descriptors capture, how many features it carries and what it cost.
 
-Rung~1 uses no three-dimensional information. Two feature sets were carried here, the
+Rung~1 uses no three-dimensional information, and it is computed on the standardised
+neutral structures, while every structure-based rung uses the protonation state
+assigned in Section~\ref{sec:dock}. The ladder therefore does not describe one
+chemical species throughout, so we rescored rung~1 on the protonated structures as
+well. It does not fall, gaining 0.018 on \framingA{} and 0.010 on \framingC{} and
+changing by less than $10^{-6}$ on \framingB{}, so the published baseline is if
+anything slightly understated. Two feature sets were carried here, the
 binary ECFP4 that defined the cliffs in Section~\ref{sec:dataset} and a count-based
 ECFP4 of the same width combined with the 217 physicochemical descriptors of RDKit,
 and we took the better of the two in every framing. Neither dominates the other, and
