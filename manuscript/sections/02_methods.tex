@@ -202,14 +202,14 @@ their order of magnitude.
 
 Rung~1 uses no three-dimensional information, and it is computed on the standardised
 neutral structures, while every structure-based rung uses the protonated form of
-Section~\ref{sec:dataset}. The ladder therefore does not describe one chemical species
-throughout, so we rescored rung~1 on the protonated structures as well. It does not
-fall, gaining 0.018 on \framingA{} and 0.010 on \framingC{} and changing by less than
-$10^{-6}$ on \framingB{}, so the published baseline is if anything slightly
-understated. Two feature sets were carried here, the binary ECFP4 that defined the
-cliffs in Section~\ref{sec:dataset} and a count-based ECFP4 of the same width combined
-with the 217 physicochemical descriptors of RDKit, and we took the better of the two
-in every framing. Neither dominates the other, and scoring only one would have
+Section~\ref{sec:dataset}. The ladder therefore does not describe one chemical species throughout, so we rescored
+rung~1 on the protonated structures as a check, and Section~\ref{sec:ladder} reports
+what that gave. Two feature sets were carried here, the binary ECFP4 that defined the cliffs in
+Section~\ref{sec:dataset} and a count-based ECFP4 of the same width combined with the
+217 physicochemical descriptors of RDKit, and we took the better of the two in every
+framing. Those 217 are the standard RDKit set, covering molecular size, polarity,
+flexibility and a range of topological indices, and they enter the second feature set
+alone. Neither dominates the other, and scoring only one would have
 handicapped the baseline against which every other rung was measured, in the direction
 that flatters the more expensive rungs.
 
@@ -224,11 +224,10 @@ docking seeds of Section~\ref{sec:dock}, and we kept the spread across seeds for
 diagnosis but did not use it as a feature. The same descriptors were also computed
 over an ensemble of receptor conformations and are reported separately as rung~2e,
 because what limits the docking is the rigidity of a single receptor and not the
-protocol, which is established in Section~\ref{sec:dock}. We selected eight
-structures, namely 4EY4, 4EY7, 4M0F, 6CQX, 6CQY, 6O4X, 6O5V and 6WUY, by clustering on
-the side-chain positions of the gorge-lining residues after superposition, since
-selecting on resolution or on date of deposition would most likely have returned
-several copies of one conformation. Each descriptor is the median across the eight,
+protocol, which is established in Section~\ref{sec:dock}. The ensemble is 4EY4, 4EY7, 4M0F, 6CQX, 6CQY, 6O4X, 6O5V and 6WUY, chosen by
+clustering on the side-chain positions of the gorge-lining residues after
+superposition. Selecting instead on resolution or on date of deposition would most
+likely have returned several copies of one conformation. Each descriptor is the median across the eight,
 and the five axis descriptors are dropped, being defined against the single 4EY7
 geometry.
 
