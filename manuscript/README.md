@@ -24,7 +24,9 @@ drafted section; it exits non-zero if an enforced rule fails.
 
 1. A drafted section carries no `\TODO` and no `\NOTE`. Guidance that is worth the
    reader's attention belongs in the prose; the rest is dropped.
-2. Paragraphs are not left short.
+2. A paragraph runs to at least five sentences and at least sixty words. A paragraph
+   shorter than that is usually a sentence that belongs with its neighbour, or a point
+   that was never developed.
 3. No colons in prose or in captions. Headings are exempt, since a heading is a title
    rather than a sentence, but the drafted ones avoid them anyway.
 4. The words "rung" and "ladder" do not appear before the subsection that defines them.
@@ -46,6 +48,10 @@ drafted section; it exits non-zero if an enforced rule fails.
    Figure~2"; a timeless fact about the protein or the chemistry, as in "Trp86 is
    located at the catalytic anionic site"; and a general claim that is not a step
    taken here, as in "no stereo-blind fingerprint can resolve such a pair".
+
+8. Sentences stay between 12 and 45 words. The mean was never the problem; the
+   variance was, with a four-word sentence next to an eighty-one-word one. The
+   reference papers run 22 to 29 words per sentence on average.
 
 Voice is matched to those papers: past-tense passive for procedure, "by using X",
 "with the PDB ID being", "as shown in Figure~N", "i.e." for enumeration, and a roadmap

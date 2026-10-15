@@ -6,18 +6,18 @@ activity-cliff dataset together with the splits on which everything was scored, 
 three framings in which every descriptor set was scored, and the four descriptor sets
 themselves. We then describe the two procedures that produce the more expensive of those sets,
 namely the receptor model with its docking and validation, and the molecular dynamics
-simulations. The descriptors derived from the trajectories follow, and then the model
-suite on which all of the sets were scored.
+simulations. The descriptors derived from the trajectories follow, together with the
+periodic-boundary treatment they require and the replicate pilot that filters them.
+The model suite, the interval estimates and the power calculation close the section.
 
 \subsection{Dataset, activity-cliff definition and splits}\label{sec:dataset}
 
 The dataset was built in three steps, in which the activity data were curated, the
 activity cliffs were defined, and the pairs were assembled and then divided into a
 development and a sealed test part. The criteria by which we chose the target itself
-are stated after the first two steps, because both were needed in order to apply them.
-
-Activity data for human acetylcholinesterase (hAChE), whose ChEMBL target identifier
-is CHEMBL220, were retrieved from ChEMBL. A record was kept only when it came from a binding assay,
+are stated after the first two steps, because both were needed in order to apply them. Activity data for human
+acetylcholinesterase (hAChE), whose ChEMBL target identifier is CHEMBL220, were then
+retrieved from ChEMBL. A record was kept only when it came from a binding assay,
 reported IC\textsubscript{50}, $K_\mathrm{i}$ or $K_\mathrm{d}$ with an exact relation
 in nanomolar units, carried a pChEMBL value, was free of ChEMBL's own data-validity
 flags and was not marked a potential duplicate. A single assay type was then kept, the most
@@ -139,35 +139,37 @@ number in parentheses the count of units available in the development split, and
 three are taken in turn below.
 
 In framing~A the unit is the ligand, the target is its pChEMBL value, and the metric
-is the coefficient of determination over the out-of-fold predictions. This is ordinary
+is the coefficient of determination over the out-of-fold predictions. The predictions of the five folds are pooled before the metric is computed, so a fold
+that happens to be easy cannot be averaged against one that is hard. This is ordinary
 potency prediction, the task on which the QSAR literature is calibrated, and we
 included it for two reasons. A descriptor set that cannot predict potency at all is no
-candidate for predicting a difference in potency, and a result on this task can be
+candidate for predicting a difference in potency. A result on this task can also be
 placed beside published models in a way that a pairwise result cannot.
 
 In framing~B the unit is the pair and the target is the signed difference in pChEMBL
 between its two members, scored again by the coefficient of determination, which is
 the quantity that defines an activity cliff. Each pair contributes two rows, with the
 difference between the descriptor vectors taken in both orders, so that the arbitrary
-choice of which member comes first cannot influence what the model learns. Framing~B
-is the primary comparison of this work, as the question being asked is whether a
-descriptor set can distinguish two molecules that a fingerprint declares identical,
-and that distinction is the signed difference within a pair and nothing else.
+choice of which member comes first cannot influence what the model learns. The construction also makes the failure mode explicit, since a pair whose two members
+carry identical descriptor vectors yields a row of zeros and any model must then
+predict a difference of zero. Framing~B is the primary comparison of this work, as the
+question being asked is whether a descriptor set can distinguish two molecules that a
+fingerprint declares identical. That distinction is the signed difference within a
+pair and nothing else.
 
 In framing~C the unit is again the pair, but the target is categorical, namely whether
 the pair is a cliff or a matched control, and the metric is the area under the
 receiver operating characteristic curve. The features of a pair have to be invariant
 to the order of its two members here, as the label is, and the antisymmetric rows of
 framing~B would leave it ambiguous. A pair was therefore described by the elementwise
-sum and the elementwise absolute difference concatenated. This framing uses five
-algorithm families, not six, as partial least squares regression has no classification
-counterpart.
-
-A pair is indivisible in both of the pair framings, so its rows were assigned to the
-same fold and resampled together, and the pair is also the unit of the intervals of
-Section~\ref{sec:eval}. Treating its two rows as independent observations would count
-every pair twice and would narrow every interval by a factor that the data does not
-support.
+sum and the elementwise absolute difference concatenated. This framing uses five algorithm families, not six, as partial least squares
+regression has no classification counterpart. The two classes are close to balanced in
+the development split, at 77 cliff pairs against 68 controls, so the metric is not
+distorted by a rare positive. A pair is indivisible in both of the pair framings, so
+its rows were assigned to the same fold and resampled together, and the pair is also
+the unit of the intervals of Section~\ref{sec:eval}. Treating its two rows as
+independent observations would count every pair twice and would narrow every interval
+by a factor that the data does not support.
 
 \subsection{Four descriptor sets of increasing computational
 cost}\label{sec:rungs}
@@ -218,7 +220,9 @@ the axis between them. A fixed panel of fourteen gorge-lining residues, i.e. res
 pose-geometry, MM/GBSA and molecular-dynamics descriptors are computed on the same
 positions. Each rung-2 descriptor is the median over the three docking seeds of
 Section~\ref{sec:dock}, and we kept the spread across seeds for diagnosis but did not
-use it as a feature.
+use it as a feature. The fourteen residues of that panel are the same ones on which
+the MM/GBSA decomposition and the trajectory descriptors are computed, so the three
+structure-based rungs describe the same positions.
 
 The same descriptors were also computed over an ensemble of receptor conformations
 and are reported separately as rung~2e. What limits the docking is the rigidity of a single
@@ -236,9 +240,10 @@ bonded terms therefore cancel exactly and only the intermolecular interaction an
 desolvation remain, while the protein term, which is identical for every ligand under
 a rigid receptor, was computed once. This is not a rigorous binding free energy and we
 do not present it as one, as absolute values obtained from a single post-docking
-snapshot are not defensible. It is on the ladder because it is what a structure-based
-study routinely does at this cost, and the question is whether that routine step buys
-anything.
+snapshot are not defensible. It is on the ladder because it is what a structure-based study routinely does at this
+cost, and the question is whether that routine step buys anything. It was computed on
+the same pose as rung~2, so the two differ by the energy evaluation and by nothing
+else.
 
 Rung~4 is described in Sections~\ref{sec:md} and \ref{sec:mddesc}, where the
 simulations and their descriptors are set out. Both the splits of
@@ -290,6 +295,8 @@ anionic site has been reported to accelerate the aggregation of $\beta$-amyloid
 alongside the catalytic function of the enzyme, and it is this principle that we built
 the descriptor sets of Section~\ref{sec:rungs} to test. Preparation of the same receptor for simulation differs and is described in
 Section~\ref{sec:md}, since it becomes relevant only once a force field is applied.
+The receptor is rigid throughout the docking, and the consequences of that are
+measured below.
 
 \begin{figure}[tb]
   \centering
@@ -427,9 +434,10 @@ them simulated once and 6 three times for the replicate pilot of
 Section~\ref{sec:filter}, amounting to 6{,}965~ns. The production length was
 \SI{50}{\nano\second} for the first 56 runs and \SI{25}{\nano\second} thereafter, and
 17 of those 56 stopped between 34 and \SI{42}{\nano\second} on reaching their
-wall-clock limit. The mixture of lengths does not affect the descriptors, since the
-first \SI{5}{\nano\second} of every run was discarded and the descriptors were
-computed on the \SI{20}{\nano\second} that follows, which every run supplies in full.
+wall-clock limit. The mixture of lengths does not affect the descriptors, since the first
+\SI{5}{\nano\second} of every run was discarded and the descriptors were computed on
+the \SI{20}{\nano\second} that follows. Every run supplies that window in full, so no
+ligand contributes a shorter record than another.
 
 \begin{figure}[tb]
   \centering

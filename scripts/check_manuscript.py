@@ -7,7 +7,7 @@ only reported on, because a script that pretends to check them would be worse th
 says it cannot.
 
   1. A drafted section carries no \\TODO and no \\NOTE.                        [reported]
-  2. Paragraphs are not left short.                                           [reported]
+  2. Paragraphs run to at least five sentences.                               [reported]
   3. No colons in prose or in captions.                                       [enforced]
   4. No "rung" or "ladder" before the subsection that defines them.           [enforced]
   5. Captions identify what a panel shows; numbers belong in the prose.       [reported]
@@ -40,6 +40,7 @@ RUNG_DEFINED_IN = "increasing computational"   # the subsection that introduces 
 # the opening roadmap has to say what the section contains.
 EARLY_TERMS = r"\b(rungs?|ladder)\b|molecular[- ]dynamics descriptor"
 SHORT_PARA_WORDS = 60
+MIN_PARA_SENTENCES = 5
 SENT_MIN, SENT_MAX = 12, 45
 
 # Splitting on ". " alone breaks at "i.e." and at siunitx remnants, which invents
@@ -192,9 +193,15 @@ def main() -> None:
         if drafted and (n_todo or n_note):
             notes.append(f"{f.name}: drafted but still carries {n_todo} TODO, {n_note} NOTE")
         for para in [p for p in re.split(r"\n\s*\n", prose) if p.strip()]:
+            if para.strip().startswith("\\"):
+                continue
             w = len(strip_refs(para).split())
-            if 0 < w < SHORT_PARA_WORDS and not para.strip().startswith("\\"):
+            ns = len(sentences(strip_headings(strip_refs(para))))
+            if 0 < w < SHORT_PARA_WORDS:
                 notes.append(f"{f.name}: short paragraph ({w} words) -- "
+                             f"{' '.join(para.split())[:60]}...")
+            elif 0 < ns < MIN_PARA_SENTENCES:
+                notes.append(f"{f.name}: thin paragraph ({ns} sentences) -- "
                              f"{' '.join(para.split())[:60]}...")
 
         # rule 3 -- colons anywhere a reader reads
