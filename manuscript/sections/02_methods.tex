@@ -81,9 +81,7 @@ quantities. The median Tanimoto coefficient is 1.000 for the cliff pairs against
 for the controls, and the mean pair-mean potency 6.64 against 6.58, while the quantity
 under test differs by construction at 2.66 log units against 0.13. The final set holds
 271 ligands and 183 pairs, 97 cliff and 86 control. Each ligand was prepared and simulated once, while a pair refers to two ligands, as a compound may belong to more than
-one pair. The dominant protonation state at pH 7.4 was assigned by explicit rules.
-Every ligand carries a net positive charge, 170 at $+1$ and 101 at $+2$, consistent
-with the cation--$\pi$ recognition at the aromatic residues lining the gorge.
+one pair.
 
 This set was then divided into a development and a test part, once and in a separate
 step that wrote the assignment to a file, with the random seed being 20260902.
@@ -290,11 +288,13 @@ Section~\ref{sec:md}, since it becomes relevant only once a force field is appli
 We docked all ligands into the prepared 4EY7 receptor by using AutoDock Vina
 \citep{vina}. The search box was a cube of \SI{30}{\angstrom} per side centred at
 $(-14.257, -42.544, 30.646)$~\AA{}, midway between the CAS and the PAS so that poses
-spanning the gorge were accessible, and we set the exhaustiveness to 32. Ligand
-structures were generated from the standardised SMILES by adding hydrogens, embedding
-a single conformer with the ETKDGv3 method under a fixed random seed and optimising it
-with the MMFF94 force field, all by using RDKit \citep{rdkit}, and were converted to
-the PDBQT format by using Meeko \citep{meeko}. We docked each ligand with three independent seeds. The
+spanning the gorge were accessible, and we set the exhaustiveness to 32. The dominant protonation state of each
+ligand at pH 7.4 was assigned by explicit rules, and every ligand carries a net
+positive charge, 170 at $+1$ and 101 at $+2$, consistent with the cation--$\pi$
+recognition at Trp86. Ligand structures were generated from those protonated SMILES by
+adding hydrogens, embedding a single conformer with the ETKDGv3 method under a fixed
+random seed and optimising it with the MMFF94 force field, all by using RDKit
+\citep{rdkit}, and were converted to the PDBQT format by using Meeko \citep{meeko}. We docked each ligand with three independent seeds. The
 pose-geometry descriptors were computed on the top-ranked pose of each seed and
 reduced to their median, and the spread across seeds was kept so that unstable poses
 could be identified.
