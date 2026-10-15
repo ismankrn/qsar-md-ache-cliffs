@@ -30,8 +30,10 @@ drafted section; it exits non-zero if an enforced rule fails.
 4. The words "rung" and "ladder" do not appear before the subsection that defines them.
    Descriptor sets are named by what they are, as in "the pose-geometry descriptors".
 5. A caption identifies what each panel shows. The numbers and the interpretation go in
-   the prose, so a caption over roughly 120 words is a sign that something belongs
-   elsewhere.
+   the prose, so a figure caption over roughly 120 words is a sign that something
+   belongs elsewhere. A table caption is held to 25 words, i.e. a title and nothing
+   more, because the column headings already say what each column holds and anything
+   past that is prose in the wrong place.
 6. Every figure panel is referenced explicitly in the prose, as `Figure~\ref{...}(a)`.
    All three figures in Sections 2.1 and 2.2 were first drafted referencing the figure
    only as a whole. Every panel's content was discussed, so nothing was missing from the

@@ -51,11 +51,11 @@ TENSE_ALLOWED = {
 }
 
 
-def figure_blocks(text: str):
-    """(label, caption, full block) for every figure environment."""
-    for m in re.finditer(r"\\begin\{figure\}(.*?)\\end\{figure\}", text, re.S):
+def figure_blocks(text: str, env: str = "figure"):
+    """(label, caption, full block) for every float environment of this kind."""
+    for m in re.finditer(r"\\begin\{" + env + r"\}(.*?)\\end\{" + env + r"\}", text, re.S):
         b = m.group(1)
-        lab = re.search(r"\\label\{(fig:[a-zA-Z]+)\}", b)
+        lab = re.search(r"\\label\{((?:fig|tab):[a-zA-Z]+)\}", b)
         i = b.find(r"\caption{")
         if i < 0 or not lab:
             continue
@@ -190,12 +190,16 @@ def main() -> None:
                 failures.append(f"{f.name}: '{m.group(0)}' used before "
                                 f"'{RUNG_DEFINED_IN}' -- ...{ctx}...")
 
-        # rule 5 -- caption length, reported
-        for label, cap, _blk in figure_blocks(text):
-            n = len(cap.split())
-            if n > 120:
-                notes.append(f"{f.name}: caption of {label} is {n} words; "
-                             f"consider moving numbers into the prose")
+        # rule 5 -- caption length, reported. A table caption is held to a much
+        # shorter limit than a figure's: a figure caption has to say what each panel
+        # shows, while a table's column headings already do that work, so anything
+        # beyond a title is prose that has been put in the wrong place.
+        for env, limit in (("figure", 120), ("table", 25)):
+            for label, cap, _blk in figure_blocks(text, env):
+                n = len(cap.split())
+                if n > limit:
+                    notes.append(f"{f.name}: caption of {label} is {n} words, over the "
+                                 f"{limit} allowed for a {env}; move it into the prose")
 
         # rule 7 -- Methods in the past tense, reported
         if "methods" in f.name:
