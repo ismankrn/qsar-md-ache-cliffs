@@ -130,34 +130,43 @@ well across a series are reported to fail on the near-identical pairs within it
 \citep{vantilborg2022, dablander2023}. The three framings below are different
 functions of the same descriptors, so a result on one does not determine a result on
 another, and separating cliff pairs from control pairs does not require predicting the
-size of the difference within a pair. Three framings were therefore scored for every descriptor set, on the
-folds of Section~\ref{sec:dataset} and with the same algorithms, so that the three
-results differ in the question being asked and in nothing else.
-Table~\ref{tab:framings} sets them side by side, with $\mathbf{d}_a$ and
+size of the difference within a pair. Three framings were therefore scored for every
+descriptor set, on the folds of Section~\ref{sec:dataset} and with the same
+algorithms, so that the three results differ in the question being asked and in
+nothing else. Table~\ref{tab:framings} sets them side by side, with $\mathbf{d}_a$ and
 $\mathbf{d}_b$ being the descriptor vectors of the two ligands of a pair and the
-number in parentheses the count of units available in the development split. Framing~B is the primary comparison of this
-work, for the reason given below.
+number in parentheses the count of units available in the development split. They are
+taken in turn below.
 
-Framing~A is ordinary potency prediction, the task on which the QSAR literature is
-calibrated. We included it for two reasons. A descriptor set that cannot predict
-potency at all is no candidate for predicting a difference in potency, and its result
-can be placed beside published models in a way that a pairwise result cannot.
-Framing~B predicts the signed difference within a pair, which is the quantity that
-defines an activity cliff. Each pair contributes two rows, with the difference taken
-in both orders, so that the arbitrary choice of which member comes first cannot
-influence what the model learns. It is our primary framing, as the question of this
-study is whether a descriptor set can distinguish two molecules that a fingerprint
-declares identical, and that distinction is the signed difference within a pair and
-nothing else.
+In framing~A the unit is the ligand, the target is its pChEMBL value, and the metric
+is the coefficient of determination over the out-of-fold predictions. This is ordinary
+potency prediction, the task on which the QSAR literature is calibrated, and we
+included it for two reasons. A descriptor set that cannot predict potency at all is no
+candidate for predicting a difference in potency, and a result on this task can be
+placed beside published models in a way that a pairwise result cannot.
 
-Framing~C classifies a pair as a cliff or a matched control. Its features have to be
-invariant to the order of the two members, as the label is, and the antisymmetric rows
-of framing~B would leave it ambiguous. A pair was therefore described by the elementwise sum and the
-elementwise absolute difference concatenated. This framing
-uses five algorithm families, not six, as partial least squares regression has no
-classification counterpart. In both pair framings a pair is indivisible. Its rows were assigned to the same fold and resampled together, and the pair is also the unit
-of the intervals of Section~\ref{sec:eval}. Treating its two rows as independent would
-count every pair twice and narrow every interval for no reason that the data supports.
+In framing~B the unit is the pair and the target is the signed difference in pChEMBL
+between its two members, scored again by the coefficient of determination. This is the
+quantity that defines an activity cliff. Each pair contributes two rows, with the
+difference between the descriptor vectors taken in both orders, so that the arbitrary
+choice of which member comes first cannot influence what the model learns. Framing~B
+is the primary comparison of this work, as the question being asked is whether a
+descriptor set can distinguish two molecules that a fingerprint declares identical,
+and that distinction is the signed difference within a pair and nothing else.
+
+In framing~C the unit is again the pair, but the target is categorical, namely whether
+the pair is a cliff or a matched control, and the metric is the area under the
+receiver operating characteristic curve. The features of a pair have to be invariant
+to the order of its two members here, as the label is, and the antisymmetric rows of
+framing~B would leave it ambiguous. A pair was therefore described by the elementwise
+sum and the elementwise absolute difference concatenated. This framing uses five
+algorithm families, not six, as partial least squares regression has no classification
+counterpart.
+
+A pair is indivisible in both of the pair framings. Its rows were assigned to the same
+fold and resampled together, and the pair is also the unit of the intervals of
+Section~\ref{sec:eval}. Treating its two rows as independent would count every pair
+twice and narrow every interval for no reason that the data supports.
 
 \subsection{Four descriptor sets of increasing computational
 cost}\label{sec:rungs}
