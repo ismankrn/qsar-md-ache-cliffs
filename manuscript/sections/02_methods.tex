@@ -239,11 +239,12 @@ a rigid receptor, was computed once. This is not a rigorous binding free energy 
 do not present it as one, as absolute values obtained from a single post-docking
 snapshot are not defensible. It is on the ladder because it is what a structure-based
 study routinely does at this cost, and it was computed on the same pose as rung~2, so
-the two differ by the energy evaluation and by nothing else. Rung~4 is described in
-Sections~\ref{sec:md} and \ref{sec:mddesc}, and twelve of its 33 descriptors survived
-the reliability filter of Section~\ref{sec:filter}, which removes those whose
-variation between repeated simulations of one ligand is comparable to their variation
-between ligands. We scored both sets, as reporting only one would leave open whether a result is a
+the two differ by the energy evaluation and by nothing else. Rung~4 is described in Sections~\ref{sec:md} and \ref{sec:mddesc}, and 11 of its 32
+dynamic descriptors survived the reliability filter of Section~\ref{sec:filter}, which
+removes those whose variation between repeated simulations of one ligand is comparable
+to their variation between ligands. The heavy-atom count is carried alongside either
+set as a size covariate and not as a dynamic descriptor, so the two feature counts
+scored are 33 and 12. We scored both sets, as reporting only one would leave open whether a result is a
 property of the descriptors or of the filter. Both the splits of
 Section~\ref{sec:dataset} and the designation of framing~B as the primary comparison
 predate the first of these scores by more than a fortnight, so neither was chosen once
