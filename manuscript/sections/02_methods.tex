@@ -304,15 +304,18 @@ ETKDGv3 method under a fixed random seed and optimising it with the MMFF94 force
 field, all by using RDKit \citep{rdkit}. The resulting structures were converted to
 the PDBQT format by using Meeko \citep{meeko}, and each ligand was docked with three
 independent seeds. The cationic state matters here, as the catalytic site binds its
-ligands through a cation--$\pi$ interaction with Trp86. The
-pose-geometry descriptors were computed on the top-ranked pose of each seed and
+ligands through a cation--$\pi$ interaction with Trp86. The pose-geometry descriptors were computed on the top-ranked pose of each seed and
 reduced to their median, and the spread across seeds was kept so that unstable poses
-could be identified.
+could be identified. Every rung above the first begins from these poses, as the MM/GBSA evaluation of
+rung~3 uses the same coordinates and each simulated system is built with its ligand in
+its docked pose. The validation below therefore underwrites the whole structure-based
+half of the ladder and not rung~2 alone.
 
 We validated the protocol against four ligands whose complexes with hAChE have been
 solved, since a docked pose can only be scored against a crystallographic answer and
-no ligand of the dataset has one. They were chosen to span different modes of binding. Donepezil comes from 4EY7 and
-spans both ends of the gorge, territrem~B from 4M0F is large at 527~Da, and
+no ligand of the dataset has one. They were chosen to span different modes of binding, so that the validation would not
+rest on ligands that resemble one another. Donepezil comes from 4EY7 and spans both
+ends of the gorge, territrem~B from 4M0F is large at 527~Da, and
 huperzine~A from 4EY5 and galantamine from 4EY6 occupy the catalytic site alone. Each was docked into
 4EY7 with five seeds, and a pose was counted as successful below \SI{2.0}{\angstrom}
 RMSD from the crystal pose. Donepezil, the ligand of 4EY7 itself, was redocked at
