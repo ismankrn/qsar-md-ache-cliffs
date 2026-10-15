@@ -31,7 +31,13 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 SEC = ROOT/"manuscript"/"sections"
-RUNG_DEFINED_IN = "increasing computational"   # the subsection that introduces the term
+RUNG_DEFINED_IN = "increasing computational"   # the subsection that introduces them
+# Rule 4 covers the vocabulary of the descriptor ladder, which is this project's own.
+# "rung" and "ladder" are the obvious members; "molecular-dynamics descriptor" joins
+# them because it presupposes that the sets have been introduced and ordered, which
+# only that subsection does. The simulations themselves may be named earlier, since
+# the opening roadmap has to say what the section contains.
+EARLY_TERMS = r"\b(rungs?|ladder)\b|molecular[- ]dynamics descriptor"
 SHORT_PARA_WORDS = 45
 
 # Rule 7. Methods describes what was done, so a present-tense passive there is
@@ -185,7 +191,7 @@ def main() -> None:
         cut = text.find(RUNG_DEFINED_IN)
         if cut > 0:
             head = strip_refs(prose_of(text[:cut]))
-            for m in re.finditer(r"\b(rungs?|ladder)\b", head, re.I):
+            for m in re.finditer(EARLY_TERMS, head, re.I):
                 ctx = " ".join(head[max(0, m.start()-45):m.start()+25].split())
                 failures.append(f"{f.name}: '{m.group(0)}' used before "
                                 f"'{RUNG_DEFINED_IN}' -- ...{ctx}...")

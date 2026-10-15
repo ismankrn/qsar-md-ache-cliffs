@@ -97,7 +97,7 @@ carries a net positive charge in that second form, 170 at $+1$ and 101 at $+2$.
 \end{table}
 
 This set was then divided once into a development and a test part, with the random
-seed being 20260902. The unit of
+seed being 20260902, and was never revised afterwards. The unit of
 assignment is not the ligand but the connected component of the graph whose vertices
 are the ligands and whose edges are the pairs, since every ligand belongs to at least
 one pair and a split that separated a pair would let a model memorise the shared
@@ -135,9 +135,8 @@ folds of Section~\ref{sec:dataset} and with the same algorithms, so that the thr
 results differ in the question being asked and in nothing else.
 Table~\ref{tab:framings} sets them side by side, with $\mathbf{d}_a$ and
 $\mathbf{d}_b$ being the descriptor vectors of the two ligands of a pair and the
-number in parentheses the count of units available in the development split. We designated framing~B the primary
-comparison before any molecular-dynamics descriptor had been scored, and that
-designation is recorded in the version history of the analysis code.
+number in parentheses the count of units available in the development split. Framing~B is the primary comparison of this
+work, for the reason given below.
 
 Framing~A is ordinary potency prediction, the task on which the QSAR literature is
 calibrated. We included it for two reasons. A descriptor set that cannot predict
@@ -231,7 +230,10 @@ snapshot are not defensible. It is on the ladder because it is what a structure-
 study routinely does at this cost, and the question is whether that routine step buys
 anything.
 
-Rung~4 is described in Sections~\ref{sec:md} and \ref{sec:mddesc}. Twelve of its 33
+Rung~4 is described in Sections~\ref{sec:md} and \ref{sec:mddesc}. Both the splits of
+Section~\ref{sec:dataset} and the designation of framing~B as the primary comparison
+predate the first of its scores by more than a fortnight, which the version history of
+the analysis code records, so neither was chosen once the expensive answer was known. Twelve of its 33
 descriptors survived the reliability filter of Section~\ref{sec:filter}, which removes
 those whose variation between repeated simulations of one ligand is comparable to
 their variation between ligands. Both sets were scored, as reporting only one would
