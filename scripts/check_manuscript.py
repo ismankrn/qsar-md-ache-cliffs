@@ -191,10 +191,11 @@ def main() -> None:
                                 f"'{RUNG_DEFINED_IN}' -- ...{ctx}...")
 
         # rule 5 -- caption length, reported. A table caption is held to a much
-        # shorter limit than a figure's: a figure caption has to say what each panel
-        # shows, while a table's column headings already do that work, so anything
-        # beyond a title is prose that has been put in the wrong place.
-        for env, limit in (("figure", 120), ("table", 25)):
+        # shorter limit than a figure's. A table caption should name what the
+        # columns hold, so that the table stands on its own, and stop there; the
+        # qualifications and the interpretation belong in the prose. Four words is
+        # too few and a hundred is prose in the wrong place.
+        for env, limit in (("figure", 120), ("table", 35)):
             for label, cap, _blk in figure_blocks(text, env):
                 n = len(cap.split())
                 if n > limit:

@@ -90,7 +90,8 @@ carries a net positive charge in that second form, 170 at $+1$ and 101 at $+2$.
 \begin{table}[tb]
   \centering
   \small
-  \caption{\textbf{The frozen splits.}}
+  \caption{\textbf{The frozen splits.} Components, ligands and pairs in each
+    cross-validation fold of the development split, and in each split as a whole.}
   \label{tab:splits}
   \input{../results/35_splits.tex}
 \end{table}
@@ -114,8 +115,8 @@ folds by greedy bin packing, taking the largest components first and assigning e
 the fold with the lowest combined load of cliff pairs and of ligands. Balancing on either quantity alone fails in
 one direction or the other. Optimising the cliff count alone gives folds of 13 ligands
 against 151, while optimising the ligand count alone gives folds of 13 cliff pairs
-against 19. Table~\ref{tab:splits} gives what each fold and each split contains.
-The component counts in that table are the sample sizes the balancing worked with,
+against 19. The component counts in Table~\ref{tab:splits} are the sample sizes the balancing
+worked with,
 since components and not ligands are what was assigned, and 87 of them over five folds
 is coarse enough that every placement carries weight.
 
@@ -134,7 +135,8 @@ scored on it. That condition was not met, and the split therefore remains unused
 \begin{table}[tb]
   \centering
   \small
-  \caption{\textbf{The three framings.}}
+  \caption{\textbf{The three framings.} The unit of each, the quantity it predicts,
+    the features of one row, the metric, and the number of algorithm families.}
   \label{tab:framings}
   \input{../results/31_framings.tex}
 \end{table}
@@ -146,10 +148,9 @@ separates cliff pairs from control pairs need not predict the size of the differ
 within a pair. Three framings were therefore scored for every descriptor set, on the
 folds of Section~\ref{sec:dataset} and with the same algorithms, so that the three
 results differ in the question being asked and in nothing else.
-Table~\ref{tab:framings} sets them side by side, giving for each the unit, the
-quantity predicted, how one row is built from the descriptor vectors $\mathbf{d}_a$
-and $\mathbf{d}_b$ of a pair, the metric and the number of algorithm families, with
-the count of units available in the development split in parentheses. We designated framing~B the primary
+Table~\ref{tab:framings} sets them side by side, with $\mathbf{d}_a$ and
+$\mathbf{d}_b$ being the descriptor vectors of the two ligands of a pair and the
+number in parentheses the count of units available in the development split. We designated framing~B the primary
 comparison before any molecular-dynamics descriptor had been scored, and that
 designation is recorded in the version history of the analysis code.
 
@@ -180,7 +181,9 @@ cost}\label{sec:rungs}
 \begin{table}[tb]
   \centering
   \small
-  \caption{\textbf{The four descriptor sets.}}
+  \caption{\textbf{The four descriptor sets.} The input each rung requires, what its
+    descriptors capture, the number of features it was scored with, and the cost of
+    producing it for one ligand.}
   \label{tab:rungs}
   \input{../results/32_rungs.tex}
 \end{table}
@@ -193,13 +196,12 @@ as the question is not whether a more expensive representation can be built but
 whether it buys anything. We therefore scored every rung with the same algorithms, on
 the same folds and in the three framings of Section~\ref{sec:framings}, so that a
 difference between two rungs is a difference between representations and not between
-model families. Table~\ref{tab:rungs} gives the input each rung requires, what its
-descriptors capture, how many features it carries and what it cost. Two of those
-columns carry a qualification. The feature counts are the two feature sets of rung~1
-and, for rung~4, the full set beside the set that survives the reliability filter. The
-costs are median measured values for one ligand, given as processor time for the first
-three rungs and as wall-clock time on one GPU for the simulation, which are not the
-same unit and are not comparable beyond their order of magnitude.
+model families. Two columns of Table~\ref{tab:rungs} carry a qualification. The feature counts are
+the two feature sets of rung~1 and, for rung~4, the full set beside the set that
+survives the reliability filter. The costs are median measured values, given as
+processor time for the first three rungs and as wall-clock time on one GPU for the
+simulation, which are not the same unit and are not comparable beyond their order of
+magnitude.
 
 Rung~1 uses no three-dimensional information, and it is computed on the standardised
 neutral structures, while every structure-based rung uses the protonated form of
@@ -386,7 +388,8 @@ valid and nothing earlier in this work had to be repeated.
 
 \begin{table}[tb]
   \centering
-  \caption{\textbf{Simulated system composition.}}
+  \caption{\textbf{Simulated system composition.} Atom counts, box size, charges and
+    force fields, over all 217 built systems.}
   \label{tab:system}
   \input{../results/27_system_composition.tex}
 \end{table}
@@ -399,9 +402,9 @@ water model with sodium chloride at \SI{0.15}{\mole\per\litre}. This is the
 combination we used for the MM/GBSA calculation of Section~\ref{sec:rungs}, as a
 difference there would have turned a comparison of rungs into a comparison of force
 fields. Each ligand was placed in its docked pose in a cubic box of
-\SI{100.1}{\angstrom} per side, giving between 96{,}220 and 96{,}298 atoms, with the composition of all 217 built systems reported in
-Table~\ref{tab:system}, where a range is the minimum and the maximum across systems
-and a single value means every system shares it. We checked two quantities for every
+\SI{100.1}{\angstrom} per side, giving between 96{,}220 and 96{,}298 atoms, with the composition reported in Table~\ref{tab:system}, where a range is the
+minimum and the maximum across systems and a single value means every system shares
+it. We checked two quantities for every
 system instead of assuming them. The net charge after counterions is at most
 $2.8\times10^{-13}\,e$ across all 217 systems, and the shortest receptor--ligand
 heavy-atom distance at build time runs from 1.67 to \SI{2.64}{\angstrom}. The lower
