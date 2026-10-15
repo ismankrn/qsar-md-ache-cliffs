@@ -310,13 +310,17 @@ reduced to their median, and the spread across seeds was kept so that unstable p
 could be identified.
 
 We validated the protocol against four ligands whose complexes with hAChE have been
-solved, with five seeds per ligand and a pose counted as successful below
-\SI{2.0}{\angstrom} RMSD from the crystal pose. Donepezil, the ligand of 4EY7 itself,
-was redocked at $0.745 \pm 0.009$~\AA{} in five of five runs, as shown in
-Figure~\ref{fig:redock}, and territrem~B was cross-docked into the same receptor at
-$0.740 \pm 0.012$~\AA{} in five of five. The two remaining cross-dockings did not
-succeed, since galantamine gave $2.463 \pm 1.709$~\AA{} in four of five runs and
-huperzine~A gave $3.098 \pm 0.011$~\AA{} in none of them. The failure of huperzine~A
+solved, since a docked pose can only be scored against a crystallographic answer and
+no ligand of the dataset has one. They were chosen to span different modes of binding. Donepezil comes from 4EY7 and
+spans both ends of the gorge, territrem~B from 4M0F is large at 527~Da, and
+huperzine~A from 4EY5 and galantamine from 4EY6 occupy the catalytic site alone. Each was docked into
+4EY7 with five seeds, and a pose was counted as successful below \SI{2.0}{\angstrom}
+RMSD from the crystal pose. Donepezil, the ligand of 4EY7 itself, was redocked at
+$0.745 \pm 0.009$~\AA{} in five of five runs, as shown in Figure~\ref{fig:redock}, and
+territrem~B was cross-docked at $0.740 \pm 0.012$~\AA{} in five of five. The two
+remaining cross-dockings did not succeed, since galantamine gave $2.463 \pm
+1.709$~\AA{} in four of five runs and huperzine~A gave $3.098 \pm 0.011$~\AA{} in none
+of them. The failure of huperzine~A
 is systematic and not stochastic, as the spread across seeds is \SI{0.011}{\angstrom},
 and the size of the search box was ruled out as its cause, since repeating the docking
 from 18 to \SI{30}{\angstrom} per side left the RMSD unchanged. What remains is that
