@@ -12,29 +12,14 @@ all of the sets were scored.
 
 \subsection{Dataset, activity-cliff definition and splits}\label{sec:dataset}
 
-The dataset was constructed in five steps, i.e. nomination of the candidate targets,
-curation of their activity data, definition of the activity cliffs, selection of one
-target, and assembly of the pairs followed by their division into a development and a
-sealed test part. The curation and the cliff criterion are described before the
-selection, because the target was selected by applying both of them to every
-candidate.
+The dataset was constructed in four steps, i.e. curation of the activity data,
+definition of the activity cliffs, selection of the target, and assembly of the pairs
+followed by their division into a development and a sealed test part. The curation and
+the cliff criterion are described before the selection, because the target was
+selected by applying both of them.
 
-Six proteins were nominated as candidates before any data were retrieved, spanning
-three target classes, i.e. the kinases epidermal growth factor receptor (CHEMBL203),
-vascular endothelial growth factor receptor 2 (CHEMBL279) and tyrosine-protein kinase
-JAK2 (CHEMBL2971), the proteases coagulation factor Xa (CHEMBL244) and
-$\beta$-secretase 1 (CHEMBL4822), and acetylcholinesterase (CHEMBL220). They were
-grouped by class so that no single class would dominate the comparison, and each of
-them carries both the quantity of measurement and the quantity of structure that this
-study needs, i.e. between 3{,}604 and 9{,}739 compounds surviving the curation
-described below and no fewer than fifty deposited structures each in the Protein Data
-Bank, the latter being required because the descriptor sets of
-Section~\ref{sec:rungs} are computed on a receptor conformation and one of them on an
-ensemble of eight. The candidates were nominated rather than discovered, i.e. no systematic search over ChEMBL was carried out, so that every
-comparison between targets reported below holds among these six and not in general.
-
-Activity data were retrieved from ChEMBL for each of the six candidates, retaining a
-record only when it came from a binding assay, reported IC\textsubscript{50}, $K_\mathrm{i}$
+Activity data were retrieved from ChEMBL, retaining a record only when it came from
+a binding assay, reported IC\textsubscript{50}, $K_\mathrm{i}$
 or $K_\mathrm{d}$ with an exact relation in nanomolar units, carried a pChEMBL value,
 was free of ChEMBL's own data-validity flags and was not marked a potential duplicate.
 A single assay type was then kept, the most frequent one, which is
@@ -62,16 +47,20 @@ coordinates resolves it trivially. Within the curated acetylcholinesterase set 4
 pairs cleared the similarity criterion with a difference of at least one log unit, 110
 of them reached the hundredfold criterion and 100 of those were constitutional.
 
-The six candidates were then screened against three entry criteria, namely at least 80
-compounds surviving curation, a potency range of at least 3 log units, and at least 25
-constitutional activity cliffs. All six satisfied the first two criteria and two of
-them satisfied the third. Acetylcholinesterase was selected from those two because its
-constitutional pairs dominate most strongly and because its binding site gives a
+The target used throughout this work is human acetylcholinesterase, with the ChEMBL
+identifier being CHEMBL220. It was taken from six proteins examined against three
+entry criteria, namely at least 80 compounds surviving the curation above, a potency
+range of at least 3 log units, and at least 25 constitutional activity cliffs. All six
+satisfied the first two criteria and two of them satisfied the third. Of those two,
+acetylcholinesterase was chosen because its constitutional pairs dominate most
+strongly, at 100 against 10 stereochemical ones, and because its binding site gives a
 mechanistic reason to expect its cliffs to be geometric in origin, since its two
 recognition sites sit at opposite ends of a narrow gorge and its inhibitors are
 designed to span them, as described in Section~\ref{sec:dock}. The enzyme is also a
-therapeutic target in Alzheimer's disease, and the counts behind the choice are
-reported in Section~\ref{sec:composition}.
+therapeutic target in Alzheimer's disease. The six were examined rather than found by
+a systematic search over ChEMBL, so that any comparison between targets holds among
+them and not in general, and the counts for all six are reported in
+Section~\ref{sec:composition}.
 
 The pool of the selected target was then filtered for simulation feasibility,
 retaining
