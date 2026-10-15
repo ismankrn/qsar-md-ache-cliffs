@@ -225,8 +225,10 @@ the receptor and as much as \SI{99}{\angstrom} for the ligand.
 
 \TODO{Prose. The numbers, from results/20\_ladder.csv and Table~\ref{tab:benchmark}:}
 \NOTE{\framingA{}: rung 1 $+0.386$, rung 2 $+0.046$, rung 2e $+0.215$, rung 3
-  $+0.118$, rung 4 $+0.056$. \framingB{}: $+0.200$, $+0.167$, $+0.274$, $-0.056$,
-  $+0.124$. \framingC{}: $0.805$, $0.684$, $0.705$, $0.753$, $0.793$.
+$+0.118$, rung 4 $+0.068$. \framingB{}: $+0.200$, $+0.167$, $+0.274$, $-0.056$,
+$+0.152$. \framingC{}: $0.805$, $0.684$, $0.705$, $0.753$, $0.796$. Rung 4 was
+rescored after the replicate pilot was re-run on all six replicate sets; see
+results/36\_pilot\_rerun.md.
   Rung 3 on framings A and C is new -- it had only ever been scored on B.
   All five rungs cover all 217 ligands and all 145 pairs, so no rung is scored on
   an easier subset.}
@@ -309,8 +311,8 @@ the receptor and as much as \SI{99}{\angstrom} for the ligand.
   set beats the unfiltered one on both pair endpoints, so this is not a diagnostic
   that was merely interesting.}
 
-\TODO{Show that the filter earns its place: \framingB{} $+0.124$ filtered against
-  $-0.054$ unfiltered; \framingC{} $0.793$ against $0.721$.}
+\TODO{Show that the filter earns its place: \framingB{} $+0.152$ filtered against
+$-0.054$ unfiltered; \framingC{} $0.796$ against $0.721$.}
 
 % ---------------------------------------------------------------------------
 \subsection{What the distance-only occupancies summarise}\label{sec:typed}
@@ -364,8 +366,8 @@ the receptor and as much as \SI{99}{\angstrom} for the ligand.
 \end{figure}
 
 \TODO{Prose. With a fixed descriptor set, \framingA{} is flat
-  ($+0.039$, $+0.027$, $+0.056$) and \framingB{} peaks at 10 ns
-  ($+0.116$, $+0.198$, $+0.124$). The spread is inside the study's resolution, so
+  ($+0.039$, $+0.027$, $+0.056$) and \framingB{} peaks at 10 ns ($+0.116$, $+0.198$, $+0.124$ at the old filter; the
+duration ablation has not been re-run since the filter changed). The spread is inside the study's resolution, so
   the conclusion is no resolvable dependence on length -- which answers the cost
   objection with data.}
 \NOTE{Do NOT quote the $+0.198$ as a result. It is the best of six cells computed
