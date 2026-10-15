@@ -269,25 +269,23 @@ validation}\label{sec:dock}
 
 We prepared the receptor model from the X-ray crystal structure of recombinant hAChE
 in complex with donepezil, with the PDB ID being 4EY7 \citep{cheung2012} and the
-resolution being \SI{2.35}{\angstrom}. Chain~A was retained and the second copy in the
-asymmetric unit was discarded. The enzyme is shown in Figure~\ref{fig:structure}(A), where donepezil in its crystal
-pose marks the active site at the base of a narrow gorge. The architecture of that
-gorge is shown in Figure~\ref{fig:structure}(B), with an aromatic residue at each end,
-namely Trp86 at the catalytic anionic site (CAS) and Trp286 at the peripheral anionic
-site (PAS) near the mouth. Tyr337 sits between the two, adopts different rotamers in
-different complexes, and is therefore referred to as the gate. In this complex the CZ3 atoms of the two indole rings were
-measured \SI{15.6}{\angstrom} apart, and donepezil spans that distance while
-contacting both residues.
-
-Donepezil is itself a dual-binding-site inhibitor, which is why this structure was
-chosen. Inhibitors designed to span both ends of the gorge are an established design
-principle and not a premise introduced here \citep{grabowska2025}. The peripheral
-anionic site has been reported to accelerate the aggregation of $\beta$-amyloid
-alongside the catalytic function of the enzyme, and it is this principle that we built
-the descriptor sets of Section~\ref{sec:rungs} to test. Preparation of the same receptor for simulation differs and is described in
-Section~\ref{sec:md}, since it becomes relevant only once a force field is applied.
-The receptor is rigid throughout the docking, and the consequences of that are
-measured below.
+resolution being \SI{2.35}{\angstrom}. Donepezil is itself a dual-binding-site
+inhibitor, which is why this structure was chosen, and chain~A was retained while the
+second copy in the asymmetric unit was discarded. The enzyme is shown in
+Figure~\ref{fig:structure}(A), where donepezil in its crystal pose marks the active
+site at the base of a narrow gorge. The architecture of that gorge is shown in
+Figure~\ref{fig:structure}(B), with an aromatic residue at each end, namely Trp86 at
+the catalytic anionic site (CAS) and Trp286 at the peripheral anionic site (PAS) near
+the mouth. Tyr337 sits between the two, adopts different rotamers in different
+complexes, and is therefore referred to as the gate, while the CZ3 atoms of the two
+indole rings were measured \SI{15.6}{\angstrom} apart in this complex. Inhibitors
+designed to span that distance are an established design principle and not a premise
+introduced here \citep{grabowska2025}, since the peripheral anionic site has been
+reported to accelerate the aggregation of $\beta$-amyloid alongside the catalytic
+function of the enzyme. It is this principle that we built the descriptor sets of
+Section~\ref{sec:rungs} to test. Preparation of the same receptor for simulation
+differs and is described in Section~\ref{sec:md}, since it becomes relevant only once
+a force field is applied, and the receptor is rigid throughout the docking.
 
 \begin{figure}[tb]
   \centering
