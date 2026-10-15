@@ -289,13 +289,9 @@ a force field is applied, and the receptor is rigid throughout the docking.
 
 \begin{figure}[tb]
   \centering
-  \includegraphics[width=\textwidth]{Figure2_redocking_validation.pdf}
-  \caption{\textbf{Redocking validation, and the limit of a rigid receptor.}
-    (A)~Donepezil redocked into its own structure reproduces the crystal pose to
-    0.75~\AA{} RMSD over five seeds. (B)~Huperzine~A docked into its own receptor
-    (4EY5) succeeds. (C)~The same ligand cross-docked into 4EY7 fails at
-    3.10~\AA{}, because the Tyr337 rotamer of this structure occludes the true
-    pose.}
+  \includegraphics[width=0.62\textwidth]{Figure2_redocking_validation.pdf}
+  \caption{\textbf{Redocking validation.} Donepezil redocked into 4EY7, its own
+    structure, against the crystal pose, with Trp86 and Tyr337 marked.}
   \label{fig:redock}
 \end{figure}
 
@@ -313,26 +309,23 @@ pose-geometry descriptors were computed on the top-ranked pose of each seed and
 reduced to their median, and the spread across seeds was kept so that unstable poses
 could be identified.
 
-We validated the protocol by redocking four ligands whose complexes with hAChE have
-been solved, with five seeds per ligand and a pose counted as successful below
-\SI{2.0}{\angstrom} RMSD from the crystal pose. Donepezil was reproduced at
-$0.745 \pm 0.009$~\AA{} in five of five runs, as shown in
-Figure~\ref{fig:redock}(A), and territrem~B at $0.740 \pm 0.012$~\AA{} in five of
-five. Galantamine gave $2.463 \pm 1.709$~\AA{} and succeeded in four of five, and
-huperzine~A gave $3.098 \pm 0.011$~\AA{} and failed in all five. That failure was systematic and not
-stochastic, as the spread across seeds was \SI{0.011}{\angstrom}, and we tested two explanations. The size of the search box was ruled out, since
-repeating the docking from 18 to \SI{30}{\angstrom} per side left the RMSD of
-huperzine~A unchanged. Docking each ligand into the structure of its own complex
-instead succeeded, with huperzine~A at \SI{0.23}{\angstrom} in 4EY5, as shown in Figure~\ref{fig:redock}(B),
-and galantamine at \SI{0.81}{\angstrom} in 4EY6. The same ligand and the same protocol
-failed in 4EY7, as shown in Figure~\ref{fig:redock}(C), so that the two panels differ
-only in the receptor. The Tyr337 side chain differs by \SI{2.53}{\angstrom} between 4EY5 and
-4EY7 and occludes the true huperzine~A pose in the latter. The limitation is therefore the rigidity of the
-receptor and not the docking protocol, which is the reason for the ensemble docking of
-Section~\ref{sec:rungs} and, ultimately, for the molecular dynamics of
-Section~\ref{sec:md}. Vina also proved strongly stochastic for small ligands, since galantamine gave 5.88
-and \SI{1.60}{\angstrom} on different seeds under otherwise identical settings, which
-is why we fixed the seeds and ran three replicates for every ligand.
+We validated the protocol against four ligands whose complexes with hAChE have been
+solved, with five seeds per ligand and a pose counted as successful below
+\SI{2.0}{\angstrom} RMSD from the crystal pose. Donepezil, the ligand of 4EY7 itself,
+was redocked at $0.745 \pm 0.009$~\AA{} in five of five runs, as shown in
+Figure~\ref{fig:redock}, and territrem~B was cross-docked into the same receptor at
+$0.740 \pm 0.012$~\AA{} in five of five. The two remaining cross-dockings did not
+succeed, since galantamine gave $2.463 \pm 1.709$~\AA{} in four of five runs and
+huperzine~A gave $3.098 \pm 0.011$~\AA{} in none of them. The failure of huperzine~A
+is systematic and not stochastic, as the spread across seeds is \SI{0.011}{\angstrom},
+and the size of the search box was ruled out as its cause, since repeating the docking
+from 18 to \SI{30}{\angstrom} per side left the RMSD unchanged. What remains is that
+one receptor conformation cannot accommodate every binding mode, which is the reason
+for the ensemble docking of Section~\ref{sec:rungs} and, ultimately, for the molecular
+dynamics of Section~\ref{sec:md}. Vina also proved strongly stochastic for small
+ligands, since galantamine gave 5.88 and \SI{1.60}{\angstrom} on different seeds under
+otherwise identical settings, which is why we fixed the seeds and ran three replicates
+for every ligand.
 
 \begin{figure}[tb]
   \centering

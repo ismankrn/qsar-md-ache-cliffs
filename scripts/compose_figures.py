@@ -58,38 +58,29 @@ fig.savefig(F/"Figure1_hAChE_structure.png", dpi=300, facecolor="white")
 fig.savefig(F/"Figure1_hAChE_structure.pdf", facecolor="white")
 plt.close(fig)
 
-# ---------------- Figure 2 (three panels) ----------------
-imgs = [trim(mpimg.imread(F/f"_p2{k}.png")) for k in ("", "b", "c")]
-titles = [("A", "Donepezil — self-docking (4EY7)",      "RMSD = 0.75 Å"),
-          ("B", "Huperzine A — self-docking (4EY5)",    "RMSD = 0.23 Å"),
-          ("C", "Huperzine A — cross-docking (4EY7)",   "RMSD = 3.12 Å")]
-fig = plt.figure(figsize=(13.6, 5.9), dpi=300)
-gs = fig.add_gridspec(1, 3, wspace=0.02, left=0.008, right=0.992,
-                      top=0.905, bottom=0.235)
-for i, (img, (lab, ttl, rms)) in enumerate(zip(imgs, titles)):
-    ax = fig.add_subplot(gs[0, i]); ax.imshow(img); ax.axis("off")
-    ax.set_anchor("N")
-    bb = ax.get_position()
-    fig.text(bb.x0 + 0.004, 0.955, lab, fontsize=19, fontweight="bold",
-             ha="left", va="top")
-    ok = float(rms.split("=")[1].strip().split()[0]) < 2.0
-    ax.text(0.97, 0.965, rms, transform=ax.transAxes, fontsize=12.5,
-            ha="right", va="top", fontweight="bold",
-            color=("#1a7a1a" if ok else "#b02020"),
-            bbox=dict(boxstyle="round,pad=0.35", fc="white",
-                      ec=("#1a7a1a" if ok else "#b02020"), lw=1.2))
+# ---------------- Figure 2 (one panel) ----------------
+# Panels B and C showed huperzine A self-docked into 4EY5 against the same ligand
+# cross-docked into 4EY7, which was the evidence that receptor rigidity and not the
+# protocol limits the docking. That diagnosis was taken out of the manuscript, so the
+# figure keeps only the redocking it validates. The renders for B and C are still in
+# figures/_p2b.png and _p2c.png if it is ever wanted back.
+img = trim(mpimg.imread(F/"_p2.png"))
+fig = plt.figure(figsize=(6.2, 5.9), dpi=300)
+ax = fig.add_axes([0.01, 0.20, 0.98, 0.76]); ax.imshow(img); ax.axis("off")
+ax.text(0.97, 0.97, "RMSD = 0.75 \u00c5", transform=ax.transAxes, fontsize=12.5,
+        ha="right", va="top", fontweight="bold", color="#1a7a1a",
+        bbox=dict(boxstyle="round,pad=0.35", fc="white", ec="#1a7a1a", lw=1.2))
 
 handles = [
     Line2D([], [], color="#22c022", lw=6, label="Crystal pose (reference)"),
     Line2D([], [], color="#e020e0", lw=6, label="Docked pose (top-ranked)"),
     Patch(facecolor="0.78", edgecolor="0.5", label="Binding-cavity surface"),
     Line2D([], [], color="#1f6fd0", lw=6, label="Trp86 (CAS)"),
-    Line2D([], [], color="#ff8c00", lw=6, label="Tyr337 in the receptor used"),
-    Line2D([], [], color="#f0dcb4", lw=6, label="Tyr337 from 4EY5, panel C only"),
+    Line2D([], [], color="#ff8c00", lw=6, label="Tyr337"),
 ]
-fig.legend(handles=handles, loc="lower center", ncol=3, frameon=False,
-           fontsize=10.5, bbox_to_anchor=(0.5, 0.065), handlelength=1.5,
-           columnspacing=2.2, handletextpad=0.6)
+fig.legend(handles=handles, loc="lower center", ncol=2, frameon=False,
+           fontsize=9.5, bbox_to_anchor=(0.5, 0.01), handlelength=1.5,
+           columnspacing=2.0, handletextpad=0.6)
 fig.savefig(F/"Figure2_redocking_validation.png", dpi=300, facecolor="white")
 fig.savefig(F/"Figure2_redocking_validation.pdf", facecolor="white")
 plt.close(fig)
