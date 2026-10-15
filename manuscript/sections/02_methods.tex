@@ -87,6 +87,18 @@ the pair definition above, and the dominant protonation state at pH 7.4, assigne
 explicit rules, is the one that enters the docking and the simulations. Every ligand
 carries a net positive charge in that second form, 170 at $+1$ and 101 at $+2$.
 
+\begin{table}[tb]
+  \centering
+  \small
+  \caption{\textbf{The frozen splits.} Components, ligands and pairs in each
+    cross-validation fold of the development split, in the development split as a
+    whole, and in the sealed test split. A component is a group of ligands joined by
+    pairs, and it is the unit that was assigned, so the component counts are the
+    sample sizes the balancing worked with.}
+  \label{tab:splits}
+  \input{../results/35_splits.tex}
+\end{table}
+
 This set was then divided into a development and a test part, once and in a separate
 step that wrote the assignment to a file, with the random seed being 20260902.
 Recomputing the folds inside each model would have let the comparison measure the luck
@@ -106,7 +118,8 @@ folds by greedy bin packing, taking the largest components first and assigning e
 the fold with the lowest combined load of cliff pairs and of ligands. Balancing on either quantity alone fails in
 one direction or the other. Optimising the cliff count alone gives folds of 13 ligands
 against 151, while optimising the ligand count alone gives folds of 13 cliff pairs
-against 19.
+against 19. Table~\ref{tab:splits} gives what each fold and each split
+contains.
 
 This gave a development split of 217 ligands and 145 pairs, and a test split of 54
 ligands and 38 pairs, 20 of which are cliff pairs. The five folds hold between 40 and
@@ -401,8 +414,9 @@ heavy-atom distance at build time runs from 1.67 to \SI{2.64}{\angstrom}. The lo
 end of that range is a tight contact, and we state it openly. What resolves it is the
 minimisation and equilibration that follow.
 
-Each system was energy-minimised by steepest descent to a maximum force of
-\SI{100}{\kilo\joule\per\mole\per\nano\metre}, equilibrated for \SI{100}{\pico\second}
+Each system was energy-minimised by steepest descent until the
+maximum force fell below \SI{100}{\kilo\joule\per\mole\per\nano\metre}. It was
+then equilibrated for \SI{100}{\pico\second}
 in the canonical ensemble with the solute position-restrained and for a further
 \SI{100}{\pico\second} in the isothermal-isobaric ensemble without restraints.
 Production used a \SI{2}{\femto\second} time step with the bonds to hydrogen
