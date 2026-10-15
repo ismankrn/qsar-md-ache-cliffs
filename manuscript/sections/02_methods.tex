@@ -4,17 +4,16 @@ In this section, we introduce the procedures to construct and to evaluate the
 descriptor sets compared in this work. We first describe the construction of the
 activity-cliff dataset together with the splits on which everything was scored, the
 three framings in which every descriptor set was scored, and the four descriptor sets
-themselves. We then describe the two procedures that produce the more expensive of
-those sets, i.e. the receptor model with its docking and validation, and the molecular
-dynamics simulations,
-followed by the descriptors derived from the trajectories and the model suite on which
-all of the sets were scored.
+themselves. We then describe the two procedures that produce the more expensive of those sets,
+namely the receptor model with its docking and validation, and the molecular dynamics
+simulations. The descriptors derived from the trajectories follow, and then the model
+suite on which all of the sets were scored.
 
 \subsection{Dataset, activity-cliff definition and splits}\label{sec:dataset}
 
-The dataset was built in three steps. The activity data were curated, the activity
-cliffs were defined, and the pairs were assembled and then divided into a development
-and a sealed test part. The criteria by which we chose the target itself
+The dataset was built in three steps, in which the activity data were curated, the
+activity cliffs were defined, and the pairs were assembled and then divided into a
+development and a sealed test part. The criteria by which we chose the target itself
 are stated after the first two steps, because both were needed in order to apply them.
 
 Activity data for human acetylcholinesterase (hAChE), whose ChEMBL target identifier
@@ -27,10 +26,10 @@ as a pair formed from an IC\textsubscript{50} and a $K_\mathrm{i}$ measurement c
 satisfy a cliff criterion by virtue of the assay alone. Structures were standardised
 by stripping salts, keeping the largest covalent fragment and neutralising formal
 charges from the deposited representation, and those below six heavy atoms were
-removed. Replicate measurements of one standardised structure were collapsed to their
-median. A structure whose replicates disagreed by more than one log unit in standard
-deviation was discarded, as a compound measured inconsistently can enter a cliff pair
-on its own measurement error. The curated set holds 5{,}609 compounds spanning pChEMBL
+removed. Replicate measurements of one standardised structure were collapsed to their median,
+and a structure whose replicates disagreed by more than one log unit in standard
+deviation was discarded instead of being averaged. A compound measured inconsistently
+can otherwise enter a cliff pair on the strength of its own measurement error. The curated set holds 5{,}609 compounds spanning pChEMBL
 4.00 to 10.96.
 
 Similarity was computed as the Tanimoto coefficient on binary ECFP4, i.e. Morgan
@@ -38,8 +37,8 @@ fingerprints of radius 2 folded to 2{,}048 bits. A pair was treated as near-iden
 at a coefficient of at least 0.90, and as an activity cliff when its two members also
 differed by at least 2.0 log units in pChEMBL, a hundredfold difference in potency. The pairs were further divided
 according to whether their two members differ in
-constitution or only in stereochemistry, comparing their canonical SMILES with the
-stereochemistry stripped. Only the constitutional pairs were treated as informative.
+constitution or only in stereochemistry, comparing their canonical SMILES with the stereochemistry stripped, and only the
+constitutional pairs were treated as informative.
 ECFP is blind to stereochemistry, so a stereo-blind fingerprint cannot resolve a
 stereoisomer pair at all, while any method that uses three-dimensional coordinates
 resolves it trivially. Within the curated hAChE set, 421 pairs cleared the similarity
@@ -51,23 +50,24 @@ We took hAChE from six proteins examined against three entry criteria, namely at
 and at least 25 constitutional activity cliffs. The third criterion rests entirely on
 the cliff definition above, and the same thresholds were applied to all six targets,
 so the definition was fixed before any target was chosen. All six satisfied the first
-two criteria, and two of them satisfied the third. We chose hAChE from those two for two
-reasons. Its constitutional pairs dominate most strongly, at 100 against 10
-stereochemical ones, and its binding site gives a mechanistic reason to expect
-geometric cliffs, as its two recognition sites sit at opposite ends of a narrow gorge
-and its inhibitors are designed to span them, as described in Section~\ref{sec:dock}.
-The enzyme is also a therapeutic target in Alzheimer's disease. We examined these six
-proteins and did not search ChEMBL systematically, so any comparison between targets
-holds among them and not in general. Section~\ref{sec:composition} reports the counts
-for all six.
+two criteria, and two of them satisfied the third. We chose hAChE from those two for two reasons, the first being that its constitutional
+pairs dominate most strongly, at 100 against 10 stereochemical ones. The second is
+that its binding site gives a mechanistic reason to expect geometric cliffs, since its
+two recognition sites sit at opposite ends of a narrow gorge and its inhibitors are
+designed to span them, as described in Section~\ref{sec:dock}. The enzyme is also a
+therapeutic target in Alzheimer's disease, and Section~\ref{sec:composition} reports
+the counts for all six proteins. We examined these six and did not search ChEMBL
+systematically, so any comparison between targets holds among them and not in general.
 
-The compound pool was then filtered for simulation feasibility. A compound was kept
-only when it was composed of the elements H, C, N, O, F, S, Cl, Br, I and P, carried
-no radical electrons, had a molecular weight between 150 and 700~Da, had at most 55
-heavy atoms and at most 18 rotatable bonds, and could be embedded in three dimensions
-by ETKDGv3. This removed 239 of the 5{,}609 compounds, most of them on molecular
-weight or on rotatable-bond count. The filter was applied to the whole pool before any pairing. A pair is lost as soon as either of its members is removed, so filtering
-first keeps every surviving pair intact by construction. Of the 100 constitutional
+The compound pool was then filtered for simulation feasibility, and a compound was
+kept only when it met five conditions. It had to be composed of the elements H, C, N, O, F, S, Cl, Br, I and P, and to carry
+no radical electrons. It also had to have a molecular weight between 150 and 700~Da,
+at most 55 heavy atoms and at most 18 rotatable bonds, and to be embeddable in three
+dimensions by ETKDGv3. This removed 239 of the 5{,}609
+compounds, most of them on molecular weight or on rotatable-bond count. We applied the
+filter to the whole pool before any pairing, because a pair is lost as soon as either
+of its members is removed, so that filtering first keeps every surviving pair intact
+by construction. Of the 100 constitutional
 cliff pairs, 97 survived with both members intact, formed from 99 distinct compounds.
 
 A control pair was near-identical under the same floor of 0.90, but its two members
@@ -81,10 +81,10 @@ quantities. The median Tanimoto coefficient is 1.000 for the cliff pairs against
 for the controls, and the mean pair-mean potency 6.64 against 6.58, while the quantity
 under test differs by construction at 2.66 log units against 0.13. The final set holds
 271 ligands and 183 pairs, 97 cliff and 86 control. Each ligand was prepared and simulated once, while a pair refers
-to two ligands, as a compound may belong to more than one pair. Each ligand was
-prepared in two forms. The standardised neutral structure carries the fingerprints and
-the pair definition above, and the dominant protonation state at pH 7.4, assigned by
-explicit rules, is the one that enters the docking and the simulations. Every ligand
+to two ligands, as a compound may belong to more than one pair. Each ligand was prepared in two forms, of which the standardised neutral structure
+carries the fingerprints and the pair definition above. The dominant protonation state
+at pH 7.4, assigned by explicit rules, is the one that enters the docking and the
+simulations. Every ligand
 carries a net positive charge in that second form, 170 at $+1$ and 101 at $+2$.
 
 \begin{table}[tb]
@@ -97,15 +97,15 @@ carries a net positive charge in that second form, 170 at $+1$ and 101 at $+2$.
 \end{table}
 
 This set was then divided once into a development and a test part, with the random
-seed being 20260902, and was never revised afterwards. The unit of
-assignment is not the ligand but the connected component of the graph whose vertices
-are the ligands and whose edges are the pairs, since every ligand belongs to at least
-one pair and a split that separated a pair would let a model memorise the shared
-scaffold from the training side. The 271 ligands form 110 such components. These were
-stratified by whether they contain a cliff pair and by their mean potency, 20 per cent
-of each stratum was assigned to the test split, and the remainder were distributed
-over five cross-validation folds balanced jointly on cliff pairs and on ligand count,
-since either quantity alone leaves the other badly skewed. Table~\ref{tab:splits}
+seed being 20260902, and was never revised afterwards. The unit of assignment is not the ligand but the connected component of the graph
+whose vertices are the ligands and whose edges are the pairs. Every ligand belongs to
+at least one pair, and a split that separated a pair would let a model memorise the
+shared scaffold from the training side, so the 271 ligands were handled as the 110
+components that they form. These were stratified by whether they contain a cliff pair
+and by their mean potency, and 20 per cent of each stratum was assigned to the test
+split. The remainder were distributed over five cross-validation folds balanced
+jointly on cliff pairs and on ligand count, since either quantity alone leaves the
+other badly skewed. Table~\ref{tab:splits}
 gives the result, and no pair has its two members on opposite sides of the test
 boundary or of any fold boundary, which was verified on the written splits. The test
 split was to be opened only once a single descriptor set and algorithm had been
@@ -135,8 +135,8 @@ descriptor set, on the folds of Section~\ref{sec:dataset} and with the same
 algorithms, so that the three results differ in the question being asked and in
 nothing else. Table~\ref{tab:framings} sets them side by side, with $\mathbf{d}_a$ and
 $\mathbf{d}_b$ being the descriptor vectors of the two ligands of a pair and the
-number in parentheses the count of units available in the development split. They are
-taken in turn below.
+number in parentheses the count of units available in the development split, and the
+three are taken in turn below.
 
 In framing~A the unit is the ligand, the target is its pChEMBL value, and the metric
 is the coefficient of determination over the out-of-fold predictions. This is ordinary
@@ -146,8 +146,8 @@ candidate for predicting a difference in potency, and a result on this task can 
 placed beside published models in a way that a pairwise result cannot.
 
 In framing~B the unit is the pair and the target is the signed difference in pChEMBL
-between its two members, scored again by the coefficient of determination. This is the
-quantity that defines an activity cliff. Each pair contributes two rows, with the
+between its two members, scored again by the coefficient of determination, which is
+the quantity that defines an activity cliff. Each pair contributes two rows, with the
 difference between the descriptor vectors taken in both orders, so that the arbitrary
 choice of which member comes first cannot influence what the model learns. Framing~B
 is the primary comparison of this work, as the question being asked is whether a
@@ -163,10 +163,11 @@ sum and the elementwise absolute difference concatenated. This framing uses five
 algorithm families, not six, as partial least squares regression has no classification
 counterpart.
 
-A pair is indivisible in both of the pair framings. Its rows were assigned to the same
-fold and resampled together, and the pair is also the unit of the intervals of
-Section~\ref{sec:eval}. Treating its two rows as independent would count every pair
-twice and narrow every interval for no reason that the data supports.
+A pair is indivisible in both of the pair framings, so its rows were assigned to the
+same fold and resampled together, and the pair is also the unit of the intervals of
+Section~\ref{sec:eval}. Treating its two rows as independent observations would count
+every pair twice and would narrow every interval by a factor that the data does not
+support.
 
 \subsection{Four descriptor sets of increasing computational
 cost}\label{sec:rungs}
@@ -189,9 +190,9 @@ as the question is not whether a more expensive representation can be built but
 whether it buys anything. We therefore scored every rung with the same algorithms, on
 the same folds and in the three framings of Section~\ref{sec:framings}, so that a
 difference between two rungs is a difference between representations and not between
-model families. Two columns of Table~\ref{tab:rungs} carry a qualification. The feature counts are
-the two feature sets of rung~1 and, for rung~4, the full set beside the set that
-survives the reliability filter. The costs are median measured values, given as
+model families. Two columns of Table~\ref{tab:rungs} carry a qualification, the first being that the
+feature counts are the two feature sets of rung~1 and, for rung~4, the full set beside
+the set that survives the reliability filter. The costs are median measured values, given as
 processor time for the first three rungs and as wall-clock time on one GPU for the
 simulation, which are not the same unit and are not comparable beyond their order of
 magnitude.
@@ -209,10 +210,10 @@ and we took the better of the two in every framing. Neither dominates the other,
 scoring only one would have handicapped the baseline against which every other rung
 was measured, in the direction that flatters the more expensive rungs.
 
-We chose the rung-2 descriptors to test one mechanism and not to cast a wide net,
-namely that two closely related inhibitors are distinguished by how persistently each
-of them engages the two ends of the gorge and by its position along the axis between
-them. A fixed panel of fourteen gorge-lining residues, i.e. residues 72, 74, 86, 121,
+We chose the rung-2 descriptors to test one mechanism and not to cast a wide net. That
+mechanism is the proposal that two closely related inhibitors are distinguished by how
+persistently each of them engages the two ends of the gorge, and by its position along
+the axis between them. A fixed panel of fourteen gorge-lining residues, i.e. residues 72, 74, 86, 121,
 124, 203, 286, 295, 297, 334, 337, 338, 341 and 447, is used from here on, so that the
 pose-geometry, MM/GBSA and molecular-dynamics descriptors are computed on the same
 positions. Each rung-2 descriptor is the median over the three docking seeds of
@@ -229,17 +230,18 @@ returned several copies of one conformation. Each descriptor is the median acros
 eight, and the five axis descriptors are dropped, being defined against the single
 4EY7 geometry.
 
-Rung~3 is single-trajectory. The complex, the protein and the ligand were taken from
-the same coordinates with no re-minimisation after separation, so that the internal
-bonded terms cancel exactly and only the intermolecular interaction and the
-desolvation remain, and the protein term, which is identical for every ligand under a
-rigid receptor, was computed once. This is not a rigorous binding free energy and we
+Rung~3 is single-trajectory, in that the complex, the protein and the ligand were
+taken from the same coordinates with no re-minimisation after separation. The internal
+bonded terms therefore cancel exactly and only the intermolecular interaction and the
+desolvation remain, while the protein term, which is identical for every ligand under
+a rigid receptor, was computed once. This is not a rigorous binding free energy and we
 do not present it as one, as absolute values obtained from a single post-docking
 snapshot are not defensible. It is on the ladder because it is what a structure-based
 study routinely does at this cost, and the question is whether that routine step buys
 anything.
 
-Rung~4 is described in Sections~\ref{sec:md} and \ref{sec:mddesc}. Both the splits of
+Rung~4 is described in Sections~\ref{sec:md} and \ref{sec:mddesc}, where the
+simulations and their descriptors are set out. Both the splits of
 Section~\ref{sec:dataset} and the designation of framing~B as the primary comparison
 predate the first of its scores by more than a fortnight, which the version history of
 the analysis code records, so neither was chosen once the expensive answer was known. Twelve of its 33
@@ -272,13 +274,12 @@ validation}\label{sec:dock}
 We prepared the receptor model from the X-ray crystal structure of recombinant hAChE
 in complex with donepezil, with the PDB ID being 4EY7 \citep{cheung2012} and the
 resolution being \SI{2.35}{\angstrom}. Chain~A was retained and the second copy in the
-asymmetric unit was discarded. The enzyme is shown in Figure~\ref{fig:structure}(A),
-where donepezil in its crystal pose marks the active site at the base of a narrow
-gorge, and the architecture of that gorge in Figure~\ref{fig:structure}(B), with an
-aromatic residue at each end, i.e. Trp86 at the catalytic anionic site (CAS) and
-Trp286 at the peripheral anionic site (PAS) near the mouth, and with Tyr337 between
-the two, which adopts different rotamers in different complexes and is therefore
-referred to as the gate. In this complex the CZ3 atoms of the two indole rings were
+asymmetric unit was discarded. The enzyme is shown in Figure~\ref{fig:structure}(A), where donepezil in its crystal
+pose marks the active site at the base of a narrow gorge. The architecture of that
+gorge is shown in Figure~\ref{fig:structure}(B), with an aromatic residue at each end,
+namely Trp86 at the catalytic anionic site (CAS) and Trp286 at the peripheral anionic
+site (PAS) near the mouth. Tyr337 sits between the two, adopts different rotamers in
+different complexes, and is therefore referred to as the gate. In this complex the CZ3 atoms of the two indole rings were
 measured \SI{15.6}{\angstrom} apart, and donepezil spans that distance while
 contacting both residues.
 
@@ -306,11 +307,12 @@ We docked all ligands into the prepared 4EY7 receptor by using AutoDock Vina
 \citep{vina}. The search box was a cube of \SI{30}{\angstrom} per side centred at
 $(-14.257, -42.544, 30.646)$~\AA{}, midway between the CAS and the PAS so that poses
 spanning the gorge were accessible, and we set the exhaustiveness to 32. Ligand structures were generated from the protonated SMILES of
-Section~\ref{sec:dataset} by adding hydrogens, embedding a single conformer with the ETKDGv3 method under a fixed
-random seed and optimising it with the MMFF94 force field, all by using RDKit
-\citep{rdkit}, and were converted to the PDBQT format by using Meeko \citep{meeko}. The cationic
-state matters here, as the catalytic site binds its ligands through a cation--$\pi$
-interaction with Trp86. We docked each ligand with three independent seeds. The
+Section~\ref{sec:dataset} by adding hydrogens, embedding a single conformer with the
+ETKDGv3 method under a fixed random seed and optimising it with the MMFF94 force
+field, all by using RDKit \citep{rdkit}. The resulting structures were converted to
+the PDBQT format by using Meeko \citep{meeko}, and each ligand was docked with three
+independent seeds. The cationic state matters here, as the catalytic site binds its
+ligands through a cation--$\pi$ interaction with Trp86. The
 pose-geometry descriptors were computed on the top-ranked pose of each seed and
 reduced to their median, and the spread across seeds was kept so that unstable poses
 could be identified.
@@ -325,19 +327,17 @@ huperzine~A gave $3.098 \pm 0.011$~\AA{} and failed in all five. That failure wa
 stochastic, as the spread across seeds was \SI{0.011}{\angstrom}, and we tested two
 explanations. Repeating the docking with
 boxes of 18, 22, 26 and \SI{30}{\angstrom} per side left the RMSD of huperzine~A
-between 3.05 and \SI{3.18}{\angstrom}, so box size was not the cause. Docking each
-ligand into the structure of its own complex instead succeeded, with huperzine~A at
-\SI{0.23}{\angstrom} in 4EY5, as shown in Figure~\ref{fig:redock}(B), and galantamine
-at \SI{0.81}{\angstrom} in 4EY6, while the same ligand and the same protocol failed in
-4EY7, as shown in Figure~\ref{fig:redock}(C), so that the two panels differ only in
-the receptor. The Tyr337 side chain differs by \SI{2.53}{\angstrom} between 4EY5 and
+between 3.05 and \SI{3.18}{\angstrom}, so box size was not the cause. Docking each ligand into the structure of its own complex instead succeeded, with
+huperzine~A at \SI{0.23}{\angstrom} in 4EY5, as shown in Figure~\ref{fig:redock}(B),
+and galantamine at \SI{0.81}{\angstrom} in 4EY6. The same ligand and the same protocol
+failed in 4EY7, as shown in Figure~\ref{fig:redock}(C), so that the two panels differ
+only in the receptor. The Tyr337 side chain differs by \SI{2.53}{\angstrom} between 4EY5 and
 4EY7 and occludes the true huperzine~A pose in the latter. The limitation is therefore the rigidity of the
 receptor and not the docking protocol, which is the reason for the ensemble docking of
 Section~\ref{sec:rungs} and, ultimately, for the molecular dynamics of
-Section~\ref{sec:md}. Vina also proved strongly stochastic for small ligands.
-Galantamine gave 5.88 and \SI{1.60}{\angstrom} on different seeds under otherwise
-identical settings, which is why we fixed the seeds and ran three replicates for every
-ligand.
+Section~\ref{sec:md}. Vina also proved strongly stochastic for small ligands, since galantamine gave 5.88
+and \SI{1.60}{\angstrom} on different seeds under otherwise identical settings, which
+is why we fixed the seeds and ran three replicates for every ligand.
 
 \begin{figure}[tb]
   \centering
@@ -356,11 +356,11 @@ pose and the redocked pose of donepezil by using ProLIF \citep{prolif2021}, with
 transferred from the docked structure so that the two poses carry identical chemistry
 and differ only in their coordinates. The crystal binding mode is shown in
 Figure~\ref{fig:interactions}(a) and the comparison between the two fingerprints in
-Figure~\ref{fig:interactions}(b). Six residues are contacted in both poses, five in
-the crystal pose only and two in the docked pose only, and every typed interaction at
-the three named sites is recovered, i.e. the hydrophobic and $\pi$-stacking contacts
-at Trp86 and at Trp286 and the cation--$\pi$ and hydrophobic contacts at Tyr337, while
-what is lost on docking is van der Waals contact alone with Ser203 and His447. We used the typing for validation only, and it enters no descriptor set.
+Figure~\ref{fig:interactions}(b). Six residues are contacted in both poses, five in the crystal pose only and two in the
+docked pose only. Every typed interaction at the three named sites is recovered,
+namely the hydrophobic and $\pi$-stacking contacts at Trp86 and at Trp286 and the
+cation--$\pi$ and hydrophobic contacts at Tyr337, while what is lost on docking is van
+der Waals contact alone with Ser203 and His447. We used the typing for validation only, and it enters no descriptor set.
 
 \subsection{Molecular dynamics}\label{sec:md}
 
@@ -376,11 +376,10 @@ divided the chain at the breaks into the segments 4--258, 265--494 and 498--541,
 each its own chain identifier, and capped it with an acetyl group at its N-terminal
 and an N-methylamide group at its C-terminal side. We used neutral caps, as charged
 termini would have added six artificial formal charges on the surface, and placed them
-by internal coordinates, so that the procedure is deterministic. Bond energy fell to
-1{,}145~\si{\kilo\joule\per\mole} and the maximum force from
-$3.3\times10^{8}$ to $2.1\times10^{5}$~\si{\kilo\joule\per\mole\per\nano\metre},
-while the atoms lining the gorge did not move at all, so that the docked poses remain
-valid and nothing earlier in this work had to be repeated.
+by internal coordinates, so that the procedure is deterministic. Bond energy fell to 1{,}145~\si{\kilo\joule\per\mole} and the maximum force from
+$3.3\times10^{8}$ to $2.1\times10^{5}$~\si{\kilo\joule\per\mole\per\nano\metre}. The
+atoms lining the gorge did not move at all, so the docked poses remain valid and
+nothing earlier in this work had to be repeated.
 
 \begin{table}[tb]
   \centering
@@ -397,15 +396,14 @@ OpenFF Sage 2.3.0 through a SMIRNOFF template generator and the solvent by the T
 water model with sodium chloride at \SI{0.15}{\mole\per\litre}. This is the
 combination we used for the MM/GBSA calculation of Section~\ref{sec:rungs}, as a
 difference there would have turned a comparison of rungs into a comparison of force
-fields. Each ligand was placed in its docked pose in a cubic box of
-\SI{100.1}{\angstrom} per side, giving between 96{,}220 and 96{,}298 atoms, with the composition reported in Table~\ref{tab:system}, where a range is the
-minimum and the maximum across systems and a single value means every system shares
-it. We checked two quantities for every
-system instead of assuming them. The net charge after counterions is at most
-$2.8\times10^{-13}\,e$ across all 217 systems, and the shortest receptor--ligand
-heavy-atom distance at build time runs from 1.67 to \SI{2.64}{\angstrom}. The lower
-end of that range is a tight contact, and we state it openly. What resolves it is the
-minimisation and equilibration that follow.
+fields. Each ligand was placed in its docked pose in a cubic box of \SI{100.1}{\angstrom} per
+side, giving between 96{,}220 and 96{,}298 atoms. Table~\ref{tab:system} reports the
+composition, where a range is the minimum and the maximum across systems and a single
+value means every system shares it. Two quantities were checked for every system instead of being assumed, the first being
+the net charge after counterions, which is at most $2.8\times10^{-13}\,e$ across all
+217 systems. The second is the shortest receptor--ligand heavy-atom distance at build
+time, which runs from 1.67 to \SI{2.64}{\angstrom}. The lower end of that range is a tight contact, which we state openly, and what
+resolves it is the minimisation and equilibration that follow.
 
 Each system was energy-minimised by steepest descent until the
 maximum force fell below \SI{100}{\kilo\joule\per\mole\per\nano\metre}. It was
@@ -413,14 +411,14 @@ then equilibrated for \SI{100}{\pico\second}
 in the canonical ensemble with the solute position-restrained and for a further
 \SI{100}{\pico\second} in the isothermal-isobaric ensemble without restraints.
 Production used a \SI{2}{\femto\second} time step with the bonds to hydrogen
-constrained by LINCS, a Verlet neighbour list, particle-mesh Ewald electrostatics, a
-\SI{1.0}{\nano\metre} cutoff for both the real-space Coulomb and the van der Waals
-interactions with a long-range dispersion correction applied to the energy and the
-pressure, the velocity-rescaling thermostat at \SI{300}{\kelvin} with a coupling time
-of \SI{0.1}{\pico\second}, and the c-rescale barostat at \SI{1}{\bar}, isotropic, with
-a coupling time of \SI{2}{\pico\second} and a compressibility of
-$4.5\times10^{-5}$~\si{\per\bar}. Coordinates were written every
-\SI{10}{\pico\second}.
+constrained by LINCS, a Verlet neighbour list and particle-mesh Ewald electrostatics.
+The cutoff was \SI{1.0}{\nano\metre} for both the real-space Coulomb and the van der
+Waals interactions, with a long-range dispersion correction applied to the energy and
+the pressure. Temperature was held by the velocity-rescaling thermostat at
+\SI{300}{\kelvin} with a coupling time of \SI{0.1}{\pico\second}, and pressure by the
+c-rescale barostat at \SI{1}{\bar}, isotropic, with a coupling time of
+\SI{2}{\pico\second} and a compressibility of $4.5\times10^{-5}$~\si{\per\bar}, with coordinates written to
+disk every \SI{10}{\pico\second}.
 
 We ran the simulations with the GPU-resident mdrun of GROMACS, submitted in batches
 through its multi-directory interface with a wall-clock limit per job and restarts
@@ -445,17 +443,18 @@ computed on the \SI{20}{\nano\second} that follows, which every run supplies in 
 \end{figure}
 
 The production ensembles ran at the thermodynamic state they were set to, as shown in
-Figure~\ref{fig:thermo}. The temperature in panel~(a) averages \SI{300.00}{\kelvin}
-with a run-to-run spread of \SI{0.02}{\kelvin}, the density in panel~(b)
+Figure~\ref{fig:thermo}. The temperature in panel~(a) averages \SI{300.00}{\kelvin} with a run-to-run spread of
+\SI{0.02}{\kelvin}, and the density in panel~(b) averages
 \SI{1018.9}{\kilo\gram\per\metre\cubed} with a spread of
-\SI{0.12}{\kilo\gram\per\metre\cubed}, and the potential energy in panel~(c) drifts by
-\SI{-10.5}{\kilo\joule\per\mole\per\nano\second} at the median against a total near
-$-1.3\times10^{6}$~\si{\kilo\joule\per\mole}, i.e. by two parts in $10^{5}$ per
+\SI{0.12}{\kilo\gram\per\metre\cubed}. The potential energy in panel~(c) drifts by
+\SI{-10.5}{\kilo\joule\per\mole\per\nano\second} at the median, against a total near
+$-1.3\times10^{6}$~\si{\kilo\joule\per\mole}, which is two parts in $10^{5}$ per
 nanosecond. Panel~(d) shows the running mean of the pressure, which ends at
 \SI{1.00}{\bar}, since the instantaneous pressure of a box of this size has a
 within-run spread of about \SI{89}{\bar} and carries no information frame by frame.
-These were computed on 64 of the 229 runs. The trajectories were deleted once the
-descriptors had been extracted and only the cluster block retained its energy files,
+These four quantities were computed on 64 of the 229 runs, because the trajectories
+were deleted once the descriptors had been extracted and only the cluster block
+retained its energy files,
 and 16 further files covering \SI{0.4}{\nano\second}, from cancelled jobs, were
 excluded as abandoned. The subset shows only that the simulations were well behaved, and we do
 not use it to compare descriptor sets.
@@ -471,12 +470,12 @@ not use it to compare descriptor sets.
   \label{fig:stability}
 \end{figure}
 
-Structural stability across the campaign is shown in Figure~\ref{fig:stability}. The
-receptor C$\alpha$ RMSD in panel~(a) has a median of \SI{1.42}{\angstrom} across runs
-and reaches \SI{2.20}{\angstrom} at worst, and the ligand RMSD from its equilibrated
-pose in panel~(b) a median of \SI{2.99}{\angstrom}, with the two production designs
-drawn separately rather than averaged into a single band whose composition would
-change partway along its own axis. The per-residue C$\alpha$ fluctuation in panel~(c),
+Structural stability across the campaign is shown in Figure~\ref{fig:stability}, where
+the receptor C$\alpha$ RMSD in panel~(a) has a median of \SI{1.42}{\angstrom} across
+runs and reaches \SI{2.20}{\angstrom} at worst. The ligand RMSD from its equilibrated
+pose in panel~(b) has a median of \SI{2.99}{\angstrom}, and the two production designs
+are drawn separately instead of being averaged into a single band whose composition
+would change partway along its own axis. The per-residue C$\alpha$ fluctuation in panel~(c),
 computed after the first \SI{5}{\nano\second}, shows no gorge-lining residue to be
 unusually mobile, the largest excursions belonging to surface loops. All three panels require the treatment of the periodic boundary that the descriptors
 require. The reduced archives wrap molecule-wise and the capped receptor is three

@@ -13,6 +13,7 @@ says it cannot.
   5. Captions identify what a panel shows; numbers belong in the prose.       [reported]
   6. Every figure panel is referenced explicitly in the prose.                [enforced]
   7. Procedure in Methods is written in the past tense.                       [reported]
+  8. Sentences stay between 12 and 45 words.                                  [reported]
 
 Rule 6 exists because all three figures in Sections 2.1 and 2.2 were first drafted with the
 figure referenced only as a whole. The content of every panel was discussed, so nothing was
@@ -38,7 +39,24 @@ RUNG_DEFINED_IN = "increasing computational"   # the subsection that introduces 
 # only that subsection does. The simulations themselves may be named earlier, since
 # the opening roadmap has to say what the section contains.
 EARLY_TERMS = r"\b(rungs?|ladder)\b|molecular[- ]dynamics descriptor"
-SHORT_PARA_WORDS = 45
+SHORT_PARA_WORDS = 60
+SENT_MIN, SENT_MAX = 12, 45
+
+# Splitting on ". " alone breaks at "i.e." and at siunitx remnants, which invents
+# short sentences that are not there. These are masked before the split.
+ABBREV = (r"i\.e\.", r"e\.g\.", r"cf\.", r"et al\.", r"vs\.", r"Fig\.", r"Eq\.",
+          r"approx\.", r"\b[A-Z]\.")
+
+
+def sentences(text: str) -> list:
+    t = re.sub(r"\\[a-zA-Z]+\*?(\[[^\]]*\])?(\{[^{}]*\})*", " ", text)
+    t = re.sub(r"[${}~^_\\]", " ", t)
+    t = re.sub(r"(\d)\.(\d)", r"\1<DOT>\2", t)
+    for a in ABBREV:
+        t = re.sub(a, lambda m: m.group(0).replace(".", "<DOT>"), t)
+    t = re.sub(r"\s+", " ", t)
+    out = [s.replace("<DOT>", ".").strip() for s in re.split(r"(?<=[.!?]) +", t)]
+    return [s for s in out if len(s.split()) > 1]
 
 # Rule 7. Methods describes what was done, so a present-tense passive there is
 # usually a slip. Three kinds of present tense are correct and are allowed. A
@@ -216,6 +234,16 @@ def main() -> None:
                         continue
                     notes.append(f"{f.name}: present-tense passive in Methods -- "
                                  f"...{line.strip()[max(0, m.start()-35):m.end()+15]}...")
+
+        # rule 8 -- sentence length, reported. The reference papers run 22 to 29
+        # words per sentence on average; the risk here is variance rather than the
+        # mean, i.e. a four-word sentence next to an eighty-word one.
+        for s in sentences(strip_headings(strip_refs(prose))):
+            n = len(s.split())
+            if n < SENT_MIN:
+                notes.append(f"{f.name}: short sentence ({n} words) -- {s}")
+            elif n > SENT_MAX:
+                notes.append(f"{f.name}: long sentence ({n} words) -- {s[:70]}...")
 
         # rule 6 -- every panel referenced, but only once the subsection has prose
         subs = subsection_prose(text)
