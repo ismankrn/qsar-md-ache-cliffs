@@ -103,9 +103,10 @@ ligands, with a median of 2. The components were stratified by whether they cont
 pair and by their mean potency in three bins, and 20 per cent of each stratum was
 assigned to the test split. The remainder were distributed over five cross-validation
 folds by greedy bin packing, taking the largest components first and assigning each to
-the fold with the lowest combined load of cliff pairs and of ligands. Balancing on
-either quantity alone had given folds of 25 cliff pairs against 4, or of 13 ligands
-against 63.
+the fold with the lowest combined load of cliff pairs and of ligands. Balancing on either quantity alone fails in
+one direction or the other. Optimising the cliff count alone gives folds of 13 ligands
+against 151, while optimising the ligand count alone gives folds of 13 cliff pairs
+against 19.
 
 This gave a development split of 217 ligands and 145 pairs, and a test split of 54
 ligands and 38 pairs, 20 of which are cliff pairs. The five folds hold between 40 and
