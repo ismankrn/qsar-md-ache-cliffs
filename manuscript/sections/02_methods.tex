@@ -6,9 +6,10 @@ activity-cliff dataset together with the splits on which everything was scored, 
 three framings in which every descriptor set was scored, and the four descriptor sets
 themselves. We then describe the two procedures that produce the more expensive of those sets,
 namely the receptor model with its docking and validation, and the molecular dynamics
-simulations. The descriptors derived from the trajectories follow, together with the
-periodic-boundary treatment they require and the replicate pilot that filters them.
-The model suite, the interval estimates and the power calculation close the section.
+simulations. The descriptors derived from the trajectories are described with the simulations that
+produce them, together with the periodic-boundary treatment they require and the
+replicate pilot that filters them. The learning algorithms, the evaluation and the
+power calculation close the section.
 
 \subsection{Dataset, activity-cliff definition and splits}\label{sec:dataset}
 
@@ -165,7 +166,7 @@ framing~B would leave it ambiguous. A pair was therefore described by the elemen
 sum and the elementwise absolute difference concatenated. The two classes are close to
 balanced in the development split, at 77 cliff pairs against 68 controls, so the
 metric is not distorted by a rare positive. The algorithms applied to all three
-framings are described together in Section~\ref{sec:eval}. A pair is indivisible in both of the pair framings, so
+framings are described together in Section~\ref{sec:algo}. A pair is indivisible in both of the pair framings, so
 its rows were assigned to the same fold and resampled together, and the pair is also
 the unit of the intervals of Section~\ref{sec:eval}. Treating its two rows as
 independent observations would count every pair twice and would narrow every interval
@@ -239,8 +240,8 @@ a rigid receptor, was computed once. This is not a rigorous binding free energy 
 do not present it as one, as absolute values obtained from a single post-docking
 snapshot are not defensible. It is on the ladder because it is what a structure-based
 study routinely does at this cost, and it was computed on the same pose as rung~2, so
-the two differ by the energy evaluation and by nothing else. Rung~4 is described in Sections~\ref{sec:md} and \ref{sec:mddesc}, and 11 of its 32
-dynamic descriptors survived the reliability filter of Section~\ref{sec:filter}, which
+the two differ by the energy evaluation and by nothing else. Rung~4 is described in Section~\ref{sec:md}, and 11 of its 32 dynamic descriptors
+survived the reliability filter described there, which
 removes those whose variation between repeated simulations of one ligand is comparable
 to their variation between ligands. The heavy-atom count is carried alongside either
 set as a size covariate and not as a dynamic descriptor, so the two feature counts
@@ -364,8 +365,8 @@ disk every \SI{10}{\pico\second}.
 We ran the simulations with the GPU-resident mdrun of GROMACS, submitted in batches
 through its multi-directory interface with a wall-clock limit per job and restarts
 taken from checkpoints. We completed 229 production runs over the 217 ligands, 211 of
-them simulated once and 6 three times for the replicate pilot of
-Section~\ref{sec:filter}, amounting to 6{,}965~ns. The production length was
+them simulated once and 6 three times for the replicate pilot
+described below, amounting to 6{,}965~ns. The production length was
 \SI{50}{\nano\second} for the first 56 runs and \SI{25}{\nano\second} thereafter, and
 17 of those 56 stopped between 34 and \SI{42}{\nano\second} on reaching their
 wall-clock limit. The mixture of lengths does not affect the descriptors, since the first
@@ -373,39 +374,57 @@ wall-clock limit. The mixture of lengths does not affect the descriptors, since 
 the \SI{20}{\nano\second} that follows. Every run supplies that window in full, so no
 ligand contributes a shorter record than another.
 
-\subsection{MD-derived descriptors}\label{sec:mddesc}
-\TODO{33 descriptors, three design classes -- persistence, fluctuation, event
-  count -- deliberately not frame-averaged rung-2 quantities. Table of
-  definitions. 14 gorge-lining residues; CAS = Trp86, PAS = Trp286, gate = Tyr337.}
-\NOTE{Of the three classes only persistence survives the replicate filter: 8 of
-  the 11 survivors are contact occupancies. Report that here or in Results, but
-  report it -- it is the actionable guidance for anyone building MD descriptors.}
+\TODO{Descriptors, as the last part of this subsection. 32 dynamic descriptors in
+  three design classes -- persistence, fluctuation and event count -- chosen so that
+  none is a frame-averaged rung-2 quantity. Table of definitions. Computed on the
+  fourteen gorge-lining residues, with CAS being Trp86, PAS being Trp286 and the gate
+  being Tyr337. The heavy-atom count is carried beside them as a size covariate and is
+  not one of the 32.}
+\NOTE{Of the three classes only persistence survives the replicate filter, and 8 of
+  the 11 survivors are contact occupancies. Report it here or in Results, but report
+  it -- it is the actionable guidance for anyone building MD descriptors.}
 
-\subsection{Periodic boundary handling}
-\TODO{Bond-based unwrap, nojump, minimum image, Kabsch superposition. State that
-  an earlier version was wrong and that 19 of 30 descriptors changed when it was
-  fixed, with the A/B test as evidence the QC catches real defects.}
-\NOTE{Source: results/16b\_rung4\_pbc\_fix.md}
+\TODO{Periodic boundary handling, which the descriptors require. Bond-based unwrap,
+  no-jump against the previous frame, minimum image, then Kabsch superposition. State
+  that an earlier version did none of it and that 19 of some 30 descriptors changed
+  when it was fixed, with the A/B test on one raw trajectory as the evidence.}
+\NOTE{Two mechanisms, both present: free rotation of the complex against a frozen
+  reference, and per-molecule wrapping of a receptor that is three chains after
+  capping. The self-correction is worth keeping -- the first analysis claimed only the
+  seven frozen-reference quantities were affected, and contact occupancies moved too,
+  every one of them upward, since a contact written an image away is a contact that
+  was missed. Source: results/16b\_rung4\_pbc\_fix.md}
 
-\subsection{Replicate pilot and the descriptor filter}\label{sec:filter}
-\TODO{Reliability $\sigma^2\_{\mathrm{lig}}/(\sigma^2\_{\mathrm{lig}}+2\sigma^2\_{\mathrm{rep}})$;
-  12 replicate runs over 5 ligands; 81 of 160 descriptor$\times$window combinations
-  are seed-dominated; the filter keeps 11 at the 20 ns window.}
-\NOTE{Source: results/18\_replicate\_pilot.md and 18\_replicate\_pilot.csv}
+\TODO{Replicate pilot and the descriptor filter. Reliability
+  $\sigma^2\_{\mathrm{lig}}/(\sigma^2\_{\mathrm{lig}}+2\sigma^2\_{\mathrm{rep}})$, the
+  share of variance that is between ligands rather than between seeds; 12 replicate
+  runs over 5 ligands; 96 of 160 descriptor$\times$window combinations are
+  seed-dominated; 11 of 32 descriptors pass at the 20~ns window. The criterion was
+  fixed before the replicate trajectories were run.}
+\NOTE{The argument that carries this: a duration ablation cannot answer the seed
+  question. A quantity can be flat in every individual run and still differ between
+  seeds, which is what basin trapping does. gate\_flips\_per\_ns averages 0.007 per ns,
+  so a run beginning in one Tyr337 rotamer reports occupancy 1.000 with a flat RMSD
+  and looks converged. Nothing inside one trajectory separates "the answer is A" from
+  "this run was stuck in A". Source: results/18\_replicate\_pilot.md}
 
-\subsection{Model suite and evaluation}\label{sec:eval}
-\TODO{Six regression and five classification families, named and cited, with the note
-that the classification suite has five because partial least squares has no
-classification counterpart. The same suite is applied to all three framings, which
-Section~\ref{sec:framings} now defers to here. Preprocessing fitted inside each fold;
-best-of-family reported; bootstrap over units with the algorithm -- and, for rung 1,
-the feature set -- re-selected inside every replicate.}
-\NOTE{State the bootstrap's known bias: resampling units and then running the
-  frozen folds puts duplicates on both sides of the split and inflates the levels.
-  It applies identically to both sides, so the gap is the quantity to read.
-  Bootstrap medians must not be quoted as performance.}
+\subsection{Learning algorithms and preprocessing}\label{sec:algo}
+\TODO{Six regression families and five classification families, named and cited, with
+  the note that the classification suite has one fewer because partial least squares
+  has no classification counterpart. The same suite is applied to all three framings,
+  which Section~\ref{sec:framings} defers to here. Preprocessing is a pipeline fitted
+  inside each training fold -- median imputation, variance threshold, standardisation,
+  and in the matched-dimensionality arm a feature selection -- so the held-out fold
+  never influences it.}
 
-\subsection{Statistical power}
-\TODO{Synthetic descriptor matrices through the same pipeline; power against the
-  rung-1 baseline with the baseline re-simulated each replicate; measurement-noise
-  ceiling from repeat assays.}
+\subsection{Model evaluation and statistical analysis}\label{sec:eval}
+\TODO{Five-fold cross-validation on the frozen folds, out-of-fold predictions pooled
+  before the metric, best of family reported per rung. Bootstrap over units with the
+  algorithm -- and, for rung 1, the feature set -- re-selected inside every replicate,
+  300 replicates. Statistical power from synthetic descriptor matrices pushed through
+  the same pipeline, with the rung-1 baseline re-simulated in each replicate, and the
+  measurement-noise ceiling from repeat assays.}
+\NOTE{State the bootstrap's known bias: resampling units and then running the frozen
+  folds puts duplicates on both sides of the split and inflates the levels. It applies
+  identically to both sides, so the gap is the quantity to read, and bootstrap medians
+  must not be quoted as performance.}
