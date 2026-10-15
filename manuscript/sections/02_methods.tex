@@ -1,24 +1,12 @@
 \section{Methods}
 
-In this section, we introduce the procedures to construct and to evaluate the
-descriptor sets compared in this work. We first describe the construction of the
-activity-cliff dataset together with the splits on which everything was scored, the
-three framings in which every descriptor set was scored, and the four descriptor sets
-themselves. We then describe the two procedures that produce the more expensive of those sets,
-namely the receptor model with its docking and validation, and the molecular dynamics
-simulations. The descriptors derived from the trajectories are described with the simulations that
-produce them, together with the periodic-boundary treatment they require and the
-replicate pilot that filters them. The learning algorithms, the evaluation and the
-power calculation close the section.
-
 \subsection{Dataset, activity-cliff definition and splits}\label{sec:dataset}
 
-The dataset was built in three steps, in which the activity data were curated, the
-activity cliffs were defined, and the pairs were assembled and then divided into a
-development and a sealed test part. The criteria by which we chose the target itself
-are stated after the first two steps, because both were needed in order to apply them. Activity data for human
-acetylcholinesterase (hAChE), whose ChEMBL target identifier is CHEMBL220, were then
-retrieved from ChEMBL. A record was kept only when it came from a binding assay,
+The dataset was built in three steps, i.e. the curation of the activity data, the
+definition of the activity cliffs, and the assembly of the pairs followed by their
+division into a development and a sealed test part. Activity data for human
+acetylcholinesterase (hAChE) were retrieved from ChEMBL, with the target identifier
+being CHEMBL220. A record was kept only when it came from a binding assay,
 reported IC\textsubscript{50}, $K_\mathrm{i}$ or $K_\mathrm{d}$ with an exact relation
 in nanomolar units, carried a pChEMBL value, was free of ChEMBL's own data-validity
 flags and was not marked a potential duplicate. A single assay type was then kept, the most
