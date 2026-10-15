@@ -97,7 +97,7 @@ carries a net positive charge in that second form, 170 at $+1$ and 101 at $+2$.
 \end{table}
 
 This set was then divided once into a development and a test part, with the random
-seed being 20260902, before any molecular-dynamics result existed. The unit of
+seed being 20260902. The unit of
 assignment is not the ligand but the connected component of the graph whose vertices
 are the ligands and whose edges are the pairs, since every ligand belongs to at least
 one pair and a split that separated a pair would let a model memorise the shared
@@ -124,10 +124,13 @@ it.
 \end{table}
 
 A comparison between descriptor sets has no single answer, as what counts as an
-improvement depends on what is being predicted. A descriptor set can predict potency
-well and still fail to tell two near-identical molecules apart, and a set that
-separates cliff pairs from control pairs need not predict the size of the difference
-within a pair. Three framings were therefore scored for every descriptor set, on the
+improvement depends on what is being predicted. Activity cliffs are the standard
+counter-example to QSAR for exactly this reason, since models that predict potency
+well across a series are reported to fail on the near-identical pairs within it
+\citep{vantilborg2022, dablander2023}. The three framings below are different
+functions of the same descriptors, so a result on one does not determine a result on
+another, and separating cliff pairs from control pairs does not require predicting the
+size of the difference within a pair. Three framings were therefore scored for every descriptor set, on the
 folds of Section~\ref{sec:dataset} and with the same algorithms, so that the three
 results differ in the question being asked and in nothing else.
 Table~\ref{tab:framings} sets them side by side, with $\mathbf{d}_a$ and
