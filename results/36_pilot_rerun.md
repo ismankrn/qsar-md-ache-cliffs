@@ -38,3 +38,20 @@ Rung 4 remains below rung 1 on all three framings, so nothing in the conclusion 
 on this. The framing-B gap narrows from −0.077 to −0.048 and stays negative.
 
 The superseded output is kept as `18_replicate_pilot_4lig_superseded.csv`.
+
+## Bootstrap intervals, recomputed
+
+300 replicates over units, the algorithm re-selected inside every replicate.
+
+| framing | gap, first run | gap, re-run | interval, re-run | excludes zero |
+|---|---:|---:|---|---|
+| A, $R^2$ | −0.384 | −0.375 | [−0.596, −0.184] | **yes** |
+| B, $R^2$ | −0.111 | −0.093 | [−0.319, +0.127] | no |
+| C, ROC AUC | −0.002 | +0.003 | [−0.102, +0.103] | no |
+
+The structure is unchanged. Framing A is the only resolved comparison in the study and
+it is resolved against rung 4, while B and C remain unresolved. The bootstrap levels
+carry the known duplicate-resampling bias and are not performance estimates; the gap is
+the quantity to read.
+
+The duration ablation has **not** been re-run against the new filter.
