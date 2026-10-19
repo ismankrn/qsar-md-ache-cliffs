@@ -480,10 +480,51 @@ any metric, rather than averaging a metric computed within each fold, so that a 
 which happens to be easy cannot offset one which is hard. The number reported for a
 rung is the best it reached over its descriptor arms and its algorithm families, which
 is what a practitioner choosing a method would obtain, and the same selection is made
-on both sides of every comparison. Framings~A and~B were scored by the coefficient of
-determination and framing~C by the area under the receiver operating characteristic
-curve. The sealed test split was never opened, so every number in this work is a
-development-split estimate.
+on both sides of every comparison. The sealed test split was never opened, so every
+number in this work is a development-split estimate. Nothing in the evaluation differs
+between rungs, which is what allows a difference between two of them to be attributed
+to their descriptors.
+
+The two regression framings were judged primarily by the coefficient of determination,
+and we recorded the root mean squared error, the mean absolute error and the Spearman
+rank correlation beside it for every model. The coefficient of determination is primary
+because it is scale-free, so the ligand framing and the pair framing can be read on one
+axis, and because it is the quantity against which the QSAR literature is calibrated.
+The rank correlation is kept because a descriptor set can order the differences within
+pairs correctly while misjudging their size, and the two metrics together separate that
+case from a set which does neither. The mean absolute error is in log units, which lets
+a reader decide whether an error of a given size would matter chemically. We also
+recorded the mean observed and predicted value over the cliff pairs and over the
+control pairs separately. A model can otherwise reach a respectable coefficient of
+determination on the pooled pairs by predicting the control pairs well and the cliff
+pairs not at all.
+
+Framing~C was judged primarily by the area under the receiver operating characteristic
+curve, with average precision, the Matthews correlation coefficient and balanced
+accuracy recorded alongside. That metric is primary because the design is close to
+balanced, with 77 cliff pairs against 68 control pairs in the development split, so
+prevalence does not distort it. Average precision is kept because it responds to the
+ordering at the top of the ranking, where a screening application would operate.
+The other two summarise a decision rather than a ranking, taken at a probability of
+one half, and they are reported because a model can rank well and still place its
+threshold badly. All four were computed on the pooled out-of-fold probabilities, as in
+the regression framings.
+
+Comparisons of a descriptor between cliff pairs and control pairs were made with the
+two-sided Mann--Whitney $U$ test, since those differences are bounded below by zero and
+strongly skewed, so a test resting on normality would not be appropriate. Monotone
+association was measured by the Spearman rank correlation, which is how we asked
+whether a quantity orders the potency differences it is meant to explain. The Pearson
+correlation appears only where a linear relation is itself the claim, as in the
+agreement between two sets of docking scores. Any comparison of this kind is confounded by
+molecular size, as the two members of a cliff pair differ by 4.4 heavy atoms on average
+against 1.8 for a control pair. Every descriptor that tracks size therefore separates
+the two groups for a reason that has nothing to do with potency. We therefore repeated each
+test twice more, once within bins of equal heavy-atom difference and once on the
+residual after regressing the descriptor on that difference, and treated a descriptor
+as surviving only if it held in both. These tests are descriptive and carry no
+correction for multiplicity, as the inferential weight of this work rests on the
+primary endpoint fixed in advance and on the interval around it.
 
 An interval on each comparison came from a bootstrap over the units of its framing,
 with 300 replicates. The unit is the ligand in framing~A and the pair in framings~B
@@ -499,9 +540,9 @@ reaches. We took the interval as the 2.5th and 97.5th percentiles of the resampl
 gap.
 
 That bootstrap carries a bias which we state here rather than attempt to correct, and
-which follows from combining a resample with folds fixed beforehand. Resampling units with
-replacement and then running the frozen folds over the resample puts duplicated units
-on both sides of a fold boundary, which inflates the absolute scores, and the
+which follows from combining a resample with folds fixed beforehand. Resampling units
+with replacement and then running the frozen folds over the resample puts duplicated
+units on both sides of a fold boundary, which inflates the absolute scores, and the
 inflation grows with how often a unit is drawn more than once. It applies identically
 to the two sides of a comparison, so the gap between them is far less affected than
 either level, and the gap is the quantity we read. A bootstrap median is therefore not
