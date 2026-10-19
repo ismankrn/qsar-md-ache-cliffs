@@ -367,25 +367,26 @@ to \SI{50}{\nano\second}, and they enter this work only as the evidence that
 \SI{20}{\nano\second} of analysed trajectory is not too short, which
 Section~\ref{sec:duration} reports.
 
-Thirty-two descriptors were computed from each trajectory, and they fall into three
-design classes. Persistence quantities measure how much of the analysed window a contact or a position
-is held, fluctuation quantities measure how widely something moves, and event counts
-measure how often something happens. None of them is a frame-averaged version of a
-rung-2 quantity, since averaging a pose descriptor over a trajectory would test the
-averaging rather than the dynamics. They are computed on the same fourteen
-gorge-lining residues, with Trp86 at the CAS, Trp286 at the PAS and Tyr337 as the
-gate, and the heavy-atom count is carried beside them as a size covariate rather than
-as one of the 32. Extracting them requires the periodic boundary to be handled before
-anything is measured. Each molecule is made whole along its bonds, prevented from
-jumping between consecutive frames and placed in the periodic image of the first
-frame, and only then is the receptor superposed by the Kabsch algorithm. An earlier
-version did none of this and compared coordinates against a frozen reference, which
-absorbed the rotation and the diffusion of the complex and left molecules cut by box
-faces. Re-extracting one raw trajectory under both treatments changed 19 of some 30
-descriptors, with the ligand RMSD falling from 26.70 to \SI{3.14}{\angstrom} and the
-gorge fluctuation from 37.09 to \SI{0.93}{\angstrom}. The contact occupancies moved as
-well, and every one of them upward, since a contact whose partner was written into
-another periodic image is a contact that was missed.
+Thirty-two descriptors were computed from each trajectory in the order of
+Figure~\ref{fig:pipeline}, and they fall into three design classes. Persistence
+quantities measure how much of the analysed window a contact or a position is held,
+fluctuation quantities measure how widely something moves, and event counts measure
+how often something happens. None of them is a frame-averaged version of a rung-2
+quantity, since averaging a pose descriptor over a trajectory would test the averaging
+rather than the dynamics. They are computed on the same fourteen gorge-lining
+residues, with Trp86 at the CAS, Trp286 at the PAS and Tyr337 as the gate, and the
+heavy-atom count is carried beside them as a size covariate rather than as one of the
+32. Extracting them requires the periodic boundary to be handled before anything is
+measured. Each molecule is made whole along its bonds, prevented from jumping between
+consecutive frames and placed in the periodic image of the first frame, and only then
+is the receptor superposed by the Kabsch algorithm. An earlier version did none of
+this and compared coordinates against a frozen reference, which absorbed the rotation
+and the diffusion of the complex and left molecules cut by box faces. Re-extracting
+one raw trajectory under both treatments changed 19 of some 30 descriptors, with the
+ligand RMSD falling from 26.70 to \SI{3.14}{\angstrom} and the gorge fluctuation from
+37.09 to \SI{0.93}{\angstrom}. The contact occupancies moved as well, and every one of
+them upward, since a contact whose partner was written into another periodic image is
+a contact that was missed.
 
 Which of the 32 descriptors can carry a pair endpoint was decided by a replicate
 pilot, and the rule was fixed before those trajectories were run. A descriptor
@@ -404,6 +405,19 @@ have answered this question, since a quantity can be flat within every individua
 and still differ between seeds. The Tyr337 gate flips about once in three
 trajectories, so a run that begins in one rotamer reports that rotamer with a flat
 RMSD and no drift, and looks converged while being stuck.
+
+\begin{figure}[tb]
+  \centering
+  \includegraphics[width=\textwidth]{fig\_md\_pipeline.pdf}
+  \caption{\textbf{From a trajectory to a scored feature set.} The order in which the
+    rung-4 descriptors were obtained, with the count at each stage. The
+    periodic-boundary treatment precedes every measurement, since a molecule cut by a
+    box face, or a receptor left free to rotate, yields a value that is a property of
+    the box rather than of the ligand. The reliability filter removes nothing from the
+    study, as it divides the 32 descriptors into the set carried forward and the full
+    set, and both were scored.}
+  \label{fig:pipeline}
+\end{figure}
 
 \subsection{Learning algorithms and preprocessing}\label{sec:algo}
 \TODO{Six regression families and five classification families, named and cited, with
