@@ -259,6 +259,18 @@ design can see, and leave the question open where it cannot.
 % ---------------------------------------------------------------------------
 \subsection{Statistical power of the comparison}
 
+The resolution of the comparison was measured on synthetic descriptor matrices pushed
+through the same pipeline, and Figure~\ref{fig:power}(a) gives the result against a
+rung-1 baseline of $0.209$. A candidate reaching $0.335$, which is a gain of $0.114$,
+is called better than the baseline in 36 per cent of simulations, and one reaching
+$0.479$, a gain of $0.256$, in 90 per cent. Eighty per cent power arrives at about
+$0.45$, so the smallest advantage this design is likely to detect is a gain of roughly
+a quarter in the coefficient of determination. Panel~(b) gives the same fact in the
+form that travels better, as the 95 per cent interval on the gap is $0.32$ wide on
+average and varies only between $0.28$ and $0.34$ across the range tested. The portable
+statement is therefore that this study separates two values of the coefficient of
+determination about $0.3$ apart, and not less.
+
 \begin{figure}[tb]
   \centering
   \includegraphics[width=\textwidth]{fig3\_power.pdf}
@@ -275,23 +287,27 @@ design can see, and leave the question open where it cannot.
   \label{fig:power}
 \end{figure}
 
-\TODO{Prose. The portable sentence is: this study separates two $R^2$ values about
-  0.30 apart and not less. Derived before any rung-4 run finished, and it held.}
+That number was fixed before it could be influenced by the answer, having been computed
+on 2026-09-28 against a simulated baseline, while rung~4 was first scored on
+2026-10-06. It bounds the null rather than leaving it open, and both halves of the
+bound deserve stating. Differences larger than about $0.3$ are excluded, so the claim
+that molecular dynamics adds a large advantage over fingerprints is ruled out on this
+dataset. Differences smaller than that are not addressed at all, so a modest advantage
+remains possible and this study cannot speak to it. What would change the bound is the
+number of pairs rather than the length of the trajectories, since the width follows
+from 145 pairs.
 
-\NOTE{Discussion. This is what makes the null bounded rather than open-ended.
-  Differences larger than about 0.30 in $R^2$ are excluded; smaller ones are not
-  addressed, and the manuscript should say both halves. Panel (c) carries the
-  complementary point: the pessimistic measurement ceiling is 0.62, far above every
-  rung, so the variance the ladder fails to explain is real signal rather than assay
-  noise. The limitation is in the descriptors, not in the data -- which is why
-  "nothing to find" is not an available reading.}
-\NOTE{How panel (c) is computed, since Section~\ref{sec:eval} no longer carries it.
-  Each compound's within-compound spread of pChEMBL across repeat assays gives a
-  noise variance, and the ceiling is the fraction of the observed variance that a
-  perfect model could still explain. Only 336 of 5{,}609 compounds carry a repeat,
-  the spread is skewed, and the median of 0.064 log units gives 0.995 while the
-  upper decile of 0.560 gives 0.616. Quote the pessimistic figure, from
-  results/17\_noise\_ceiling.csv.}
+Panel~(c) closes the one remaining way of reading the result, which is that the
+endpoint itself is too noisy to predict. A model cannot explain more of the variance
+than the measurement reproduces, and we estimated that ceiling from the 336 of 5609
+compounds carrying a repeat assay. Each compound's spread across its repeats gives a
+noise variance, and the ceiling is the share of the observed variance that a perfect
+model could still account for. Even on the pessimistic reading, which takes the
+upper decile of the within-compound spread rather than its median, the ceiling stands
+at $0.616$ and lies far above every rung of the ladder. The variance the ladder fails
+to explain is therefore real signal and not assay noise, which places the limitation in
+the descriptors rather than in the data, and removes the reading that there was nothing
+there to find.
 
 % ---------------------------------------------------------------------------
 \subsection{Reliability of the dynamic descriptors}\label{sec:reliability}
