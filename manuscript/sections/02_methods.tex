@@ -416,14 +416,60 @@ RMSD and no drift, and looks converged while being stuck.
   \label{fig:mdflow}
 \end{figure}
 
-\subsection{Learning algorithms and preprocessing}\label{sec:algo}
-\TODO{Six regression families and five classification families, named and cited, with
-  the note that the classification suite has one fewer because partial least squares
-  has no classification counterpart. The same suite is applied to all three framings,
-  which Section~\ref{sec:framings} defers to here. Preprocessing is a pipeline fitted
-  inside each training fold -- median imputation, variance threshold, standardisation,
-  and in the matched-dimensionality arm a feature selection -- so the held-out fold
-  never influences it.}
+\subsection{Preprocessing and learning algorithms}\label{sec:algo}
+
+Every preprocessing step was a stage of a pipeline rather than a transformation applied
+to the matrix beforehand, so each was fitted on the training part of a fold and then
+applied unchanged to the held-out part. The structure-based rungs began with a median
+imputation, since a pose or a trajectory occasionally failed to supply what a
+descriptor needs. We took that median from the training fold alone, as a replacement
+computed on the whole matrix would carry information from the data it is then asked to
+predict. A zero-variance filter followed, removing the fingerprint bits and the
+per-residue counts that were constant across the ligands of a fold. We then
+standardised the features for the linear, latent-variable, kernel and distance-based
+learners, whose behaviour depends on the relative scale of the features, and left the
+two tree ensembles unscaled, since they are invariant to any monotone rescaling.
+Rung~1 needed no imputation stage, as the non-finite values that RDKit returns for a
+handful of its topological descriptors were set to zero when the matrix was built.
+
+Six regression families carried framings~A and~B, chosen to span the model classes
+rather than to find the best one. They were ridge regression \citep{ridge}, partial
+least squares \citep{pls}, $k$-nearest neighbours \citep{knn}, a support vector machine
+with a radial basis function kernel \citep{svm}, a random forest \citep{rf} and
+histogram-based gradient boosting \citep{gbm}, all as implemented in scikit-learn
+\citep{sklearn}. A linear model, a latent-variable model, an instance-based one, a
+kernel method and two ensembles between them cover the shapes a structure-activity
+relationship is usually assumed to take, so a rung that fails on all six has not simply
+been given the wrong model. We fixed the hyperparameters before any rung was scored and
+used the same values at every rung, with a ridge penalty of 10, five latent components,
+five neighbours, a kernel penalty of 10 and 500 trees, the remaining values being the
+library defaults. We ran no inner search over them, because tuning each rung separately
+would let a comparison between representations absorb a difference in how hard each one
+had been tuned.
+
+Framing~C carried five classification families, namely logistic regression, the same
+$k$-nearest neighbours, the same support vector machine with probability estimates
+enabled, a random forest and histogram-based gradient boosting. The suite is one
+smaller than the regression suite because partial least squares has no classification
+counterpart, so it is missing there rather than having been tried and failed. Every
+rung met the same families in the same framings, which is what allows a difference
+between two rungs to be read as a difference between their descriptors. A family
+appearing in both suites kept its hyperparameters, so the regression and the
+classification results differ by the task and by the metric and not by the
+configuration of the learner. Section~\ref{sec:eval} reports the best value a rung
+reached over its descriptor arms and its families, and
+Tables~\ref{tab:benchreg} and~\ref{tab:benchclf} hold the full grid behind it.
+
+We scored a matched-dimensionality arm alongside the main comparison, in which the
+wider feature set is cut to the width of the narrower one before the learner sees it.
+The selector is a univariate filter on the $F$ statistic, of the regression or the
+classification form according to the framing, and we placed it inside the pipeline with
+everything else. That placement is the point of the arm rather than a detail of its
+implementation, as choosing the $k$ features on the whole matrix and cross-validating
+afterwards lets the held-out fold influence which features it is then asked to predict
+from. The inflation that follows is substantial and it is also invisible, since such an
+arm still reports a cross-validated score that looks honest. Holding the selection
+inside the fold cost nothing beyond the time to refit it five times.
 
 \subsection{Model evaluation and statistical analysis}\label{sec:eval}
 \TODO{Five-fold cross-validation on the frozen folds, out-of-fold predictions pooled
