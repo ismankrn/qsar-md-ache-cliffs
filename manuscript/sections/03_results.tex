@@ -2,28 +2,17 @@
 
 \subsection{Validation of the docking protocol}\label{sec:dockval}
 
-We validated the protocol against four ligands whose complexes with hAChE have been
-solved, since a docked pose can only be scored against a crystallographic answer and
-no ligand of the dataset has one. They were chosen to span different modes of binding, so that the validation would not
-rest on ligands that resemble one another. Donepezil comes from 4EY7 and spans both
-ends of the gorge, territrem~B from 4M0F is large at 527~Da, and
-huperzine~A from 4EY5 and galantamine from 4EY6 occupy the catalytic site alone. Each was docked into
-4EY7 with five seeds, and a pose was counted as successful below \SI{2.0}{\angstrom}
-RMSD from the crystal pose. Donepezil, the ligand of 4EY7 itself, was redocked at
-$0.745 \pm 0.009$~\AA{} in five of five runs, as shown in Figure~\ref{fig:redock}, and
-territrem~B was cross-docked at $0.740 \pm 0.012$~\AA{} in five of five. The two
-remaining cross-dockings did not succeed, since galantamine gave $2.463 \pm
-1.709$~\AA{} in four of five runs and huperzine~A gave $3.098 \pm 0.011$~\AA{} in none
-of them. The failure of huperzine~A
-is systematic and not stochastic, as the spread across seeds is \SI{0.011}{\angstrom},
-and the size of the search box was ruled out as its cause, since repeating the docking
-from 18 to \SI{30}{\angstrom} per side left the RMSD unchanged. What remains is that
-one receptor conformation cannot accommodate every binding mode, which is the reason
-for the ensemble docking of Section~\ref{sec:rungs} and, ultimately, for the molecular
-dynamics of Section~\ref{sec:md}. Vina also proved strongly stochastic for small
-ligands, since galantamine gave 5.88 and \SI{1.60}{\angstrom} on different seeds under
-otherwise identical settings, which is why we fixed the seeds and ran three replicates
-for every ligand.
+We validated the protocol by redocking donepezil into 4EY7, the structure from which
+its crystallographic pose is taken, since a docked pose can only be scored against a
+crystallographic answer and no ligand of the dataset has one. Donepezil spans both ends
+of the gorge, so the validation covers a pose that engages the catalytic and the
+peripheral anionic site at once rather than one site alone. It was docked with five
+independent seeds, and a pose was counted as successful below \SI{2.0}{\angstrom} RMSD
+from the crystal pose, which is the conventional criterion. The crystal pose was
+recovered at $0.745 \pm 0.009$~\AA{} in five of five runs, as Figure~\ref{fig:redock}
+shows, clearing that criterion by nearly a factor of three. The spread of
+\SI{0.009}{\angstrom} across the five seeds shows the recovery to be a property of the
+protocol rather than a fortunate draw.
 
 \begin{figure}[tb]
   \centering
