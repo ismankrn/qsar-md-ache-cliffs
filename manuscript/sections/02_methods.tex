@@ -367,20 +367,20 @@ to \SI{50}{\nano\second}, and they enter this work only as the evidence that
 \SI{20}{\nano\second} of analysed trajectory is not too short, which
 Section~\ref{sec:duration} reports.
 
-Thirty-two descriptors were computed from each trajectory, and they fall into three
-design classes. Persistence quantities measure how much of the analysed window a
-contact or a position is held, fluctuation quantities measure how widely something
-moves, and event counts measure how often something happens. None of them is a
-frame-averaged version of a rung-2 quantity, since averaging a pose descriptor over a
-trajectory would test the averaging rather than the dynamics. They are computed on the
-same fourteen gorge-lining residues, with Trp86 at the CAS, Trp286 at the PAS and
-Tyr337 as the gate, and the heavy-atom count is carried beside them as a size
-covariate rather than as one of the 32. Extracting them requires the periodic boundary
-to be handled before anything is measured. Each molecule is made whole along its
-bonds, prevented from jumping between consecutive frames and placed in the periodic
-image of the first frame, and only then is the receptor superposed by the Kabsch
-algorithm. An earlier version did none of this and compared coordinates against a
-frozen reference, which absorbed the rotation and the diffusion of the complex and
+Thirty-two descriptors were computed from each trajectory, and they fall into the
+three design classes of Figure~\ref{fig:mdflow}. Persistence quantities measure how
+much of the analysed window a contact or a position is held, fluctuation quantities
+measure how widely something moves, and event counts measure how often something
+happens. None of them is a frame-averaged version of a rung-2 quantity, since
+averaging a pose descriptor over a trajectory would test the averaging rather than the
+dynamics. They are computed on the same fourteen gorge-lining residues, with Trp86 at
+the CAS, Trp286 at the PAS and Tyr337 as the gate, and the heavy-atom count is carried
+beside them as a size covariate rather than as one of the 32. Extracting them requires
+the periodic boundary to be handled before anything is measured. Each molecule is made
+whole along its bonds, prevented from jumping between consecutive frames and placed in
+the periodic image of the first frame, and only then is the receptor superposed by the
+Kabsch algorithm. An earlier version did none of this and compared coordinates against
+a frozen reference, which absorbed the rotation and the diffusion of the complex and
 left molecules cut by box faces. Re-extracting one raw trajectory under both
 treatments changed 19 of some 30 descriptors, with the ligand RMSD falling from 26.70
 to \SI{3.14}{\angstrom} and the gorge fluctuation from 37.09 to \SI{0.93}{\angstrom}.
@@ -404,6 +404,24 @@ have answered this question, since a quantity can be flat within every individua
 and still differ between seeds. The Tyr337 gate flips about once in three
 trajectories, so a run that begins in one rotamer reports that rotamer with a flat
 RMSD and no drift, and looks converged while being stuck.
+
+\begin{figure}[tb]
+  \centering
+  \includegraphics[width=0.78\textwidth]{fig\_md\_descriptor\_flow.png}
+  \caption{\textbf{Deriving the rung-4 descriptors from a trajectory.} The three design
+    classes the 32 descriptors fall into, with the preprocessing that precedes any
+    measurement and the combination that follows it.}
+  \label{fig:mdflow}
+\end{figure}
+\TODO{This figure disagrees with the pipeline in four places and cannot ship as drawn.
+  The class sizes are 19 persistence, 8 fluctuation and 3 event counts, with
+  \texttt{depth\_mean} and \texttt{n\_bridge\_water} sitting between classes, not 10, 12
+  and 10. Hydrogen-bond persistence, $\pi$--$\pi$ stacking persistence, B-factor-like
+  metrics, hydrogen-bond events and contact events are not computed anywhere in this
+  work. Preprocessing is the periodic-boundary treatment and the Kabsch superposition,
+  with no handling of missing data. The analysis window, the panel of fourteen residues
+  and the reliability filter are absent. The total of 32, the three class names and RMSD
+  and RMSF are right.}
 
 \subsection{Learning algorithms and preprocessing}\label{sec:algo}
 \TODO{Six regression families and five classification families, named and cited, with
