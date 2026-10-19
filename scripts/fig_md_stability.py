@@ -170,6 +170,10 @@ def main() -> None:
         R = np.vstack([r for r in rmsfs if len(r) == len(resids)])
         med = np.median(R, 0)
         lo, hi = np.percentile(R, [25, 75], axis=0)
+        # written out so the manuscript can cite where the fluctuation actually sits
+        pd.DataFrame({"resid": resids, "rmsf_median": med, "rmsf_q25": lo,
+                      "rmsf_q75": hi, "gorge_lining": np.isin(resids, LINING)}
+                     ).to_csv(RES/"25_md_rmsf_per_residue.csv", index=False)
         ax.fill_between(resids, lo, hi, color="#1b7837", alpha=0.22, lw=0)
         ax.plot(resids, med, color="#1b7837", lw=0.9)
         inl = np.isin(resids, LINING)

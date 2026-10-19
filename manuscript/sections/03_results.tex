@@ -84,14 +84,30 @@ resting on it.
 
 Structural stability across the campaign is shown in Figure~\ref{fig:stability}, where
 the receptor C$\alpha$ RMSD in panel~(a) has a median of \SI{1.42}{\angstrom} across
-runs and reaches \SI{2.20}{\angstrom} at worst. The ligand RMSD from its equilibrated
-pose in panel~(b) has a median of \SI{2.99}{\angstrom}, and the two production designs
-are drawn separately instead of being averaged into a single band whose composition
-would change partway along its own axis. The per-residue C$\alpha$ fluctuation in
-panel~(c), computed after the first \SI{5}{\nano\second}, shows no gorge-lining
-residue to be unusually mobile, the largest excursions belonging to surface loops. All
-three panels were computed after the same periodic-boundary treatment that the
-descriptors receive.
+runs and reaches \SI{2.20}{\angstrom} at worst. The steep rise in that panel is
+complete within the five nanoseconds that are discarded, and the curve creeps only
+slowly over the window that is analysed, so the descriptors are not measured on a
+system still finding its equilibrium. The ligand RMSD from its equilibrated pose in
+panel~(b) has a median of \SI{2.99}{\angstrom}, and the two production designs are
+drawn separately instead of being averaged into a single band whose composition would
+change partway along its own axis. They track each other over the window they share,
+at \SI{1.41}{\angstrom} against \SI{1.44}{\angstrom} for the receptor and
+\SI{3.06}{\angstrom} against \SI{2.84}{\angstrom} for the ligand, so the runs that
+continued are not a different population and the common window may be read as one set.
+A ligand displacement of three \AA{} is a rearrangement within the site and not a
+departure from it, as the centre of mass of no ligand in any of the 229 runs ever moved
+more than \SI{12}{\angstrom} from where it started.
+
+The fluctuation in panel~(c) is concentrated where the receptor was cut. Its eight
+largest values belong to residues 494, 541, 493, 258, 540, 4, 492 and 539, reaching
+\SI{4.53}{\angstrom} at residue 494, and every one of them is a capped segment
+terminus or its immediate neighbour. That is the expected behaviour of a free chain
+end and it is confined to the surface, since the fourteen gorge-lining residues
+fluctuate by a median of \SI{0.49}{\angstrom} and by no more than
+\SI{0.75}{\angstrom}. Splitting the chain into three segments therefore left the
+binding site as rigid as the rest of the fold, which is the condition the contact
+descriptors depend on. All three panels were computed after the same periodic-boundary
+treatment that the descriptors receive.
 
 \begin{figure}[tb]
   \centering
