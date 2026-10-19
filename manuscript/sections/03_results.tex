@@ -232,8 +232,8 @@ dynamics. The comparison that matters is therefore against rung~1 as it would
 actually be used, with every feature it has and the feature set re-selected inside each
 bootstrap replicate.
 
-Against that unhandicapped baseline, the bootstrap over units puts the gap at $-0.375$
-on \framingA{} with a 95 per cent interval of $[-0.596, -0.184]$, at $-0.093$ on
+Against that unhandicapped baseline, and as Figure~\ref{fig:gapforest} shows, the
+bootstrap over units puts the gap at $-0.375$ on \framingA{} with a 95 per cent interval of $[-0.596, -0.184]$, at $-0.093$ on
 \framingB{} with $[-0.319, +0.127]$, and at $+0.003$ on \framingC{} with $[-0.102,
 +0.103]$. Only \framingA{} is resolved, and it is resolved against rung~4 rather than for it.
 That interval is the only one in this study that excludes zero, and its sign matters as much
@@ -242,6 +242,19 @@ fingerprint on per-ligand potency. On the two pair framings the gap is small and
 interval contains zero in both, so neither supports a claim in either direction. The
 molecular-dynamics descriptors therefore fail to improve on a 2D baseline where the
 design can see, and leave the question open where it cannot.
+
+\begin{figure}[tb]
+  \centering
+  \includegraphics[width=0.75\textwidth]{fig\_gap\_forest.pdf}
+  \caption{\textbf{One of the three comparisons is resolved, and it is resolved against
+    rung~4.} The difference between the best score of rung~4 and the best score of
+    rung~1, with the 95 per cent interval from a bootstrap over the units of each
+    framing. The baseline is rung~1 with all of its features and its feature set
+    re-selected inside every replicate. \framingA{} is drawn apart because its interval
+    clears zero, while the two pair framings contain zero and support no claim in
+    either direction.}
+  \label{fig:gapforest}
+\end{figure}
 
 % ---------------------------------------------------------------------------
 \subsection{Statistical power of the comparison}
