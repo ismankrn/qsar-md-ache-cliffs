@@ -162,6 +162,18 @@ carrying a rung throughout.
   \input{../results/22_benchmark_main.tex}
 \end{table}
 
+No rung is resolvably ahead of any other on any framing, and the ordering above should
+be read with that in mind. The largest advantage any structure-based rung holds over
+the fingerprints anywhere is the $0.074$ by which the receptor ensemble leads on
+\framingB{}, and the largest lead the fingerprints hold over the best structure-based
+rung is $0.171$ on \framingA{} and $0.010$ on \framingC{}. All three are well inside
+the resolution of about $0.3$ that Section~\ref{sec:power} establishes, so none of them
+is a difference this design can see. The claim is therefore not that two-dimensional
+fingerprints win everywhere, since on \framingB{} the ensemble is numerically ahead of
+them, but that no rung is separated from any other by more than the noise. The one
+comparison that does separate is the gap between rung~4 and the fingerprints on
+\framingA{}, which Section~\ref{sec:matched} reports and which runs against rung~4.
+
 The 2D baseline is computed on the neutral structures while every structure-based rung
 uses the protonated form, so we rescored rung~1 on the protonated structures to check
 that the comparison is not an artefact of that asymmetry. It is not, and the baseline
@@ -174,9 +186,6 @@ unchanged for 130 of the 145 development pairs because the two members of a
 near-identical pair protonate alike. On the endpoint that defines an activity cliff,
 protonation is therefore invisible to a 2D fingerprint by construction.
 
-\TODO{State plainly that on \framingB{} the ensemble rung 2 is numerically above
-  rung 1 ($+0.274$ vs $+0.200$) and that the difference is not resolvable. Do not
-  write that 2D wins everything.}
 \NOTE{What the intervals add, and it is worth writing out. On \framingA{} rung 1
   $[+0.245,+0.497]$ is the only rung clearly above zero; rung 2 ensemble just
   touches it at $[-0.011,+0.342]$ and rung 4 contains it at $[-0.096,+0.185]$ (both to be rechecked against the rescored
@@ -188,7 +197,7 @@ rung 4). On
   plainly does -- but that no structure-based rung is resolvably better than a
   fingerprint anywhere.}
 
-\subsection{Rung 4 against a dimensionality-matched baseline}
+\subsection{Rung 4 against a dimensionality-matched baseline}\label{sec:matched}
 
 The headline comparison gives rung~1 thousands of features and rung~4 twelve, so the
 obvious objection is that the fingerprint wins on width rather than on content. We
@@ -241,7 +250,7 @@ design can see, and leave the question open where it cannot.
 \end{figure}
 
 % ---------------------------------------------------------------------------
-\subsection{Statistical power of the comparison}
+\subsection{Statistical power of the comparison}\label{sec:power}
 
 The resolution of the comparison was measured on synthetic descriptor matrices pushed
 through the same pipeline, and Figure~\ref{fig:power}(a) gives the result against a
