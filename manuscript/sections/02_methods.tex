@@ -2,21 +2,22 @@
 
 \subsection{Dataset, activity-cliff definition and splits}\label{sec:dataset}
 
-The dataset was built in three steps, i.e. the curation of the activity data, the
-definition of the activity cliffs, and the assembly of the pairs followed by their
-splitting into a development and a sealed test set. An activity cliff is defined here
-as a pair of compounds that are near-identical in structure and far apart in potency,
-and both halves of that need a threshold. Similarity was computed as the Tanimoto
-coefficient on binary ECFP4, i.e. Morgan fingerprints of radius 2 folded to 2{,}048
-bits, and a pair was treated as near-identical at a coefficient of at least 0.90. It
-was treated as a cliff when its two members also differed by at least 2.0 log units in
-pChEMBL, which is a hundredfold difference in potency. Pairs were further divided
-according to whether their two members differ in constitution or only in
-stereochemistry, which was decided by comparing their canonical SMILES with the
-stereochemistry stripped, and only the constitutional pairs were treated as
-informative. ECFP is blind to stereochemistry, so a stereo-blind fingerprint cannot
-resolve a stereoisomer pair at all, while any method that uses three-dimensional
-coordinates resolves it trivially.
+The dataset of this work is built around activity cliffs, so the definition of one
+comes first. An activity cliff is a pair of compounds that are near-identical in
+structure and far apart in potency, and both halves of that need a threshold.
+Similarity was computed as the Tanimoto coefficient on binary ECFP4, i.e. Morgan
+fingerprints of radius 2 folded to 2{,}048 bits, and a pair was treated as
+near-identical at a coefficient of at least 0.90. It was treated as a cliff when its
+two members also differed by at least 2.0 log units in pChEMBL, which is a hundredfold
+difference in potency. Pairs were further divided according to whether their two
+members differ in constitution or only in stereochemistry, which was decided by
+comparing their canonical SMILES with the stereochemistry stripped, and only the
+constitutional pairs were treated as informative. ECFP is blind to stereochemistry, so
+a stereo-blind fingerprint cannot resolve a stereoisomer pair at all, while any method
+that uses three-dimensional coordinates resolves it trivially. With that definition in
+hand, the dataset was built in three steps, i.e. the curation of the activity data,
+the identification of the cliff pairs, and the assembly of the pairs followed by their
+splitting into a development and a sealed test set.
 
 The target was determined before the dataset was built, by curating the data of six
 candidate proteins and applying three entry criteria to each of them. A candidate had
