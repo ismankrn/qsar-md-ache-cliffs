@@ -60,3 +60,33 @@ descriptor.
   \label{tab:sirung4}
   \input{../results/37_si_rung4.tex}
 \end{table}
+
+Tables~\ref{tab:benchreg} and~\ref{tab:benchclf} hold the full grid of scores that the
+ladder summarises, with every rung crossed against every descriptor arm and every
+algorithm family. The headline comparison takes the best value a rung reached over its
+arms and its families, which is one number drawn from a block of them, and these two
+tables are that block. They are split because the regression and the classification
+framings do not share a model suite, as Ridge and PLS have no classification counterpart
+and are absent from the second rather than having failed in it. Reading down a column
+shows how much of a rung's score is the descriptors and how much is the choice of
+algorithm, which the single best value conceals. The arms are the alternative feature
+sets of Section~\ref{sec:rungs}, namely the two fingerprint variants of rung~1 and the
+filtered and unfiltered sets of rung~4, while rungs~2, 2e and~3 carry one arm each.
+
+\begin{table}[tb]
+  \centering
+  \caption{\textbf{Every regression family on \framingA{} and \framingB{}.} Each
+    rung is shown with every descriptor arm it was scored with, so the best value
+    that Figure~\ref{fig:ladder} plots can be located in the grid it came from.}
+  \label{tab:benchreg}
+  \input{../results/22_benchmark_si_reg.tex}
+\end{table}
+
+\begin{table}[tb]
+  \centering
+  \caption{\textbf{Every classification family on \framingC{}.} The families differ from Table~\ref{tab:benchreg} because \framingC{} is a
+    classification; Ridge and PLS have no counterpart here and are absent rather
+    than failed.}
+  \label{tab:benchclf}
+  \input{../results/22_benchmark_si_clf.tex}
+\end{table}
