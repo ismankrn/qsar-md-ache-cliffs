@@ -223,8 +223,7 @@ are chosen.
 Rung~1 uses no three-dimensional information, and it is computed on the standardised
 neutral structures, while every structure-based rung uses the protonated form of
 Section~\ref{sec:dataset}. The ladder therefore does not describe one chemical species throughout, so we rescored
-rung~1 on the protonated structures as a check, and Section~\ref{sec:ladder} reports
-what that gave. Two feature sets were carried here, the binary ECFP4 that defined the cliffs in
+rung~1 on the protonated structures as a check on that asymmetry. Two feature sets were carried here, the binary ECFP4 that defined the cliffs in
 Section~\ref{sec:dataset} and a count-based ECFP4 of the same width combined with the
 217 physicochemical descriptors of RDKit, and we took the better of the two in every
 framing. Those 217 are the standard RDKit set, covering molecular size, polarity,
@@ -321,8 +320,8 @@ ligands through a cation--$\pi$ interaction with Trp86. The pose-geometry descri
 reduced to their median, and the spread across seeds was kept so that unstable poses
 could be identified. Every rung above the first begins from these poses, as the MM/GBSA evaluation of
 rung~3 uses the same coordinates and each simulated system is built with its ligand in
-its docked pose. The validation reported in Section~\ref{sec:dockval} therefore
-underwrites the whole structure-based half of the ladder and not rung~2 alone.
+its docked pose. The docking validation therefore underwrites the whole structure-based half of the
+ladder and not rung~2 alone.
 
 \subsection{Molecular dynamics simulations and descriptor extraction}\label{sec:md}
 
@@ -394,8 +393,7 @@ three times for the replicate pilot, amounting to 6{,}965~ns. Production was
 discarded and the \SI{20}{\nano\second} that follows supplied every descriptor, so
 every ligand carries the same record. Fifty-six runs of the first batch were continued
 to \SI{50}{\nano\second}, and they enter this work only as the evidence that
-\SI{20}{\nano\second} of analysed trajectory is not too short, which
-Section~\ref{sec:duration} reports.
+\SI{20}{\nano\second} of analysed trajectory is not too short.
 
 Thirty-two descriptors were computed from each trajectory, and they fall into the
 three design classes of Figure~\ref{fig:mdflow}. Persistence quantities measure how
