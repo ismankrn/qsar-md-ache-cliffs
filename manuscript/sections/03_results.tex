@@ -139,34 +139,18 @@ Section~\ref{sec:reliability} rather than here.
 
 \subsection{Comparison of the four descriptor sets}\label{sec:ladder}
 
-The best score each rung reached is given in Table~\ref{tab:benchmark} and drawn in
-Figure~\ref{fig:ladder}. On \framingA{}, in panel~(a), the 2D fingerprints lead at $+0.386$, with the
+Table~\ref{tab:benchmark} gives the best score each rung reached on each framing,
+together with the algorithm family that reached it. On \framingA{} the 2D
+fingerprints lead at $+0.386$, with the
 receptor ensemble second at $+0.215$, MM/GBSA at $+0.118$, molecular dynamics at
-$+0.068$ and the single rigid pose last at $+0.046$. On \framingB{} in panel~(b), the endpoint that
-defines a cliff, the order changes, as the receptor ensemble reaches $+0.274$ against
+$+0.068$ and the single rigid pose last at $+0.046$. On \framingB{}, the endpoint that defines a cliff, the order changes, as the receptor ensemble reaches $+0.274$ against
 $+0.200$ for the fingerprints, molecular dynamics reaches $+0.152$, pose geometry
-$+0.167$ and MM/GBSA falls below zero at $-0.056$. In panel~(c), on \framingC{}, every rung separates
-cliff pairs from controls better than chance, the fingerprints leading at $0.805$ and
+$+0.167$ and MM/GBSA falls below zero at $-0.056$. On \framingC{} every rung separates cliff pairs from controls better than chance, the fingerprints leading at $0.805$ and
 molecular dynamics close behind at $0.796$, with MM/GBSA at $0.753$, the ensemble at
 $0.705$ and the single pose at $0.684$. Every rung was scored on all 217 development
 ligands and all 145 development pairs, so no rung is helped by an easier subset of the
 data, and the winning algorithm family differs between cells rather than one family
 carrying a rung throughout.
-
-\begin{figure}[tb]
-  \centering
-  \includegraphics[width=\textwidth]{fig2\_ladder.pdf}
-  \caption{\textbf{No structure-based rung resolvably outperforms 2D
-    fingerprints.} Panels show (a)~\framingA{}, (b)~\framingB{} and
-    (c)~\framingC{}. Each point is the best score over a rung's descriptor arms and
-    over the algorithm families, on 217 development ligands and 145 development
-    pairs with frozen five-fold cross-validation. Rung~1 carries both feature sets
-    benchmarked for it, because the winner depends on the framing. Rung~2 appears
-    twice, as a single rigid receptor and as the median over eight receptor
-    conformations. The dashed line marks the rung-1 level.
-    \TODO{add interval description once fig\_ladder.py is run with --n-boot 300}}
-  \label{fig:ladder}
-\end{figure}
 
 \begin{table}[tb]
   \centering
