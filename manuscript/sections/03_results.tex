@@ -218,20 +218,19 @@ bootstrap over units puts the gap at $-0.375$ on \framingA{} with a 95 per cent 
 That interval is the only one in this study that excludes zero, and its sign matters as much
 as its width, since it does not report rung~4 as unproven but as worse than a
 fingerprint on per-ligand potency. On the two pair framings the gap is small and the
-interval contains zero in both, so neither supports a claim in either direction. The
+interval contains zero in both, so neither supports a claim in either direction, and
+the figure colours the three accordingly. The baseline throughout is rung~1 with every
+feature it has, its feature set re-selected inside each replicate, so the gap is not
+measured against a weakened fingerprint. The
 molecular-dynamics descriptors therefore fail to improve on a 2D baseline where the
 design can see, and leave the question open where it cannot.
 
 \begin{figure}[tb]
   \centering
   \includegraphics[width=0.75\textwidth]{fig\_gap\_forest.pdf}
-  \caption{\textbf{One of the three comparisons is resolved, and it is resolved against
-    rung~4.} The difference between the best score of rung~4 and the best score of
-    rung~1, with the 95 per cent interval from a bootstrap over the units of each
-    framing. The baseline is rung~1 with all of its features and its feature set
-    re-selected inside every replicate. \framingA{} is drawn apart because its interval
-    clears zero, while the two pair framings contain zero and support no claim in
-    either direction.}
+  \caption{\textbf{Rung~4 against rung~1 on the three framings.} The difference between
+    the best score of each, with the 95 per cent bootstrap interval, coloured by
+    whether the interval clears zero.}
   \label{fig:gapforest}
 \end{figure}
 
