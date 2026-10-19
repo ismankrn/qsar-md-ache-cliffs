@@ -28,15 +28,21 @@ interactions. Interaction fingerprints were computed for the crystal
 pose and the redocked pose of donepezil by using ProLIF \citep{prolif2021}, with bond orders
 transferred from the docked structure so that the two poses carry identical chemistry
 and differ only in their coordinates. The crystal binding mode is shown in
-Figure~\ref{fig:interactions}(a) and the comparison between the two fingerprints in
-Figure~\ref{fig:interactions}(b). Six residues are contacted in both poses, five in the crystal pose only and two in the
-docked pose only. Every typed interaction at the three named sites is recovered,
-namely the hydrophobic and $\pi$-stacking contacts at Trp86 and at Trp286 and the
-cation--$\pi$ and hydrophobic contacts at Tyr337. What docking loses lies away from
-those sites, as four of the five residues contacted in the crystal pose alone
-contribute van der Waals contact, namely Tyr72, Ser203, Ser293 and His447, while the
-fifth is a hydrophobic contact with Phe297. A hydrogen-bond acceptor contact with
-Phe295 is lost as well, although that residue is still contacted in the docked pose. We used the typing for validation only, and it enters no descriptor set.
+Figure~\ref{fig:interactions}(a), and Figure~\ref{fig:interactions}(b) sets the two
+fingerprints side by side, with every interaction placed by the residue it involves and
+by its type. Counting residues alone understates what changes, since a residue
+contacted in both poses can still gain or lose an interaction, as Tyr341 does. Counted
+interaction by interaction, the crystal pose carries 18 and the redocked pose 14, of
+which 11 are common, 7 appear only in the crystal pose and 3 only in the docked one.
+Ten of the 18 crystal interactions are typed rather than bare van der Waals contact,
+and 8 of those 10 are recovered, namely the hydrophobic and $\pi$-stacking contacts at
+Trp86 and at Trp286 and the cation--$\pi$ and hydrophobic contacts at Tyr337. The two
+typed interactions that are lost are a hydrogen-bond acceptor contact with Phe295 and a
+hydrophobic contact with Phe297, and neither lies at one of the three named sites.
+Every remaining difference is van der Waals contact, lost at Tyr72, Ser203, Ser293 and
+His447 and gained at Tyr124, Tyr341 and Gly448. The three sites on which the descriptors
+of this work rest are therefore reproduced in full, and the disagreement is confined to
+the weakest class of contact and to residues outside them. We used the typing for validation only, and it enters no descriptor set.
 
 \begin{figure}[tb]
   \centering
