@@ -1,32 +1,23 @@
 #!/usr/bin/env python
-"""Figure 1 and Table 1 — target selection, the fingerprint that saturates, and the size
-confound.
+"""Figure 1 and Table 1 — the fingerprint that saturates, and the size confound.
 
-Four panels, each answering a question a reader should ask before any model appears.
+Three panels, each answering a question a reader should ask before any model appears.
+The target screen that once opened this figure was dropped, since the manuscript states
+the criteria hAChE met and does not argue the choice against the other candidates.
 
-(a) Why this target. Six ChEMBL targets were screened. Activity cliffs split into two kinds:
-    constitutional pairs, which differ in composition, and stereochemical pairs, which are
-    stereoisomers. Only constitutional cliffs are a fair test of a 2D descriptor, because no
-    stereo-blind fingerprint can resolve a stereoisomer pair by construction while any 3D
-    method resolves it trivially -- a benchmark dominated by them is rigged in favour of
-    structure. AChE is the only target screened where constitutional cliffs dominate, 100
-    against 10; BACE1 inverts that at 5 against 101.
+(a) What binary ECFP4 does to the pairs in the set. Every cliff pair is constitutional,
+    differing by 1 to 10 heavy atoms. Binary ECFP4 nevertheless reports Tanimoto exactly
+    1.000 for 49 of the 97 -- molecules that differ by a median of four heavy atoms,
+    declared identical. Count-based Tanimoto separates the same pairs at a median of
+    0.878. Folding to bits discards the multiplicity that distinguishes them.
 
-(b) What binary ECFP4 does to the pairs that survive. Every cliff pair in the final set is
-    constitutional, differing by 1 to 10 heavy atoms. Binary ECFP4 nevertheless reports
-    Tanimoto exactly 1.000 for 49 of the 97 -- molecules that differ by a median of four
-    heavy atoms, declared identical. Count-based Tanimoto separates the same pairs at a
-    median of 0.878. Folding to bits discards the multiplicity that distinguishes them.
+(b) The plane of the cliff definition, with similarity measured by the binary
+    fingerprint that performed the selection. The empty band between the two groups is
+    imposed by the criterion rather than by the chemistry.
 
-(c) The cliff definition on the selected set, and (d) the size confound that follows from it:
-    cliff partners differ by more heavy atoms than control partners, so any size-correlated
-    descriptor separates the groups for the wrong reason. Stage 10 found 0 of 19 descriptors
-    survive a size adjustment.
-
-Also writes Table 1 (dataset composition) as a LaTeX fragment.
-
-Usage:
-    python scripts/fig_dataset.py
+(c) The size confound. The two members of a cliff pair differ by 4.4 heavy atoms on
+    average against 1.8 for a control pair, so any size-correlated descriptor separates
+    the groups for a reason unrelated to the cliff.
 """
 from __future__ import annotations
 from pathlib import Path
@@ -60,29 +51,10 @@ def main() -> None:
                             for a, b in zip(pr.ligand_a, pr.ligand_b)])
 
     FIGS.mkdir(exist_ok=True)
-    fig, axes = plt.subplots(2, 2, figsize=(11.0, 8.2))
-
-    # ---- (a) target screen ----
-    ax = axes[0, 0]
-    f = feas.sort_values("cliffs_constitutional", ascending=True)
-    yy = np.arange(len(f))
-    ax.barh(yy - 0.19, f.cliffs_constitutional, height=0.36, color="#2166ac",
-            label="constitutional")
-    ax.barh(yy + 0.19, f.cliffs_stereochemical, height=0.36, color="#d6604d",
-            label="stereochemical")
-    ax.set_yticks(yy)
-    ax.set_yticklabels([f"{n}\n{t}" for n, t in zip(f.pref_name.str.slice(0, 26),
-                                                    f.target_chembl_id)], fontsize=6.5)
-    for i, (v, ok) in enumerate(zip(f.cliffs_constitutional, f.verdict)):
-        ax.text(max(f.cliffs_stereochemical.max(), f.cliffs_constitutional.max())*1.02, i,
-                ok, fontsize=7, va="center",
-                color="#1b7837" if ok == "PASS" else "0.55")
-    ax.set_xlabel("Activity-cliff pairs found", fontsize=8.5)
-    ax.text(0.0, 1.02, "a", transform=ax.transAxes, fontsize=11, fontweight="bold", va="bottom", ha="left")
-    ax.legend(fontsize=7, frameon=False, loc="lower right")
+    fig, axes = plt.subplots(1, 3, figsize=(12.6, 4.1))
 
     # ---- (b) binary vs count Tanimoto ----
-    ax = axes[0, 1]
+    ax = axes[0]
     s = ax.scatter(au.t_bit, au.t_count, c=au.d_heavy, cmap="viridis", s=26,
                    edgecolors="0.3", linewidths=0.4)
     n_sat = int((au.t_bit >= 0.9995).sum())
@@ -97,10 +69,10 @@ def main() -> None:
     plt.colorbar(s, ax=ax, label="heavy-atom difference", fraction=0.046, pad=0.03)
     ax.set_xlabel("Tanimoto, binary ECFP4", fontsize=8.5)
     ax.set_ylabel("Tanimoto, count ECFP4", fontsize=8.5)
-    ax.text(0.0, 1.02, "b", transform=ax.transAxes, fontsize=11, fontweight="bold", va="bottom", ha="left")
+    ax.text(0.0, 1.02, "a", transform=ax.transAxes, fontsize=11, fontweight="bold", va="bottom", ha="left")
 
     # ---- (c) the cliff definition ----
-    ax = axes[1, 0]
+    ax = axes[1]
     for grp, col, lab in (("control", "#4393c3", "control"), ("cliff", "#b2182b", "cliff")):
         q = pr[pr.group == grp]
         ax.scatter(q.tanimoto, q.delta.abs(), s=22, color=col, alpha=0.75,
@@ -110,16 +82,16 @@ def main() -> None:
             transform=ax.get_yaxis_transform(), ha="right", fontsize=7, va="bottom",
             color="0.35")
     # Verified identical to t_bit in the audit file: the pair-selection criterion is the
-    # binary fingerprint, which panel (b) shows saturates. So the measure that chose these
+    # binary fingerprint, which panel (a) shows saturates. So the measure that chose these
     # pairs is the one that cannot tell molecules eight heavy atoms apart from identical.
     ax.set_xlabel("Tanimoto similarity, binary ECFP4 (the selection criterion)",
                   fontsize=8.5)
     ax.set_ylabel(r"$|\Delta$pChEMBL$|$", fontsize=8.5)
-    ax.text(0.0, 1.02, "c", transform=ax.transAxes, fontsize=11, fontweight="bold", va="bottom", ha="left")
+    ax.text(0.0, 1.02, "b", transform=ax.transAxes, fontsize=11, fontweight="bold", va="bottom", ha="left")
     ax.legend(fontsize=7, frameon=False, loc="upper left", bbox_to_anchor=(0.0, 0.98))
 
     # ---- (d) the size confound ----
-    ax = axes[1, 1]
+    ax = axes[2]
     data = [pr[pr.group == g].d_heavy.dropna() for g in ("cliff", "control")]
     parts = ax.violinplot(data, positions=[0, 1], showmedians=True, widths=0.7)
     for pc, col in zip(parts["bodies"], ("#b2182b", "#4393c3")):
@@ -130,13 +102,13 @@ def main() -> None:
         ax.text(i, d.max()+0.5, f"mean {d.mean():.1f}", ha="center", fontsize=7.5)
     ax.set_xticks([0, 1]); ax.set_xticklabels(["cliff", "control"], fontsize=8.5)
     ax.set_ylabel("Heavy-atom difference within a pair", fontsize=8.5)
-    ax.text(0.0, 1.02, "d", transform=ax.transAxes, fontsize=11, fontweight="bold", va="bottom", ha="left")
+    ax.text(0.0, 1.02, "c", transform=ax.transAxes, fontsize=11, fontweight="bold", va="bottom", ha="left")
 
     for ax in axes.ravel():
         ax.tick_params(labelsize=8)
         ax.spines[["top", "right"]].set_visible(False)
 
-    fig.tight_layout(rect=(0, 0.01, 1, 0.96))
+    fig.tight_layout(rect=(0, 0.01, 1, 0.97))
     for ext in ("pdf", "png"):
         fig.savefig(FIGS/f"fig1_dataset.{ext}", dpi=300)
     print("  -> figures/fig1_dataset.pdf / .png")
