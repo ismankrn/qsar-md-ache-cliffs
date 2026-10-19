@@ -3,8 +3,7 @@
   number it rests on. The cross-cutting argument is gathered in
   Section~\ref{sec:synthesis} at the end, and limitations after it.}
 
-\subsection{Docking reproduces the reference pose and its
-contacts}\label{sec:dockval}
+\subsection{Validation of the docking protocol}\label{sec:dockval}
 
 We validated the protocol against four ligands whose complexes with hAChE have been
 solved, since a docked pose can only be scored against a crystallographic answer and
@@ -63,7 +62,7 @@ Phe295 is lost as well, although that residue is still contacted in the docked p
   \label{fig:interactions}
 \end{figure}
 
-\subsection{The simulations were well behaved}\label{sec:simqc}
+\subsection{Stability and thermodynamic state of the simulations}\label{sec:simqc}
 
 The production ensembles ran at the thermodynamic state they were set to, as shown in
 Figure~\ref{fig:thermo}. The temperature in panel~(a) averages \SI{300.00}{\kelvin} with a run-to-run spread of
@@ -116,7 +115,7 @@ the receptor and as much as \SI{99}{\angstrom} for the ligand.
   \label{fig:stability}
 \end{figure}
 
-\subsection{The ladder}\label{sec:ladder}
+\subsection{Comparison of the four descriptor sets}\label{sec:ladder}
 \NOTE{Protonation robustness, from results/33\_rung1\_protonation.md. Rung 1 rescored
   on the protonated SMILES gains 0.018 on \framingA{} and 0.010 on \framingC{} and is
   unchanged to six decimals on \framingB{}, so no gap in this subsection narrows. The
@@ -175,7 +174,7 @@ rung 4). On
   plainly does -- but that no structure-based rung is resolvably better than a
   fingerprint anywhere.}
 
-\subsection{Rung 4 against a matched 2D baseline}
+\subsection{Rung 4 against a dimensionality-matched baseline}
 \TODO{Gaps and intervals, 300-replicate bootstrap over units, recomputed after the
 replicate pilot was re-run on all six replicate sets. \framingA{} $-0.375$, CI
 $[-0.596,-0.184]$, which excludes zero, so rung 4 is worse. \framingB{} $-0.093$, CI
@@ -185,7 +184,7 @@ resolved, and it is resolved against rung 4.}
   does not say rung 4 is unproven; it says rung 4 is worse, resolved by the design.}
 
 % ---------------------------------------------------------------------------
-\subsection{What the study could have detected}
+\subsection{Statistical power of the comparison}
 
 \begin{figure}[tb]
   \centering
@@ -222,7 +221,7 @@ resolved, and it is resolved against rung 4.}
   results/17\_noise\_ceiling.csv.}
 
 % ---------------------------------------------------------------------------
-\subsection{Descriptor reliability}
+\subsection{Reliability of the dynamic descriptors}
 \begin{figure}[tb]
   \centering
   \includegraphics[width=\textwidth]{fig4_reliability.pdf}
@@ -253,7 +252,7 @@ resolved, and it is resolved against rung 4.}
 $-0.054$ unfiltered; \framingC{} $0.796$ against $0.721$.}
 
 % ---------------------------------------------------------------------------
-\subsection{What the distance-only occupancies summarise}\label{sec:typed}
+\subsection{Interpretation of the distance-based contact occupancies}\label{sec:typed}
 
 \begin{figure}[tb]
   \centering
@@ -287,7 +286,7 @@ $-0.054$ unfiltered; \framingC{} $0.796$ against $0.721$.}
 \NOTE{8 of 229 runs failed with a ProLIF fragmented-residue error and are excluded;
   report the number.}
 
-\subsection{Trajectory length}\label{sec:duration}
+\subsection{Dependence on trajectory length}\label{sec:duration}
 
 \begin{figure}[tb]
   \centering
@@ -319,7 +318,7 @@ $-0.054$ unfiltered; \framingC{} $0.796$ against $0.721$.}
   or more targets change it. More nanoseconds do not.}
 
 % ---------------------------------------------------------------------------
-\subsection{A partial subset inflates an expensive descriptor set's apparent gain}
+\subsection{Effect of an incomplete subset on the apparent gain}
 \label{sec:subset}
 
 \begin{table}[tb]
@@ -343,7 +342,7 @@ $-0.054$ unfiltered; \framingC{} $0.796$ against $0.721$.}
   28.8 ns of analysed trajectory against 20.0. 217 ligands cannot separate them.}
 
 % ---------------------------------------------------------------------------
-\subsection{What this study tested, and what it did not}
+\subsection{Scope of the comparison}
 \label{sec:synthesis}
 
 \TODO{Draft the cross-cutting argument here. Beats, in order:}
