@@ -472,13 +472,57 @@ arm still reports a cross-validated score that looks honest. Holding the selecti
 inside the fold cost nothing beyond the time to refit it five times.
 
 \subsection{Model evaluation and statistical analysis}\label{sec:eval}
-\TODO{Five-fold cross-validation on the frozen folds, out-of-fold predictions pooled
-  before the metric, best of family reported per rung. Bootstrap over units with the
-  algorithm -- and, for rung 1, the feature set -- re-selected inside every replicate,
-  300 replicates. Statistical power from synthetic descriptor matrices pushed through
-  the same pipeline, with the rung-1 baseline re-simulated in each replicate, and the
-  measurement-noise ceiling from repeat assays.}
-\NOTE{State the bootstrap's known bias: resampling units and then running the frozen
-  folds puts duplicates on both sides of the split and inflates the levels. It applies
-  identically to both sides, so the gap is the quantity to read, and bootstrap medians
-  must not be quoted as performance.}
+
+Every model was scored by five-fold cross-validation on the folds frozen in
+Section~\ref{sec:dataset}, with each fold's model fitted on the other four and used once
+to predict the fold held out. We pooled the out-of-fold predictions before computing
+any metric, rather than averaging a metric computed within each fold, so that a fold
+which happens to be easy cannot offset one which is hard. The number reported for a
+rung is the best it reached over its descriptor arms and its algorithm families, which
+is what a practitioner choosing a method would obtain, and the same selection is made
+on both sides of every comparison. Framings~A and~B were scored by the coefficient of
+determination and framing~C by the area under the receiver operating characteristic
+curve. The sealed test split was never opened, so every number in this work is a
+development-split estimate.
+
+An interval on each comparison came from a bootstrap over the units of its framing,
+with 300 replicates. The unit is the ligand in framing~A and the pair in framings~B
+and~C, and a pair was resampled as a whole, so its two antisymmetric rows always travel
+together and a resample can never place one of them against the other. Inside every
+replicate we re-selected the best over the descriptor arms and the algorithm families
+on both sides, because choosing the best is part of the procedure whose uncertainty is
+being measured, and freezing that choice would report an interval for a different
+procedure. Rung~1 entered the bootstrap with both of its feature sets for the same
+reason, as the winner between them depends on the framing, and resampling against one
+of them alone would have reported an interval for a baseline weaker than rung~1
+reaches. We took the interval as the 2.5th and 97.5th percentiles of the resampled
+gap.
+
+That bootstrap carries a bias which we state here rather than attempt to correct, and
+which follows from combining a resample with folds fixed beforehand. Resampling units with
+replacement and then running the frozen folds over the resample puts duplicated units
+on both sides of a fold boundary, which inflates the absolute scores, and the
+inflation grows with how often a unit is drawn more than once. It applies identically
+to the two sides of a comparison, so the gap between them is far less affected than
+either level, and the gap is the quantity we read. A bootstrap median is therefore not
+a performance estimate in this work and must not be quoted as one, the unresampled
+cross-validated values being the estimates of performance. The intervals accordingly
+accompany differences between rungs and never a rung on its own.
+
+The resolution of the comparison was measured rather than assumed, by pushing synthetic
+descriptor matrices through the same support vector machine and the same frozen folds
+that scored every rung. Each synthetic block carries four features whose signal
+strength is set by one parameter, which we calibrated against the out-of-fold
+coefficient of determination the pipeline actually returns rather than against a
+nominal target. The rung-1 baseline was re-simulated in every replicate at the setting
+matching its own score, so the uncertainty of the baseline is carried rather than
+treated as a constant, over 150 simulations each with 800 bootstrap draws across the
+145 development pairs. A gain of 0.26 in the coefficient of determination is detected
+in 90 per cent of simulations and a gain of 0.11 in 36 per cent, with a mean interval
+width near 0.30, which is the resolution this design can claim. We also estimated what
+measurement noise alone would permit, from the 336 of 5609 compounds that carry a
+repeat assay, and a median within-compound spread of 0.064 log units implies a ceiling
+of 0.995 on the coefficient of determination. That spread is strongly skewed, with an
+upper decile of 0.560 log units implying a ceiling of 0.616, so assay noise does not
+limit the comparison at the median while it plausibly does for the least reproducible
+tenth of the set.
