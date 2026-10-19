@@ -69,7 +69,14 @@ nanosecond. Panel~(d) shows the running mean of the pressure, which ends at
 within-run spread of about \SI{89}{\bar} and carries no information frame by frame.
 These four quantities were computed on 64 of the 229 runs, and the subset establishes
 only that the simulations were well behaved, no comparison between descriptor sets
-resting on it.
+resting on it. What the four panels establish is that the integrator, the thermostat
+and the barostat behaved, and a drift of two parts in $10^{5}$ per nanosecond rules
+out a systematic leak of energy. They do not establish that the sampling has
+converged, since a temperature and a density settle within picoseconds of any
+production run, including one whose ligand never leaves the basin it started in.
+Whether \SI{20}{\nano\second} is long enough for the descriptors is answered by the
+replicate pilot and by the ablation of Section~\ref{sec:duration}, which compare runs
+with one another rather than examining each on its own.
 
 \begin{figure}[tb]
   \centering
