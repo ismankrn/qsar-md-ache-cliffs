@@ -75,15 +75,6 @@ at pH 7.4, assigned by explicit rules, is the one that enters the docking and th
 simulations. Every ligand
 carries a net positive charge in that second form, 170 at $+1$ and 101 at $+2$.
 
-\begin{table}[tb]
-  \centering
-  \small
-  \caption{\textbf{The frozen splits.} Components, ligands and pairs in each
-    cross-validation fold of the development split, and in each split as a whole.}
-  \label{tab:splits}
-  \input{../results/35_splits.tex}
-\end{table}
-
 This set was then divided once into a development and a test part, with the random
 seed being 20260902, and was never revised afterwards. The unit of assignment is not the ligand but the connected component of the graph
 whose vertices are the ligands and whose edges are the pairs. Every ligand belongs to
@@ -100,16 +91,16 @@ split was to be opened only once a single descriptor set and algorithm had been
 selected, which did not happen, so no model reported in this work has been scored on
 it.
 
-\subsection{Three framings of the prediction problem}\label{sec:framings}
-
 \begin{table}[tb]
   \centering
   \small
-  \caption{\textbf{The three framings.} The unit of each, the quantity it predicts,
-    the features of one row, and the metric.}
-  \label{tab:framings}
-  \input{../results/31_framings.tex}
+  \caption{\textbf{The frozen splits.} Components, ligands and pairs in each
+    cross-validation fold of the development split, and in each split as a whole.}
+  \label{tab:splits}
+  \input{../results/35_splits.tex}
 \end{table}
+
+\subsection{Three framings of the prediction problem}\label{sec:framings}
 
 A comparison between descriptor sets has no single answer, as what counts as an
 improvement depends on what is being predicted. Activity cliffs are the standard
@@ -123,6 +114,15 @@ described in Section~\ref{sec:algo}, so that the three results differ in the que
 being asked and in nothing else. Table~\ref{tab:framings} sets them side by side, with $\mathbf{d}_a$ and
 $\mathbf{d}_b$ being the descriptor vectors of the two ligands of a pair and the
 number in parentheses the count of units available in the development split.
+
+\begin{table}[tb]
+  \centering
+  \small
+  \caption{\textbf{The three framings.} The unit of each, the quantity it predicts,
+    the features of one row, and the metric.}
+  \label{tab:framings}
+  \input{../results/31_framings.tex}
+\end{table}
 
 In framing~A the unit is the ligand, the target is its pChEMBL value, and the metric
 is the coefficient of determination over the out-of-fold predictions. The predictions of the five folds are pooled before the metric is computed, so a fold
@@ -158,16 +158,6 @@ by a factor that the data does not support.
 \subsection{Four descriptor sets of increasing computational
 cost}\label{sec:rungs}
 
-\begin{table}[tb]
-  \centering
-  \small
-  \caption{\textbf{The four descriptor sets.} The input each rung requires, what its
-    descriptors capture, the number of features it was scored with, and the cost of
-    producing it for one ligand.}
-  \label{tab:rungs}
-  \input{../results/32_rungs.tex}
-\end{table}
-
 We compared four descriptor families, ordered by the cost of producing them, and we refer to each as a rung of that ladder. The first needs only the molecular
 graph, the second a docked pose, the third an energy evaluation on that pose and the
 fourth a molecular-dynamics trajectory. The ordering is the point of the comparison,
@@ -187,6 +177,16 @@ down to 34 features would describe nothing that anyone does. We also scored a
 matched-dimensionality arm as a robustness check, performing the feature selection
 inside each training fold so that the held-out fold can never influence which features
 are chosen.
+
+\begin{table}[tb]
+  \centering
+  \small
+  \caption{\textbf{The four descriptor sets.} The input each rung requires, what its
+    descriptors capture, the number of features it was scored with, and the cost of
+    producing it for one ligand.}
+  \label{tab:rungs}
+  \input{../results/32_rungs.tex}
+\end{table}
 
 Rung~1 uses no three-dimensional information, and it is computed on the standardised
 neutral structures, while every structure-based rung uses the protonated form of
@@ -240,17 +240,6 @@ the expensive answer was known.
 
 \subsection{Receptor model and docking protocol}\label{sec:dock}
 
-\begin{figure}[tb]
-  \centering
-  \includegraphics[width=\textwidth]{Figure1_hAChE_structure.pdf}
-  \caption{\textbf{Human acetylcholinesterase and its catalytic gorge (PDB 4EY7).}
-    (A)~Overall fold, rainbow-coloured from N- to C-terminus; donepezil in the
-    crystal pose marks the gorge as black spheres. (B)~The architecture of the gorge, formed by Trp86 at
-    the catalytic anionic site, Trp286 at the peripheral anionic site, the swinging
-    Tyr337 gate between them, and the Ser203--His447--Glu334 catalytic triad.}
-  \label{fig:structure}
-\end{figure}
-
 We prepared the receptor model from the X-ray crystal structure of recombinant hAChE
 in complex with donepezil, with the PDB ID being 4EY7 \citep{cheung2012} and the
 resolution being \SI{2.35}{\angstrom}. Donepezil is itself a dual-binding-site
@@ -270,6 +259,17 @@ function of the enzyme. It is this principle that we built the descriptor sets o
 Section~\ref{sec:rungs} to test. Preparation of the same receptor for simulation
 differs and is described in Section~\ref{sec:md}, since it becomes relevant only once
 a force field is applied, and the receptor is rigid throughout the docking.
+
+\begin{figure}[tb]
+  \centering
+  \includegraphics[width=\textwidth]{Figure1_hAChE_structure.pdf}
+  \caption{\textbf{Human acetylcholinesterase and its catalytic gorge (PDB 4EY7).}
+    (A)~Overall fold, rainbow-coloured from N- to C-terminus; donepezil in the
+    crystal pose marks the gorge as black spheres. (B)~The architecture of the gorge, formed by Trp86 at
+    the catalytic anionic site, Trp286 at the peripheral anionic site, the swinging
+    Tyr337 gate between them, and the Ser203--His447--Glu334 catalytic triad.}
+  \label{fig:structure}
+\end{figure}
 
 We docked all ligands into the prepared 4EY7 receptor by using AutoDock Vina
 \citep{vina}. The search box was a cube of \SI{30}{\angstrom} per side centred at
@@ -306,14 +306,6 @@ $3.3\times10^{8}$ to $2.1\times10^{5}$~\si{\kilo\joule\per\mole\per\nano\metre}.
 atoms lining the gorge did not move at all, so the docked poses remain valid and
 nothing earlier in this work had to be repeated.
 
-\begin{table}[tb]
-  \centering
-  \caption{\textbf{Simulated system composition.} Atom counts, box size, charges and
-    force fields, over all 217 built systems.}
-  \label{tab:system}
-  \input{../results/27_system_composition.tex}
-\end{table}
-
 We built one system per ligand and not per trajectory, so that a replicate differs
 from its parent only in the velocity seed and tests the sampling and not the
 structure. The protein was described by the amber14SB force field, the ligand by
@@ -329,6 +321,14 @@ the net charge after counterions, which is at most $2.8\times10^{-13}\,e$ across
 217 systems. The second is the shortest receptor--ligand heavy-atom distance at build
 time, which runs from 1.67 to \SI{2.64}{\angstrom}. The lower end of that range is a tight contact, which we state openly, and what
 resolves it is the minimisation and equilibration that follow.
+
+\begin{table}[tb]
+  \centering
+  \caption{\textbf{Simulated system composition.} Atom counts, box size, charges and
+    force fields, over all 217 built systems.}
+  \label{tab:system}
+  \input{../results/27_system_composition.tex}
+\end{table}
 
 Each system was energy-minimised by steepest descent until the
 maximum force fell below \SI{100}{\kilo\joule\per\mole\per\nano\metre}. It was

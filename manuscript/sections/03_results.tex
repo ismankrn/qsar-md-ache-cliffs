@@ -4,19 +4,8 @@
   Section~\ref{sec:synthesis} at the end, and limitations after it.}
 
 \subsection{Dataset composition}\label{sec:composition}
-\begin{figure}[tb]
-  \centering
-  \includegraphics[width=\textwidth]{fig1_dataset.pdf}
-  \caption{\textbf{Target selection, the cliff definition, and two limitations it
-    carries.} (a)~The activity-cliff pairs of the six ChEMBL targets screened,
-    divided into constitutional and stereochemical ones. (b)~The 97 cliff pairs of
-    the selected set, each placed by its binary and its count-based ECFP4 Tanimoto
-    coefficient and coloured by the heavy-atom difference between its two members.
-    (c)~The selected pairs in the plane of the cliff definition, with similarity
-    measured by the binary fingerprint that performed the selection. (d)~The
-    heavy-atom difference within a pair, for the cliff pairs and for the controls.}
-  \label{fig:dataset}
-\end{figure}
+
+\TODO{One paragraph on the composition itself, from Table~\ref{tab:dataset}.}
 
 \begin{table}[tb]
   \centering
@@ -25,8 +14,6 @@
   \label{tab:dataset}
   \input{../results/23_dataset_composition.tex}
 \end{table}
-
-\TODO{One paragraph on the composition itself, from Table~\ref{tab:dataset}.}
 
 The six targets screened were acetylcholinesterase, $\beta$-secretase~1, coagulation
 factor~X, the epidermal growth factor receptor, the vascular endothelial growth factor
@@ -43,6 +30,20 @@ pass, at 33 against 16. Every pair that reached the final set is constitutional,
 in molecular formula in all 97 pairs and the smallest difference in heavy-atom count
 is one. No result reported below therefore rests on a pair that a stereo-blind
 fingerprint is barred from resolving by construction.
+
+\begin{figure}[tb]
+  \centering
+  \includegraphics[width=\textwidth]{fig1_dataset.pdf}
+  \caption{\textbf{Target selection, the cliff definition, and two limitations it
+    carries.} (a)~The activity-cliff pairs of the six ChEMBL targets screened,
+    divided into constitutional and stereochemical ones. (b)~The 97 cliff pairs of
+    the selected set, each placed by its binary and its count-based ECFP4 Tanimoto
+    coefficient and coloured by the heavy-atom difference between its two members.
+    (c)~The selected pairs in the plane of the cliff definition, with similarity
+    measured by the binary fingerprint that performed the selection. (d)~The
+    heavy-atom difference within a pair, for the cliff pairs and for the controls.}
+  \label{fig:dataset}
+\end{figure}
 
 The fingerprint also fails to separate pairs that did enter the set, which is shown in
 Figure~\ref{fig:dataset}(b) for all 97 cliff pairs. Binary ECFP4 reported a Tanimoto coefficient of exactly 1.000 for 49 of the 97. The
@@ -84,14 +85,6 @@ treated as a local difficulty.
 \subsection{Docking reproduces the reference pose and its
 contacts}\label{sec:dockval}
 
-\begin{figure}[tb]
-  \centering
-  \includegraphics[width=0.62\textwidth]{Figure2_redocking_validation.pdf}
-  \caption{\textbf{Redocking validation.} Donepezil redocked into 4EY7, its own
-    structure, against the crystal pose, with Trp86 and Tyr337 marked.}
-  \label{fig:redock}
-\end{figure}
-
 We validated the protocol against four ligands whose complexes with hAChE have been
 solved, since a docked pose can only be scored against a crystallographic answer and
 no ligand of the dataset has one. They were chosen to span different modes of binding, so that the validation would not
@@ -117,12 +110,10 @@ for every ligand.
 
 \begin{figure}[tb]
   \centering
-  \includegraphics[width=\textwidth]{fig_interactions.pdf}
-  \caption{\textbf{The reference binding mode, and docking checked at the level of
-    contacts.} (a)~Donepezil in the crystal pose with the residues it contacts,
-    where the colour of each edge gives the type of interaction. (b)~The same
-    fingerprint calculated for the redocked pose.}
-  \label{fig:interactions}
+  \includegraphics[width=0.62\textwidth]{Figure2_redocking_validation.pdf}
+  \caption{\textbf{Redocking validation.} Donepezil redocked into 4EY7, its own
+    structure, against the crystal pose, with Trp86 and Tyr337 marked.}
+  \label{fig:redock}
 \end{figure}
 
 The pose-geometry and molecular-dynamics descriptors are defined in terms of residue
@@ -138,18 +129,17 @@ namely the hydrophobic and $\pi$-stacking contacts at Trp86 and at Trp286 and th
 cation--$\pi$ and hydrophobic contacts at Tyr337, while what is lost on docking is van
 der Waals contact alone with Ser203 and His447. We used the typing for validation only, and it enters no descriptor set.
 
-\subsection{The simulations were well behaved}\label{sec:simqc}
-
 \begin{figure}[tb]
   \centering
-  \includegraphics[width=\textwidth]{fig_thermo.pdf}
-  \caption{\textbf{Production ensembles ran at the intended thermodynamic state.}
-    (a)~Temperature, (b)~density, (c)~potential energy and (d)~the running mean of
-    the pressure, each drawn as the median across runs with the 5--95 percentile
-    band. Panel~(d) shows a running mean rather than the instantaneous pressure,
-    which fluctuates by hundreds of bar from frame to frame.}
-  \label{fig:thermo}
+  \includegraphics[width=\textwidth]{fig_interactions.pdf}
+  \caption{\textbf{The reference binding mode, and docking checked at the level of
+    contacts.} (a)~Donepezil in the crystal pose with the residues it contacts,
+    where the colour of each edge gives the type of interaction. (b)~The same
+    fingerprint calculated for the redocked pose.}
+  \label{fig:interactions}
 \end{figure}
+
+\subsection{The simulations were well behaved}\label{sec:simqc}
 
 The production ensembles ran at the thermodynamic state they were set to, as shown in
 Figure~\ref{fig:thermo}. The temperature in panel~(a) averages \SI{300.00}{\kelvin} with a run-to-run spread of
@@ -170,13 +160,13 @@ not use it to compare descriptor sets.
 
 \begin{figure}[tb]
   \centering
-  \includegraphics[width=\textwidth]{fig_md_stability.pdf}
-  \caption{\textbf{Structural stability across all 229 production runs.}
-    (a)~Receptor C$\alpha$ RMSD and (b)~ligand RMSD from the equilibrated pose, each
-    drawn as the median and the interquartile band across runs and split by the
-    25~ns and 50~ns production designs. (c)~Per-residue C$\alpha$ fluctuation
-    computed after the first 5~ns, with the fourteen gorge-lining residues marked.}
-  \label{fig:stability}
+  \includegraphics[width=\textwidth]{fig_thermo.pdf}
+  \caption{\textbf{Production ensembles ran at the intended thermodynamic state.}
+    (a)~Temperature, (b)~density, (c)~potential energy and (d)~the running mean of
+    the pressure, each drawn as the median across runs with the 5--95 percentile
+    band. Panel~(d) shows a running mean rather than the instantaneous pressure,
+    which fluctuates by hundreds of bar from frame to frame.}
+  \label{fig:thermo}
 \end{figure}
 
 Structural stability across the campaign is shown in Figure~\ref{fig:stability}, where
@@ -190,6 +180,17 @@ unusually mobile, the largest excursions belonging to surface loops. All three p
 require. The reduced archives wrap molecule-wise and the capped receptor is three
 chains, so an RMSD computed directly on the archive returns \SI{25.8}{\angstrom} for
 the receptor and as much as \SI{99}{\angstrom} for the ligand.
+
+\begin{figure}[tb]
+  \centering
+  \includegraphics[width=\textwidth]{fig_md_stability.pdf}
+  \caption{\textbf{Structural stability across all 229 production runs.}
+    (a)~Receptor C$\alpha$ RMSD and (b)~ligand RMSD from the equilibrated pose, each
+    drawn as the median and the interquartile band across runs and split by the
+    25~ns and 50~ns production designs. (c)~Per-residue C$\alpha$ fluctuation
+    computed after the first 5~ns, with the fourteen gorge-lining residues marked.}
+  \label{fig:stability}
+\end{figure}
 
 \subsection{The ladder}\label{sec:ladder}
 \NOTE{Protonation robustness, from results/33\_rung1\_protonation.md. Rung 1 rescored
@@ -217,16 +218,6 @@ the receptor and as much as \SI{99}{\angstrom} for the ligand.
   \label{fig:ladder}
 \end{figure}
 
-\begin{table}[tb]
-  \centering
-  \caption{\textbf{Best score per rung on each framing}, over the rung's descriptor
-    arms and the algorithm families, on 217 development ligands and 145 development
-    pairs. The winning family is named in parentheses. The full grid is
-    the supplementary tables at the end of this section.}
-  \label{tab:benchmark}
-  \input{../results/22_benchmark_main.tex}
-\end{table}
-
 \TODO{Prose. The numbers, from results/20\_ladder.csv and Table~\ref{tab:benchmark}:}
 \NOTE{\framingA{}: rung 1 $+0.386$, rung 2 $+0.046$, rung 2e $+0.215$, rung 3
 $+0.118$, rung 4 $+0.068$. \framingB{}: $+0.200$, $+0.167$, $+0.274$, $-0.056$,
@@ -236,6 +227,16 @@ results/36\_pilot\_rerun.md.
   Rung 3 on framings A and C is new -- it had only ever been scored on B.
   All five rungs cover all 217 ligands and all 145 pairs, so no rung is scored on
   an easier subset.}
+
+\begin{table}[tb]
+  \centering
+  \caption{\textbf{Best score per rung on each framing}, over the rung's descriptor
+    arms and the algorithm families, on 217 development ligands and 145 development
+    pairs. The winning family is named in parentheses. The full grid is
+    the supplementary tables at the end of this section.}
+  \label{tab:benchmark}
+  \input{../results/22_benchmark_main.tex}
+\end{table}
 
 \TODO{State plainly that on \framingB{} the ensemble rung 2 is numerically above
   rung 1 ($+0.274$ vs $+0.200$) and that the difference is not resolvable. Do not

@@ -268,6 +268,22 @@ def main() -> None:
             (failures if done.get(sub) else notes).append(
                 msg + ("" if done.get(sub) else f"  [{sub} not drafted yet]"))
 
+        # rule 9 -- a float declared before the paragraph that cites it. LaTeX
+        # places a float no earlier than its declaration, so declaring it ahead of
+        # its reference prints Figure 1 on the page before the text that calls it.
+        for env in ("figure", "table"):
+            for label, _, blk in figure_blocks(text, env):
+                at = text.find(blk)
+                sub = subsection_of(text, at)
+                r = re.search(r"\\ref\{" + re.escape(label) + r"\}", text)
+                if r is None:
+                    msg = f"{f.name}: {label} never referenced in prose"
+                    (failures if done.get(sub) else notes).append(
+                        msg + ("" if done.get(sub) else f"  [{sub} not drafted yet]"))
+                elif r.start() > at + len(blk):
+                    failures.append(f"{f.name}: {label} declared before the text "
+                                    f"that cites it, in {sub}")
+
     for n in notes:
         print(f"  note     {n}")
     for x in failures:
