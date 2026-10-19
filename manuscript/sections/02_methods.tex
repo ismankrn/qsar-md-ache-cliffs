@@ -61,8 +61,7 @@ cliff pairs, 97 survived with both members intact, formed from 99 distinct compo
 
 A control pair was near-identical under the same floor of 0.90, but its two members
 differed by at most 0.30 log units, less than twofold. The two groups then differ in
-the property under test and in as little else as possible. Stereoisomer pairs were excluded here on
-the same grounds as above, and the controls were drawn to reproduce the
+the property under test and in as little else as possible. Stereoisomer pairs were excluded here on the same grounds, and the controls were drawn to reproduce the
 joint distribution of similarity and mean potency of the cliff pairs over four
 similarity and five potency bins, using each control compound once. The procedure
 yielded 86 control pairs from 172 compounds, and the matching is close on both
@@ -71,7 +70,7 @@ for the controls, and the mean pair-mean potency 6.64 against 6.58, while the qu
 under test differs by construction at 2.66 log units against 0.13. The final set holds
 271 ligands and 183 pairs, 97 cliff and 86 control. Each ligand was prepared and simulated once, while a pair refers
 to two ligands, as a compound may belong to more than one pair. Each ligand was prepared in two forms, of which the standardised neutral structure
-carries the fingerprints and the pair definition above. The dominant protonation state
+carries the fingerprints and the pair definition. The dominant protonation state
 at pH 7.4, assigned by explicit rules, is the one that enters the docking and the
 simulations. Every ligand
 carries a net positive charge in that second form, 170 at $+1$ and 101 at $+2$.
@@ -169,8 +168,7 @@ cost}\label{sec:rungs}
   \input{../results/32_rungs.tex}
 \end{table}
 
-We compared four descriptor families, ordered by the cost of producing them, and we
-refer to each below as a rung of that ladder. The first needs only the molecular
+We compared four descriptor families, ordered by the cost of producing them, and we refer to each as a rung of that ladder. The first needs only the molecular
 graph, the second a docked pose, the third an energy evaluation on that pose and the
 fourth a molecular-dynamics trajectory. The ordering is the point of the comparison,
 as the question is not whether a more expensive representation can be built but
@@ -180,10 +178,15 @@ difference between two rungs is a difference between representations and not bet
 model families. Table~\ref{tab:rungs} gives the input each rung requires, what its
 descriptors capture, the feature count and the cost, with two columns that carry a
 qualification. The feature counts are the two feature sets of rung~1 and, for rung~4, the full set
-beside the set that survives the reliability filter. The costs are median measured
-values, given as processor time for the first three rungs and as wall-clock time on
-one GPU for the simulation, which are not the same unit and are not comparable beyond
-their order of magnitude.
+beside the set that survives the reliability filter. The costs are median measured values, given as processor time for the first three
+rungs and as wall-clock time on one GPU for the simulation, which are not the same
+unit and are not comparable beyond their order of magnitude. The number of features is
+not matched across the rungs either, and that is deliberate. Each was scored in the
+form in which it would actually be used, and a comparison that first cut a fingerprint
+down to 34 features would describe nothing that anyone does. We also scored a
+matched-dimensionality arm as a robustness check, performing the feature selection
+inside each training fold so that the held-out fold can never influence which features
+are chosen.
 
 Rung~1 uses no three-dimensional information, and it is computed on the standardised
 neutral structures, while every structure-based rung uses the protonated form of
@@ -201,10 +204,10 @@ that flatters the more expensive rungs.
 We chose the rung-2 descriptors to test one mechanism and not to cast a wide net. That
 mechanism is the proposal that two closely related inhibitors are distinguished by how
 persistently each of them engages the two ends of the gorge, and by its position along
-the axis between them. A fixed panel of fourteen gorge-lining residues, i.e. residues
-72, 74, 86, 121, 124, 203, 286, 295, 297, 334, 337, 338, 341 and 447, is used from
-here on, so that the pose-geometry, MM/GBSA and molecular-dynamics descriptors are
-computed on the same positions. Each rung-2 descriptor is the median over the three
+the axis between them. A fixed panel of fourteen gorge-lining residues, i.e. residues 72, 74, 86, 121, 124,
+203, 286, 295, 297, 334, 337, 338, 341 and 447, carries the pose-geometry, MM/GBSA and
+molecular-dynamics descriptors alike, so that all three are computed on the same
+positions. Each rung-2 descriptor is the median over the three
 docking seeds of Section~\ref{sec:dock}, and we kept the spread across seeds for
 diagnosis but did not use it as a feature. The same descriptors were also computed
 over an ensemble of receptor conformations and are reported separately as rung~2e,
@@ -233,11 +236,7 @@ scored are 33 and 12. We scored both sets, as reporting only one would leave ope
 property of the descriptors or of the filter. Both the splits of
 Section~\ref{sec:dataset} and the designation of framing~B as the primary comparison
 predate the first of these scores by more than a fortnight, so neither was chosen once
-the expensive answer was known. The number of features is not matched across the rungs, and that is deliberate. Each
-was scored in the form in which it would actually be used, and a comparison that first
-cut a fingerprint down to 34 features would describe nothing that anyone does. We also scored a matched-dimensionality arm
-as a robustness check, performing the feature selection inside each training fold so
-that the held-out fold can never influence which features are chosen.
+the expensive answer was known. 
 
 \subsection{Receptor model and docking protocol}\label{sec:dock}
 
@@ -349,8 +348,7 @@ disk every \SI{10}{\pico\second}.
 We ran the simulations with the GPU-resident mdrun of GROMACS, submitted in batches
 through its multi-directory interface with a wall-clock limit per job and restarts
 taken from checkpoints. We completed 229 production runs over the 217 ligands, 211 of
-them simulated once and 6 three times for the replicate pilot
-described below, amounting to 6{,}965~ns. The production length was
+them simulated once and 6 three times for the replicate pilot, amounting to 6{,}965~ns. The production length was
 \SI{50}{\nano\second} for the first 56 runs and \SI{25}{\nano\second} thereafter, and
 17 of those 56 stopped between 34 and \SI{42}{\nano\second} on reaching their
 wall-clock limit. The mixture of lengths does not affect the descriptors, since the first
