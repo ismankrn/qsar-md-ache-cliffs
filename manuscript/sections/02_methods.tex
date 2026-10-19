@@ -343,35 +343,26 @@ resolves it is the minimisation and equilibration that follow.
   \input{../results/27_system_composition.tex}
 \end{table}
 
-Each system was energy-minimised by steepest descent until the
-maximum force fell below \SI{100}{\kilo\joule\per\mole\per\nano\metre}. It was
-then equilibrated for \SI{100}{\pico\second}
-in the canonical ensemble with the solute position-restrained and for a further
-\SI{100}{\pico\second} in the isothermal-isobaric ensemble without restraints.
-Production used a \SI{2}{\femto\second} time step with the bonds to hydrogen
-constrained by LINCS, a Verlet neighbour list and particle-mesh Ewald electrostatics.
-The cutoff was \SI{1.0}{\nano\metre} for both the real-space Coulomb and the van der
-Waals interactions, with a long-range dispersion correction applied to the energy and
-the pressure. Temperature was held by the velocity-rescaling thermostat at
-\SI{300}{\kelvin} with a coupling time of \SI{0.1}{\pico\second}, and pressure by the
-c-rescale barostat at \SI{1}{\bar}, isotropic, with a coupling time of
-\SI{2}{\pico\second} and a compressibility of $4.5\times10^{-5}$~\si{\per\bar}, with coordinates written to
-disk every \SI{10}{\pico\second}.
-
-We ran the simulations with the GPU-resident mdrun of GROMACS, submitted in batches
-through its multi-directory interface with a wall-clock limit per job and restarts
-taken from checkpoints. We completed 229 production runs over the 217 ligands, 211 of
-them simulated once and 6 three times for the replicate pilot, amounting to
-6{,}965~ns. Every ligand contributes the same \SI{25}{\nano\second} to the analysis,
-of which the first \SI{5}{\nano\second} was discarded and the \SI{20}{\nano\second}
-that follows supplied every descriptor, so no ligand carries a shorter record than
-another. A run that continued past that window was truncated to it, and 56 of the 229
-did continue, the first batch having been submitted at \SI{50}{\nano\second} before
-the length was settled on the replicate pilot. Of those 56, 17 stopped between 34 and
-\SI{42}{\nano\second} on reaching a wall-clock limit, which changes nothing, as the
-window they are cut to is shorter than the shortest of them. The trajectory beyond the
-common window entered this work only through the duration ablation, where the 55 runs
-reaching a \SI{30}{\nano\second} window were scored as their own subset.
+Each system was energy-minimised by steepest descent until the maximum force fell
+below \SI{100}{\kilo\joule\per\mole\per\nano\metre}. It was then equilibrated for
+\SI{100}{\pico\second} in the canonical ensemble with the solute position-restrained
+and for a further \SI{100}{\pico\second} in the isothermal-isobaric ensemble without
+restraints. Production used a \SI{2}{\femto\second} time step with the bonds to
+hydrogen constrained by LINCS, a Verlet neighbour list and particle-mesh Ewald
+electrostatics. The cutoff was \SI{1.0}{\nano\metre} for both the real-space Coulomb
+and the van der Waals interactions, with a long-range dispersion correction applied to
+the energy and the pressure. Temperature was held by the velocity-rescaling thermostat
+at \SI{300}{\kelvin} with a coupling time of \SI{0.1}{\pico\second}, and pressure by
+the c-rescale barostat at \SI{1}{\bar}, isotropic, with a coupling time of
+\SI{2}{\pico\second} and a compressibility of $4.5\times10^{-5}$~\si{\per\bar}, with
+coordinates written to disk every \SI{10}{\pico\second}. We ran the simulations with
+the GPU-resident mdrun of GROMACS, submitted in batches through its multi-directory
+interface with a wall-clock limit per job and restarts taken from checkpoints. We
+completed 229 production runs over the 217 ligands, 211 of them simulated once and 6
+three times for the replicate pilot, amounting to 6{,}965~ns. The descriptors were
+computed on a common \SI{25}{\nano\second} of production per ligand, of which the
+first \SI{5}{\nano\second} was discarded and the \SI{20}{\nano\second} that follows
+was analysed, so no ligand carries a shorter or a longer record than another.
 
 Thirty-two descriptors were computed from each trajectory, and they fall into three
 design classes. Persistence quantities measure how much of the analysed window a contact or a position
