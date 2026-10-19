@@ -205,13 +205,43 @@ rung 4). On
   fingerprint anywhere.}
 
 \subsection{Rung 4 against a dimensionality-matched baseline}
-\TODO{Gaps and intervals, 300-replicate bootstrap over units, recomputed after the
-replicate pilot was re-run on all six replicate sets. \framingA{} $-0.375$, CI
-$[-0.596,-0.184]$, which excludes zero, so rung 4 is worse. \framingB{} $-0.093$, CI
-$[-0.319,+0.127]$. \framingC{} $+0.003$, CI $[-0.102,+0.103]$. Only \framingA{} is
-resolved, and it is resolved against rung 4.}
-\NOTE{Framing A's interval is the only one in the study that excludes zero. It
-  does not say rung 4 is unproven; it says rung 4 is worse, resolved by the design.}
+
+The headline comparison gives rung~1 thousands of features and rung~4 twelve, so the
+obvious objection is that the fingerprint wins on width rather than on content. We
+therefore scored an arm in which the fingerprint is cut to the width of rung~4 by a
+univariate filter fitted inside each training fold. The width is twelve features on
+framings~A and~B and twenty-four on \framingC{}, where each pair contributes a
+concatenation of two vectors. The control does not settle the question in one
+direction, as it reverses the ordering on two framings and leaves it standing on the
+third. On \framingB{} the handicapped fingerprint falls to $-0.128$ from $+0.200$ and
+so drops below the $+0.152$ of rung~4, and on \framingC{} it falls to $0.713$ from
+$0.805$ and below the $0.796$ of rung~4. On \framingA{} it falls only to $+0.165$ from
+$+0.386$ and remains well above the $+0.068$ of rung~4. The two framings whose ordering changes are
+the two the design cannot resolve, and the one framing it can resolve is the one left
+unchanged.
+
+We read that as a statement about the control rather than as evidence for rung~4,
+because the two sides are not handicapped symmetrically. The twelve rung-4 features are
+what a reliability criterion left of a set designed for this target, whereas the twelve
+fingerprint bits are what a univariate filter left of two thousand that carry their
+information in combination rather than singly. Cutting a fingerprint to twelve bits
+does not produce a smaller fingerprint, it produces a different and much poorer
+descriptor. The arm therefore shows that feature count is not the quantity on which
+this comparison turns, which is worth establishing but is not a result about molecular
+dynamics. The comparison that matters is therefore against rung~1 as it would
+actually be used, with every feature it has and the feature set re-selected inside each
+bootstrap replicate.
+
+Against that unhandicapped baseline, the bootstrap over units puts the gap at $-0.375$
+on \framingA{} with a 95 per cent interval of $[-0.596, -0.184]$, at $-0.093$ on
+\framingB{} with $[-0.319, +0.127]$, and at $+0.003$ on \framingC{} with $[-0.102,
++0.103]$. Only \framingA{} is resolved, and it is resolved against rung~4 rather than for it.
+That interval is the only one in this study that excludes zero, and its sign matters as much
+as its width, since it does not report rung~4 as unproven but as worse than a
+fingerprint on per-ligand potency. On the two pair framings the gap is small and the
+interval contains zero in both, so neither supports a claim in either direction. The
+molecular-dynamics descriptors therefore fail to improve on a 2D baseline where the
+design can see, and leave the question open where it cannot.
 
 % ---------------------------------------------------------------------------
 \subsection{Statistical power of the comparison}
