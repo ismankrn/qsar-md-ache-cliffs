@@ -5,23 +5,14 @@
 This work is concerned with activity cliffs, i.e. pairs of compounds that are
 near-identical in structure and yet far apart in potency. All of the bioactivity data
 used here were taken from ChEMBL, which records measured potencies against individual
-protein targets, so a dataset is always the data of one target. The target whose
+protein targets. The target whose
 cliffs are studied here is human acetylcholinesterase (hAChE), with the ChEMBL target
-identifier being CHEMBL220. It was selected because it met three entry criteria,
-namely at least 80 compounds surviving curation, a potency range of at least 3 log
-units, and at least 25 constitutional activity cliffs. The same thresholds were
-applied to every candidate, so none of them was chosen by adjusting what counts as a
-cliff. The constitutional pairs of hAChE dominate most strongly, at 100 against 10
-stereochemical ones, and only one of the six candidates met the third criterion at
-all. Its binding site also gives a mechanistic reason to expect geometric cliffs,
-since its two recognition sites sit at opposite ends of a narrow gorge and its
-inhibitors are designed to span them, as described in Section~\ref{sec:dock}. The
+identifier being CHEMBL220. The
 enzyme hydrolyses acetylcholine, and its inhibition raises the synaptic concentration
 of this neurotransmitter, which is the basis of the cholinergic treatment of
-Alzheimer's disease. We examined six candidates and did not search ChEMBL
-systematically, so any comparison between targets holds among them and not in general,
-and Section~\ref{sec:composition} names all six proteins and reports the counts behind
-the choice.
+Alzheimer's disease. The hAChE target was selected because it met three entry criteria,
+namely at least 80 compounds surviving curation, a potency range of at least 3 log
+units, and at least 25 constitutional activity cliffs. 
 
 Both halves of the cliff definition need a threshold, one for how alike the two
 members are and one for how far apart their potencies lie. Similarity was computed as
@@ -133,8 +124,7 @@ descriptor set, on the folds of Section~\ref{sec:dataset} and with the same
 algorithms, so that the three results differ in the question being asked and in
 nothing else. Table~\ref{tab:framings} sets them side by side, with $\mathbf{d}_a$ and
 $\mathbf{d}_b$ being the descriptor vectors of the two ligands of a pair and the
-number in parentheses the count of units available in the development split, and the
-three are taken in turn below.
+number in parentheses the count of units available in the development split.
 
 In framing~A the unit is the ligand, the target is its pChEMBL value, and the metric
 is the coefficient of determination over the out-of-fold predictions. The predictions of the five folds are pooled before the metric is computed, so a fold
