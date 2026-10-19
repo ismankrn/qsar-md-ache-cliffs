@@ -80,7 +80,7 @@ def figure_blocks(text: str, env: str = "figure"):
     """(label, caption, full block) for every float environment of this kind."""
     for m in re.finditer(r"\\begin\{" + env + r"\}(.*?)\\end\{" + env + r"\}", text, re.S):
         b = m.group(1)
-        lab = re.search(r"\\label\{((?:fig|tab):[a-zA-Z]+)\}", b)
+        lab = re.search(r"\\label\{((?:fig|tab):[a-zA-Z0-9_]+)\}", b)
         i = b.find(r"\caption{")
         if i < 0 or not lab:
             continue
@@ -112,6 +112,13 @@ def drop_macro(text: str, name: str) -> str:
             k += 1
         out.append(" ")
         i = k
+
+
+def mask_floats(text: str) -> str:
+    """The text with every float environment blanked, positions preserved."""
+    def blank(m):
+        return " " * len(m.group(0))
+    return re.sub(r"\\begin\{(figure|table)\}.*?\\end\{\1\}", blank, text, flags=re.S)
 
 
 def prose_of(text: str) -> str:
@@ -278,9 +285,13 @@ def main() -> None:
             for label, _, blk in figure_blocks(text, env):
                 at = text.find(blk)
                 sub = subsection_of(text, at)
-                r = re.search(r"\\ref\{" + re.escape(label) + r"\}", text)
-                if r is None and re.search(r"\\ref\{" + re.escape(label) + r"\}", alltext):
-                    continue                 # cited from another section file
+                # A reference from inside another float's caption says nothing about
+                # reader order, since floats are not read where they are declared. Only
+                # a reference in running prose fixes where a float has to print.
+                ref = r"\\ref\{" + re.escape(label) + r"\}"
+                r = re.search(ref, mask_floats(text))
+                if r is None and re.search(ref, alltext):
+                    continue                 # cited from another file, or from a caption
                 if r is None:
                     msg = f"{f.name}: {label} never referenced in prose"
                     (failures if done.get(sub) else notes).append(

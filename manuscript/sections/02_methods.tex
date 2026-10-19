@@ -207,8 +207,7 @@ persistently each of them engages the two ends of the gorge, and by its position
 the axis between them. A fixed panel of fourteen gorge-lining residues, i.e. residues
 72, 74, 86, 121, 124, 203, 286, 295, 297, 334, 337, 338, 341 and 447, carries the
 pose-geometry, MM/GBSA and molecular-dynamics descriptors alike, so that all three are
-computed on the same positions. Tables~\ref{tab:sirung2} to~\ref{tab:sirung4} name and
-define every descriptor of rungs~2, 2e, 3 and~4 individually. Each rung-2 descriptor
+computed on the same positions.  Each rung-2 descriptor
 is the median over the three
 docking seeds of Section~\ref{sec:dock}, and we kept the spread across seeds for
 diagnosis but did not use it as a feature. The same descriptors were also computed
@@ -217,9 +216,10 @@ because what limits the docking is the rigidity of a single receptor and not the
 protocol, which is established in Section~\ref{sec:dock}. The ensemble is 4EY4, 4EY7, 4M0F, 6CQX, 6CQY, 6O4X, 6O5V and 6WUY, chosen by
 clustering on the side-chain positions of the gorge-lining residues after
 superposition. Selecting instead on resolution or on date of deposition would most
-likely have returned several copies of one conformation. Each descriptor is the median across the eight,
-and the five axis descriptors are dropped, being defined against the single 4EY7
-geometry.
+likely have returned several copies of one conformation. Each descriptor is the median
+across the eight, and the five axis descriptors are dropped, being defined against the
+single 4EY7 geometry. Table~\ref{tab:sirung2} names every rung-2 descriptor and marks
+the ones the ensemble carries.
 
 Rung~3 is single-trajectory, in that the complex, the protein and the ligand were
 taken from the same coordinates with no re-minimisation after separation. The internal
@@ -229,8 +229,10 @@ a rigid receptor, was computed once. This is not a rigorous binding free energy 
 do not present it as one, as absolute values obtained from a single post-docking
 snapshot are not defensible. It is on the ladder because it is what a structure-based
 study routinely does at this cost, and it was computed on the same pose as rung~2, so
-the two differ by the energy evaluation and by nothing else. Rung~4 is described in Section~\ref{sec:md}, and 11 of its 32 dynamic descriptors
-survived the reliability filter described there, which
+the two differ by the energy evaluation and by nothing else. Table~\ref{tab:sirung3}
+names its 22 descriptors. Rung~4 is described in Section~\ref{sec:md}, and 11 of its
+32 dynamic descriptors, which Table~\ref{tab:sirung4} names one by one, survived the
+reliability filter described there, which
 removes those whose variation between repeated simulations of one ligand is comparable
 to their variation between ligands. The heavy-atom count is carried alongside either
 set as a size covariate and not as a dynamic descriptor, so the two feature counts

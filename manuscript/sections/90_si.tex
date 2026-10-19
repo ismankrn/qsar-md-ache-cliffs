@@ -5,24 +5,38 @@
 \renewcommand{\thetable}{S\arabic{table}}
 \setcounter{table}{0}
 
-Section~\ref{sec:rungs} gives the feature count of each rung but does not name the
-descriptors, and the tables here do. Each is named as it appears in the deposited
-descriptor tables, so a quantity discussed in the text can be traced to the column it
-was computed in. Rungs~2, 2e and~4 share the panel of fourteen gorge-lining residues
-and compute a per-residue quantity for each, which is why all three tables end with a
-block of fourteen entries. The three differ in what that quantity is, namely a contact
-count on one pose, the same count on eight, and the fraction of simulated frames in
-which the contact was present. The last column of Table~\ref{tab:sirung4} is the
-only place the reliability filter is reported descriptor by descriptor, as
-Section~\ref{sec:rungs} gives no more than the number that survived it.
+Each descriptor is named here as it appears in the deposited descriptor tables, so a
+quantity discussed in the text can be traced to the column it was computed in.
+Rungs~2, 2e and~4 share one panel of fourteen gorge-lining residues and compute a
+per-residue quantity for each of them, which is why three of these tables end with a
+block of fourteen entries. What that quantity is differs between the three, being a
+contact count on one docked pose, the same count taken as a median over eight receptor
+conformations, and the fraction of simulated frames in which the contact was present.
+The residue numbering is that of the mature human enzyme as deposited in 4EY7, and the
+names were read from the receptor used in the calculations rather than assigned by hand.
+The \SI{4.5}{\angstrom} cutoff that defines a contact is the same at all three rungs,
+so a per-residue entry means the same geometric thing wherever it appears.
+
+Five of the rung-2 descriptors measure the ligand's position along the axis between the
+two anionic sites, and they are defined against the single 4EY7 geometry, so the
+ensemble carries the remaining 29 and not those five. The rung-4 table carries two
+further columns, namely the spread of a descriptor between ligands divided by its spread
+between replicate simulations of one ligand, and the verdict that ratio produced at a
+threshold of two. A descriptor whose replicate spread was zero has no ratio, and that
+case splits in two, as a quantity that never varies at all carries no information while
+one that is almost always zero is reproducible only by its own sparsity. The heavy-atom
+count appears in the same table because it is carried beside either feature set as a
+size covariate, and it is not a dynamic quantity and was not put to the filter.
+Section~\ref{sec:md} gives the pilot the filter was computed from and
+Section~\ref{sec:rungs} the counts that survived it, neither of which names a
+descriptor.
 
 \begin{table}[htbp]
   \centering
   \footnotesize
   \caption{\textbf{Rung~2 and rung~2e descriptors.} The 34 geometric descriptors
-    measured on the docked pose, with the 29 of them carried over to the receptor
-    ensemble. The five axis descriptors are defined against the single 4EY7 geometry
-    and have no ensemble counterpart.}
+    measured on the docked pose, with the 29 of them that the receptor ensemble carries
+    over to rung~2e.}
   \label{tab:sirung2}
   \input{../results/37_si_rung2.tex}
 \end{table}
@@ -41,9 +55,8 @@ Section~\ref{sec:rungs} gives no more than the number that survived it.
   \centering
   \footnotesize
   \caption{\textbf{Rung~4 descriptors and the reliability filter.} The 32 dynamic
-    descriptors with the between-ligand spread of each divided by its between-replicate
-    spread, the verdict that ratio produced at a threshold of two, and the heavy-atom
-    count carried beside them. A ratio is absent where the replicate spread was zero.}
+    descriptors, the ratio of between-ligand to between-replicate spread for each, and
+    the verdict that ratio produced.}
   \label{tab:sirung4}
   \input{../results/37_si_rung4.tex}
 \end{table}
