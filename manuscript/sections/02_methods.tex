@@ -7,15 +7,26 @@ near-identical in structure and yet far apart in potency. All of the bioactivity
 used here were taken from ChEMBL, which records measured potencies against individual
 protein targets, so a dataset is always the data of one target. The target whose
 cliffs are studied here is human acetylcholinesterase (hAChE), with the ChEMBL target
-identifier being CHEMBL220. The enzyme hydrolyses acetylcholine, and its inhibition
-raises the synaptic concentration of this neurotransmitter, which is the basis of the
-cholinergic treatment of Alzheimer's disease. It was selected from six candidate
-proteins under the criteria set out below.
+identifier being CHEMBL220. It was selected because it met three entry criteria,
+namely at least 80 compounds surviving curation, a potency range of at least 3 log
+units, and at least 25 constitutional activity cliffs. The same thresholds were
+applied to every candidate, so none of them was chosen by adjusting what counts as a
+cliff. The constitutional pairs of hAChE dominate most strongly, at 100 against 10
+stereochemical ones, and only one of the six candidates met the third criterion at
+all. Its binding site also gives a mechanistic reason to expect geometric cliffs,
+since its two recognition sites sit at opposite ends of a narrow gorge and its
+inhibitors are designed to span them, as described in Section~\ref{sec:dock}. The
+enzyme hydrolyses acetylcholine, and its inhibition raises the synaptic concentration
+of this neurotransmitter, which is the basis of the cholinergic treatment of
+Alzheimer's disease. We examined six candidates and did not search ChEMBL
+systematically, so any comparison between targets holds among them and not in general,
+and Section~\ref{sec:composition} names all six proteins and reports the counts behind
+the choice.
 
 Both halves of the cliff definition need a threshold, one for how alike the two
-members are and one for how far apart their potencies lie. Similarity was computed as the
-Tanimoto coefficient on binary ECFP4, i.e. Morgan fingerprints of radius 2 folded to
-2{,}048 bits, and a pair was treated as near-identical at a coefficient of at least
+members are and one for how far apart their potencies lie. Similarity was computed as
+the Tanimoto coefficient on binary ECFP4, i.e. Morgan fingerprints of radius 2 folded
+to 2{,}048 bits, and a pair was treated as near-identical at a coefficient of at least
 0.90. It was treated as a cliff when its two members also differed by at least 2.0 log
 units in pChEMBL, which is a hundredfold difference in potency. Pairs were further
 divided according to whether their two members differ in constitution or only in
@@ -24,19 +35,6 @@ stereochemistry stripped, and only the constitutional pairs were treated as
 informative. ECFP is blind to stereochemistry, so a stereo-blind fingerprint cannot
 resolve a stereoisomer pair at all, while any method that uses three-dimensional
 coordinates resolves it trivially.
-
-hAChE was selected because it met three entry criteria, namely at least 80 compounds
-surviving curation, a potency range of at least 3 log units, and at least 25
-constitutional activity cliffs under the definition above. The same thresholds were
-applied to every candidate, so the definition was fixed before any target was chosen.
-Its constitutional pairs dominate most strongly, at 100 against 10 stereochemical
-ones, and only one other candidate met the third criterion at all. Its binding site
-also gives a mechanistic reason to expect geometric cliffs, since its two recognition
-sites sit at opposite ends of a narrow gorge and its inhibitors are designed to span
-them, as described in Section~\ref{sec:dock}. We examined six candidates and did not
-search ChEMBL systematically, so any comparison between targets holds among them and
-not in general. Section~\ref{sec:composition} names all six proteins and reports the
-counts behind the choice.
 
 The dataset itself was then built in three steps, i.e. the curation of the activity
 data, the identification of the cliff pairs, and the assembly of the pairs followed by
