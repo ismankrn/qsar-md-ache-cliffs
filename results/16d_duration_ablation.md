@@ -94,3 +94,23 @@ Not applied to: the 28 phase-1 runs and 12 replicates already finished at 50 ns.
 adjustment. Every JSON carries the 5/10/20/30 ns windows, so the primary table is built on the
 common 20 ns window for every run regardless of how long it was simulated, and the 50 ns
 subset remains available as a robustness check.
+
+---
+
+## Re-run (2026-10-19): recomputed against the re-run replicate filter
+
+The filter this ablation holds fixed was itself recomputed in stage 36, once all six
+replicate sets and all 217 ligands had finished, so the curve was regenerated. The
+numbers above that describe the mechanics, the cost table and the bit-identical check
+are unaffected, as none of them depends on which descriptors the filter selects.
+
+The outcome of the ablation did not change. With the descriptor set held at the 20 ns
+selection, framing A is flat across 5, 10 and 20 ns, framing B peaks at 10 ns, and
+framing C rises by 0.049 over the same range, every spread being inside the resolution
+this study can claim. The 2026-10-02 decision to simulate 25 ns stands, and it was taken
+on the replicate pilot rather than on this curve in any case.
+
+Note that the paragraph above recording that decision quotes the filter as it stood then,
+i.e. 12 of 15 usable descriptors surviving at 20 ns. That was the state of the evidence
+on which the decision was made and is left as written; the current filter passes 11 at
+20 ns, which stage 36 records.

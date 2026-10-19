@@ -356,20 +356,21 @@ $-0.054$ unfiltered; \framingC{} $0.796$ against $0.721$.}
   \caption{\textbf{Trajectory length is not the limiting factor between 5 and
     20~ns.} Panels show (a)~\framingA{}, (b)~\framingB{} and (c)~\framingC{}, with
     descriptors recomputed on the first 5, 10, 20 and 30~ns of analysed
-    trajectory. The per-window replicate filter selects 15, 14 and 12 descriptors
-    respectively, so it confounds trajectory length with descriptor choice; the
-    fixed series holds the 20~ns selection at every window and isolates length.
+    trajectory. The per-window replicate filter gives 14, 14 and 12 features at 5, 10
+    and 20~ns and does not select the same ones at each, so it confounds trajectory
+    length with descriptor choice; the fixed series holds the 20~ns selection at every
+    window and isolates length.
     Only 45 development ligands reach 30~ns, drawn as their own series and never
     joined to the full-sample line.}
   \label{fig:duration}
 \end{figure}
 
-\TODO{Prose. With a fixed descriptor set, \framingA{} is flat
-  ($+0.039$, $+0.027$, $+0.056$) and \framingB{} peaks at 10 ns ($+0.116$, $+0.198$, $+0.124$ at the old filter; the
-duration ablation has not been re-run since the filter changed). The spread is inside the study's resolution, so
-  the conclusion is no resolvable dependence on length -- which answers the cost
-  objection with data.}
-\NOTE{Do NOT quote the $+0.198$ as a result. It is the best of six cells computed
+\TODO{Prose. With a fixed descriptor set, \framingA{} is flat ($+0.030$, $+0.044$,
+  $+0.043$), \framingB{} peaks at 10 ns ($+0.149$, $+0.196$, $+0.152$) and \framingC{}
+  rises a little with length ($0.747$, $0.788$, $0.796$). Every spread is inside the
+  study's resolution, so the conclusion is no resolvable dependence on length -- which
+  answers the cost objection with data.}
+\NOTE{Do NOT quote the $+0.196$ as a result. It is the best of six cells computed
   together and it is the kind of number this paper exists to warn about.}
 
 \NOTE{Discussion. Trajectory length is not the lever, and the practical reading is

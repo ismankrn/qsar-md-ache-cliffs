@@ -54,4 +54,30 @@ it is resolved against rung 4, while B and C remain unresolved. The bootstrap le
 carry the known duplicate-resampling bias and are not performance estimates; the gap is
 the quantity to read.
 
-The duration ablation has **not** been re-run against the new filter.
+## Duration ablation, re-run
+
+`fig_duration.py` reads the filter live, so re-running it was the whole fix. The fixed
+series holds the 20 ns selection at every window and is the series that isolates length.
+
+| window | A, first run | A, re-run | B, first run | B, re-run | C, first run | C, re-run |
+|---:|---:|---:|---:|---:|---:|---:|
+| 5 ns | 0.039 | **0.030** | 0.116 | **0.149** | 0.792 | **0.747** |
+| 10 ns | 0.027 | **0.044** | 0.198 | **0.196** | 0.805 | **0.788** |
+| 20 ns | 0.056 | **0.043** | 0.124 | **0.152** | 0.793 | **0.796** |
+
+The 20 ns column now matches the ladder exactly, which is the check that matters: the
+same descriptor set scored by the same code has to give the same number in both places,
+and it does (A 0.043, B 0.152, C 0.796).
+
+The reading is unchanged and is in places firmer. Framing A moved over a range of 0.029
+across the three windows and now moves over 0.014. Framing B still peaks at 10 ns.
+Framing C now rises monotonically with length, by 0.049 from 5 to 20 ns, where before it
+moved without direction; that is well inside the bootstrap interval of roughly 0.10 on
+this framing, so it does not become a dependence on length.
+
+The per-window filter is also less uneven than before. It passes 13, 13 and 11
+descriptors at 5, 10 and 20 ns, against 14, 13 and 11 before, but the membership at 5
+and 10 ns still differs by one, so the adaptive series continues to confound length with
+descriptor choice and the fixed series remains the one to read.
+
+The 45-ligand subset that reaches 30 ns does not rise past 20 ns, as before.
