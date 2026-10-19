@@ -71,12 +71,7 @@ These four quantities were computed on 64 of the 229 runs, and the subset establ
 only that the simulations were well behaved, no comparison between descriptor sets
 resting on it. What the four panels establish is that the integrator, the thermostat
 and the barostat behaved, and a drift of two parts in $10^{5}$ per nanosecond rules
-out a systematic leak of energy. They do not establish that the sampling has
-converged, since a temperature and a density settle within picoseconds of any
-production run, including one whose ligand never leaves the basin it started in.
-Whether \SI{20}{\nano\second} is long enough for the descriptors is answered by the
-replicate pilot and by the ablation of Section~\ref{sec:duration}, which compare runs
-with one another rather than examining each on its own.
+out a systematic leak of energy.
 
 \begin{figure}[tb]
   \centering
@@ -115,6 +110,21 @@ fluctuate by a median of \SI{0.49}{\angstrom} and by no more than
 binding site as rigid as the rest of the fold, which is the condition the contact
 descriptors depend on. All three panels were computed after the same periodic-boundary
 treatment that the descriptors receive.
+
+Taken together the two figures establish that the systems are equilibrated and
+structurally stable over the window that is analysed, which is the condition the
+descriptors need, and they do not establish that the sampling has converged. A
+temperature and a density settle within picoseconds of any production run, and an RMSD
+plateaus just as convincingly for a ligand that entered one basin early and stayed in
+it. The replicate pilot measures that directly, by running the same ligand again under a
+different velocity seed. The share of descriptors whose seed-to-seed spread swamps
+their spread between ligands does not fall as the window lengthens, standing at 19 of
+32 at \SI{5}{\nano\second}, 21 at \SI{20}{\nano\second} and 20 at
+\SI{45}{\nano\second}. A converging simulation would show that share shrinking, and it
+does not. What these two figures rule out is therefore a system that is drifting,
+unfolding or losing its ligand, and the question of how much of the accessible
+configuration space 20 nanoseconds covers is settled in
+Section~\ref{sec:reliability} rather than here.
 
 \begin{figure}[tb]
   \centering
@@ -233,7 +243,7 @@ resolved, and it is resolved against rung 4.}
   results/17\_noise\_ceiling.csv.}
 
 % ---------------------------------------------------------------------------
-\subsection{Reliability of the dynamic descriptors}
+\subsection{Reliability of the dynamic descriptors}\label{sec:reliability}
 \begin{figure}[tb]
   \centering
   \includegraphics[width=\textwidth]{fig4_reliability.pdf}
