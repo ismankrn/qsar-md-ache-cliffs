@@ -58,6 +58,11 @@
 
 \section*{Data and code availability}
 \TODO{repository URL, archived DOI, which artefacts are deposited}
+Any trajectory taken from the deposited archive needs the treatment of the periodic
+boundary described in Section~\ref{sec:md} before anything is measured on it. The
+archives are wrapped molecule-wise and the capped receptor is three separate chains, so
+an RMSD computed directly on an archive returns \SI{25.8}{\angstrom} for the receptor
+and as much as \SI{99}{\angstrom} for the ligand.
 \NOTE{md/reduced/ is 2.7 GB of protein+ligand trajectories at 100 ps and is the
   largest depositable artefact; the 229 descriptor JSONs are 1.8 MB.}
 
