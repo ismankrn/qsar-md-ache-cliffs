@@ -75,6 +75,49 @@ at pH 7.4, assigned by explicit rules, is the one that enters the docking and th
 simulations. Every ligand
 carries a net positive charge in that second form, 170 at $+1$ and 101 at $+2$.
 
+Six ChEMBL targets were screened against those entry criteria, namely
+acetylcholinesterase, $\beta$-secretase~1, coagulation factor~X, the epidermal growth
+factor receptor, the vascular endothelial growth factor receptor~2 and the
+tyrosine-protein kinase JAK2. They differed sharply in the kind of cliff they offered,
+which Figure~\ref{fig:dataset}(a) divides into constitutional and stereochemical pairs.
+$\beta$-Secretase~1 returned 101 stereochemical pairs against 5 constitutional ones,
+and the three kinases between 9 and 17 constitutional pairs each. Four of the six
+therefore fell below the criterion of 25 constitutional cliffs, although all six met
+the criteria on compound count and on potency range. Acetylcholinesterase inverted that ratio at 100
+constitutional pairs against 10 stereochemical ones, and coagulation factor Xa was the
+only other target to pass, at 33 against 16. Every pair that reached the final set is
+constitutional, as the two members differ in molecular formula in all 97 and the
+smallest difference in heavy-atom count is one. No result in this work therefore rests
+on a pair that a stereo-blind fingerprint is barred from resolving.
+
+The fingerprint also fails to separate pairs that did enter the set. Binary ECFP4
+reported a Tanimoto coefficient of exactly 1.000 for 49 of the 97 cliff pairs, whose
+two members differ by a median of 4 and by as many as 8 heavy atoms, and in potency by
+a median of 2.51 log units. Count-based ECFP4 separated those same 49 pairs at a median
+coefficient of 0.878, as Figure~\ref{fig:dataset}(b) shows, so folding counts to bits
+discards the multiplicity that distinguishes a molecule from its longer homologue. This
+bears on the selection and not only on the descriptors, since the similarity recorded at
+selection agrees exactly with the audited binary coefficient over all 97 pairs.
+Figure~\ref{fig:dataset}(c) places the pairs in the plane of the definition, where the
+empty band between the cliff pairs above 2.0 log units and the controls below 0.30 is
+imposed by the criterion rather than by the chemistry. The two groups also differ in
+size, by 4.4 heavy atoms on average within a cliff pair against 1.8 within a control,
+which Figure~\ref{fig:dataset}(d) shows and which Section~\ref{sec:eval} adjusts for.
+
+\begin{figure}[tb]
+  \centering
+  \includegraphics[width=\textwidth]{fig1_dataset.pdf}
+  \caption{\textbf{Target selection, the cliff definition, and two limitations it
+    carries.} (a)~The activity-cliff pairs of the six ChEMBL targets screened,
+    divided into constitutional and stereochemical ones. (b)~The 97 cliff pairs of
+    the selected set, each placed by its binary and its count-based ECFP4 Tanimoto
+    coefficient and coloured by the heavy-atom difference between its two members.
+    (c)~The selected pairs in the plane of the cliff definition, with similarity
+    measured by the binary fingerprint that performed the selection. (d)~The
+    heavy-atom difference within a pair, for the cliff pairs and for the controls.}
+  \label{fig:dataset}
+\end{figure}
+
 This set was then divided once into a development and a test part, with the random
 seed being 20260902, and was never revised afterwards. The unit of assignment is not the ligand but the connected component of the graph
 whose vertices are the ligands and whose edges are the pairs. Every ligand belongs to
