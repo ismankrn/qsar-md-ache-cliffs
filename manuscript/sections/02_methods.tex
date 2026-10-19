@@ -230,18 +230,19 @@ a rigid receptor, was computed once. This is not a rigorous binding free energy 
 do not present it as one, as absolute values obtained from a single post-docking
 snapshot are not defensible. It is on the ladder because it is what a structure-based
 study routinely does at this cost, and it was computed on the same pose as rung~2, so
-the two differ by the energy evaluation and by nothing else. Table~\ref{tab:sirung3}
-names its 22 descriptors. Rung~4 is described in Section~\ref{sec:md}, and 11 of its
-32 dynamic descriptors, which Table~\ref{tab:sirung4} names one by one, survived the
-reliability filter described there, which
-removes those whose variation between repeated simulations of one ligand is comparable
-to their variation between ligands. The heavy-atom count is carried alongside either
-set as a size covariate and not as a dynamic descriptor, so the two feature counts
-scored are 33 and 12. We scored both sets, as reporting only one would leave open whether a result is a
-property of the descriptors or of the filter. Both the splits of
-Section~\ref{sec:dataset} and the designation of framing~B as the primary comparison
-predate the first of these scores by more than a fortnight, so neither was chosen once
-the expensive answer was known. 
+the two differ by the energy evaluation and by nothing else. Its 22 descriptors are
+the interaction and desolvation terms of Table~\ref{tab:sirung3}, together with a
+per-residue decomposition over the same fourteen residues. Rung~4 is described in
+Section~\ref{sec:md}, and 11 of its 32 dynamic descriptors, which
+Table~\ref{tab:sirung4} names one by one, survived the reliability filter described
+there, which removes those whose variation between repeated simulations of one ligand
+is comparable to their variation between ligands. The heavy-atom count is carried
+alongside either set as a size covariate and not as a dynamic descriptor, so the two
+feature counts scored are 33 and 12. We scored both sets, as reporting only one would
+leave open whether a result is a property of the descriptors or of the filter. Both
+the splits of Section~\ref{sec:dataset} and the designation of framing~B as the
+primary comparison predate the first of these scores by more than a fortnight, so
+neither was chosen once the expensive answer was known.
 
 \subsection{Receptor model and docking protocol}\label{sec:dock}
 
@@ -307,11 +308,15 @@ divided the chain at the breaks into the segments 4--258, 265--494 and 498--541,
 each its own chain identifier, and capped it with an acetyl group at its N-terminal
 and an N-methylamide group at its C-terminal side. We used neutral caps, as charged
 termini would have added six artificial formal charges on the surface, and placed them
-by internal coordinates, so that the procedure is deterministic. Bond energy fell to
-1{,}145~\si{\kilo\joule\per\mole} and the maximum force from $3.3\times10^{8}$ to
-$2.1\times10^{5}$~\si{\kilo\joule\per\mole\per\nano\metre}. The atoms lining the gorge
-did not move at all, so the docked poses remain valid and nothing earlier in this work
-had to be repeated.
+by internal coordinates, so that the procedure is deterministic. All six caps sit on
+surface loops, the nearest cap atom lying \SI{15.5}{\angstrom} from the closest
+gorge-lining heavy atom and \SI{28.9}{\angstrom} from Trp86 at the gorge floor. Bond
+energy fell to 1{,}145~\si{\kilo\joule\per\mole} and the maximum force from
+$3.3\times10^{8}$ to $2.1\times10^{5}$~\si{\kilo\joule\per\mole\per\nano\metre}. No
+atom that the two receptors share moved, the gorge-lining side chains and all 529
+shared C$\alpha$ alike, their displacement being zero at the \SI{0.001}{\angstrom}
+precision the coordinate file holds. The docked poses therefore remain valid and
+nothing earlier in this work had to be repeated.
 
 We built one system per ligand and not per trajectory, so that a replicate differs
 from its parent only in the velocity seed and tests the sampling and not the
