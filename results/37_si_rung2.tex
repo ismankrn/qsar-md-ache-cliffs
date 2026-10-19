@@ -1,0 +1,55 @@
+\begin{tabular}{l>{\raggedright\arraybackslash}p{0.54\linewidth}ll}
+\toprule
+Descriptor & Definition & Unit & Rung~2e \\
+\midrule
+\addlinespace
+\multicolumn{4}{l}{\itshape Engagement of the two anionic sites} \\
+\addlinespace[2pt]
+\texttt{d\_cas} & Closest approach of a ligand heavy atom to a Trp86 side-chain heavy atom & \si{\angstrom} & yes \\
+\texttt{d\_pas} & The same distance to Trp286 & \si{\angstrom} & yes \\
+\texttt{d\_gate} & The same distance to Tyr337 & \si{\angstrom} & yes \\
+\texttt{bridges} & Both $d_{\mathrm{cas}}$ and $d_{\mathrm{pas}}$ within \SI{4.5}{\angstrom} & 0/1 & yes \\
+\texttt{bridge\_gap} & The larger of $d_{\mathrm{cas}}$ and $d_{\mathrm{pas}}$ & \si{\angstrom} & yes \\
+\texttt{catpi\_cas} & Closest approach of a formally cationic ligand atom to the centroid of the Trp86 six-membered ring & \si{\angstrom} & yes \\
+\texttt{catpi\_pas} & The same distance to the Trp286 ring & \si{\angstrom} & yes \\
+\texttt{catpi\_both} & Both cation--$\pi$ distances within \SI{6}{\angstrom} & 0/1 & yes \\
+\addlinespace
+\multicolumn{4}{l}{\itshape Position along the gorge axis} \\
+\addlinespace[2pt]
+\texttt{axis\_span\_frac} & Extent of the ligand's projection onto the Trp86$\rightarrow$Trp286 axis, as a fraction of its \SI{15.2}{\angstrom} length & --- & no \\
+\texttt{axis\_reach\_pas} & Projection of the ligand atom reaching furthest towards the gorge mouth & --- & no \\
+\texttt{axis\_foot\_cas} & Projection of the ligand atom sitting lowest towards the gorge floor & --- & no \\
+\texttt{d\_cas\_centroid} & Closest approach of a ligand heavy atom to the Trp86 side-chain centroid & \si{\angstrom} & no \\
+\texttt{d\_pas\_centroid} & The same distance to the Trp286 side-chain centroid & \si{\angstrom} & no \\
+\addlinespace
+\multicolumn{4}{l}{\itshape Burial and contact density} \\
+\addlinespace[2pt]
+\texttt{n\_contacts\_4A} & Ligand heavy atoms having a protein heavy atom within \SI{4}{\angstrom} & count & yes \\
+\texttt{n\_prot\_5A} & Protein heavy atoms within \SI{5}{\angstrom} of any ligand heavy atom & count & yes \\
+\texttt{n\_prot\_8A} & Protein heavy atoms within \SI{8}{\angstrom} of any ligand heavy atom & count & yes \\
+\texttt{frac\_lig\_buried} & Fraction of ligand heavy atoms having a protein heavy atom within \SI{4.5}{\angstrom} & --- & yes \\
+\addlinespace
+\multicolumn{4}{l}{\itshape Shape of the bound conformation} \\
+\addlinespace[2pt]
+\texttt{rgyr} & Radius of gyration of the ligand heavy atoms, unweighted & \si{\angstrom} & yes \\
+\texttt{end\_to\_end} & Largest distance between any two ligand heavy atoms & \si{\angstrom} & yes \\
+\texttt{n\_heavy} & Ligand heavy atoms, carried as a size covariate & count & yes \\
+\addlinespace
+\multicolumn{4}{l}{\itshape Per-residue contacts} \\
+\addlinespace[2pt]
+\texttt{c\_72} & Ligand and residue heavy-atom pairs within \SI{4.5}{\angstrom} of Tyr72 & count & yes \\
+\texttt{c\_74} & Ligand and residue heavy-atom pairs within \SI{4.5}{\angstrom} of Asp74 & count & yes \\
+\texttt{c\_86} & Ligand and residue heavy-atom pairs within \SI{4.5}{\angstrom} of Trp86 & count & yes \\
+\texttt{c\_121} & Ligand and residue heavy-atom pairs within \SI{4.5}{\angstrom} of Gly121 & count & yes \\
+\texttt{c\_124} & Ligand and residue heavy-atom pairs within \SI{4.5}{\angstrom} of Tyr124 & count & yes \\
+\texttt{c\_203} & Ligand and residue heavy-atom pairs within \SI{4.5}{\angstrom} of Ser203 & count & yes \\
+\texttt{c\_286} & Ligand and residue heavy-atom pairs within \SI{4.5}{\angstrom} of Trp286 & count & yes \\
+\texttt{c\_295} & Ligand and residue heavy-atom pairs within \SI{4.5}{\angstrom} of Phe295 & count & yes \\
+\texttt{c\_297} & Ligand and residue heavy-atom pairs within \SI{4.5}{\angstrom} of Phe297 & count & yes \\
+\texttt{c\_334} & Ligand and residue heavy-atom pairs within \SI{4.5}{\angstrom} of Glu334 & count & yes \\
+\texttt{c\_337} & Ligand and residue heavy-atom pairs within \SI{4.5}{\angstrom} of Tyr337 & count & yes \\
+\texttt{c\_338} & Ligand and residue heavy-atom pairs within \SI{4.5}{\angstrom} of Phe338 & count & yes \\
+\texttt{c\_341} & Ligand and residue heavy-atom pairs within \SI{4.5}{\angstrom} of Tyr341 & count & yes \\
+\texttt{c\_447} & Ligand and residue heavy-atom pairs within \SI{4.5}{\angstrom} of His447 & count & yes \\
+\bottomrule
+\end{tabular}

@@ -182,6 +182,9 @@ def main() -> None:
     files = [Path(f) for f in a.files] if a.files else sorted(SEC.glob("*.tex"))
 
     failures, notes = [], []
+    # A float declared in one file is often cited from another, so the reference search
+    # of rule 9 runs over the whole manuscript rather than one file at a time.
+    alltext = "\n".join(x.read_text() for x in sorted(SEC.glob("*.tex")))
     for f in files:
         text = f.read_text()
         prose = prose_of(text)
@@ -276,6 +279,8 @@ def main() -> None:
                 at = text.find(blk)
                 sub = subsection_of(text, at)
                 r = re.search(r"\\ref\{" + re.escape(label) + r"\}", text)
+                if r is None and re.search(r"\\ref\{" + re.escape(label) + r"\}", alltext):
+                    continue                 # cited from another section file
                 if r is None:
                     msg = f"{f.name}: {label} never referenced in prose"
                     (failures if done.get(sub) else notes).append(

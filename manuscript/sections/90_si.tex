@@ -1,0 +1,49 @@
+\clearpage
+\appendix
+\section*{Supplementary information}
+\addcontentsline{toc}{section}{Supplementary information}
+\renewcommand{\thetable}{S\arabic{table}}
+\setcounter{table}{0}
+
+Section~\ref{sec:rungs} gives the feature count of each rung but does not name the
+descriptors, and the tables here do. Each is named as it appears in the deposited
+descriptor tables, so a quantity discussed in the text can be traced to the column it
+was computed in. Rungs~2, 2e and~4 share the panel of fourteen gorge-lining residues
+and compute a per-residue quantity for each, which is why all three tables end with a
+block of fourteen entries. The three differ in what that quantity is, namely a contact
+count on one pose, the same count on eight, and the fraction of simulated frames in
+which the contact was present. The last column of Table~\ref{tab:sirung4} is the
+only place the reliability filter is reported descriptor by descriptor, as
+Section~\ref{sec:rungs} gives no more than the number that survived it.
+
+\begin{table}[htbp]
+  \centering
+  \footnotesize
+  \caption{\textbf{Rung~2 and rung~2e descriptors.} The 34 geometric descriptors
+    measured on the docked pose, with the 29 of them carried over to the receptor
+    ensemble. The five axis descriptors are defined against the single 4EY7 geometry
+    and have no ensemble counterpart.}
+  \label{tab:sirung2}
+  \input{../results/37_si_rung2.tex}
+\end{table}
+
+\begin{table}[htbp]
+  \centering
+  \footnotesize
+  \caption{\textbf{Rung~3 descriptors.} The 22 MM/GBSA quantities, computed on the
+    rung~2 pose after minimisation of the ligand hydrogens. Differences within a matched
+    pair are what the models see, as the absolute values are not interpretable.}
+  \label{tab:sirung3}
+  \input{../results/37_si_rung3.tex}
+\end{table}
+
+\begin{table}[htbp]
+  \centering
+  \footnotesize
+  \caption{\textbf{Rung~4 descriptors and the reliability filter.} The 32 dynamic
+    descriptors with the between-ligand spread of each divided by its between-replicate
+    spread, the verdict that ratio produced at a threshold of two, and the heavy-atom
+    count carried beside them. A ratio is absent where the replicate spread was zero.}
+  \label{tab:sirung4}
+  \input{../results/37_si_rung4.tex}
+\end{table}

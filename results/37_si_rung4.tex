@@ -1,0 +1,57 @@
+\begin{tabular}{l>{\raggedright\arraybackslash}p{0.40\linewidth}rl}
+\toprule
+Descriptor & Definition & $s_{\mathrm{lig}}/s_{\mathrm{rep}}$ & Verdict \\
+\midrule
+\addlinespace
+\multicolumn{4}{l}{\itshape Persistence of the bridging contact} \\
+\addlinespace[2pt]
+\texttt{occ\_cas} & Fraction of frames with a ligand heavy atom within \SI{4.5}{\angstrom} of Trp86 & 103.10 & usable \\
+\texttt{occ\_pas} & The same fraction for Trp286 & 51.54 & usable \\
+\texttt{occ\_bridge} & Fraction of frames contacting Trp86 and Trp286 at once & 55.65 & usable \\
+\texttt{bridge\_runs\_per\_ns} & Separate bridging episodes begun per nanosecond & 4.22 & usable \\
+\texttt{bridge\_longest\_ns} & Longest uninterrupted bridging episode & 1.31 & seed-dominated \\
+\addlinespace
+\multicolumn{4}{l}{\itshape Whether the ligand stayed where it was docked} \\
+\addlinespace[2pt]
+\texttt{rmsd\_mean} & Ligand heavy-atom RMSD from the equilibrated pose, averaged over frames, measured after superposing the receptor on its reference by C$\alpha$ & 0.88 & seed-dominated \\
+\texttt{rmsd\_max} & Largest value that RMSD reached & 1.32 & seed-dominated \\
+\texttt{escaped} & Whether the ligand centre of mass ever left a \SI{12}{\angstrom} sphere about its starting position & --- & constant \\
+\texttt{depth\_mean} & Position of the ligand centroid along the Trp86$\rightarrow$Trp286 axis, which is recomputed each frame & 3.08 & usable \\
+\texttt{depth\_sd} & Standard deviation of that position & 1.29 & seed-dominated \\
+\addlinespace
+\multicolumn{4}{l}{\itshape Flexibility, which a single pose has none of} \\
+\addlinespace[2pt]
+\texttt{rmsf\_lig} & Per-atom fluctuation of the ligand, averaged over its heavy atoms & 1.38 & seed-dominated \\
+\texttt{rmsf\_gorge} & The same fluctuation for the 14 gorge-lining side chains & 1.09 & seed-dominated \\
+\texttt{gate\_chi1\_sd} & Circular standard deviation of the Tyr337 $\chi_1$ dihedral & 0.66 & seed-dominated \\
+\texttt{gate\_flips\_per\_ns} & Crossings of Tyr337 $\chi_1$ between rotamer wells per nanosecond & 0.41 & seed-dominated \\
+\texttt{lig\_dihedral\_sd} & Circular standard deviation of the ligand's own rotatable dihedrals, averaged over them & 1.78 & seed-dominated \\
+\addlinespace
+\multicolumn{4}{l}{\itshape Burial, water and quality control} \\
+\addlinespace[2pt]
+\texttt{frac\_lig\_buried\_mean} & Fraction of ligand heavy atoms within \SI{4.5}{\angstrom} of the protein, averaged over frames & 1.50 & seed-dominated \\
+\texttt{n\_bridge\_water} & Waters within \SI{3.5}{\angstrom} of both a ligand and a protein polar heavy atom, averaged over frames & 1.68 & seed-dominated \\
+\texttt{ca\_rmsd\_mean} & Receptor C$\alpha$ RMSD after superposition, kept as a check that the receptor was reassembled whole across the periodic boundary & 1.00 & seed-dominated \\
+\addlinespace
+\multicolumn{4}{l}{\itshape Per-residue contact persistence} \\
+\addlinespace[2pt]
+\texttt{occ\_72} & Fraction of frames within \SI{4.5}{\angstrom} of Tyr72 & 4.12 & usable \\
+\texttt{occ\_74} & Fraction of frames within \SI{4.5}{\angstrom} of Asp74 & 1.07 & seed-dominated \\
+\texttt{occ\_86} & Fraction of frames within \SI{4.5}{\angstrom} of Trp86 & 1241.70 & usable \\
+\texttt{occ\_121} & Fraction of frames within \SI{4.5}{\angstrom} of Gly121 & 3.48 & usable \\
+\texttt{occ\_124} & Fraction of frames within \SI{4.5}{\angstrom} of Tyr124 & 3.69 & usable \\
+\texttt{occ\_203} & Fraction of frames within \SI{4.5}{\angstrom} of Ser203 & 0.99 & seed-dominated \\
+\texttt{occ\_286} & Fraction of frames within \SI{4.5}{\angstrom} of Trp286 & 51.51 & usable \\
+\texttt{occ\_295} & Fraction of frames within \SI{4.5}{\angstrom} of Phe295 & 1.66 & seed-dominated \\
+\texttt{occ\_297} & Fraction of frames within \SI{4.5}{\angstrom} of Phe297 & 0.83 & seed-dominated \\
+\texttt{occ\_334} & Fraction of frames within \SI{4.5}{\angstrom} of Glu334 & --- & sparse \\
+\texttt{occ\_337} & Fraction of frames within \SI{4.5}{\angstrom} of Tyr337 & 3.11 & usable \\
+\texttt{occ\_338} & Fraction of frames within \SI{4.5}{\angstrom} of Phe338 & 0.77 & seed-dominated \\
+\texttt{occ\_341} & Fraction of frames within \SI{4.5}{\angstrom} of Tyr341 & 0.82 & seed-dominated \\
+\texttt{occ\_447} & Fraction of frames within \SI{4.5}{\angstrom} of His447 & 0.98 & seed-dominated \\
+\addlinespace
+\multicolumn{4}{l}{\itshape Size covariate} \\
+\addlinespace[2pt]
+\texttt{n\_heavy} & Ligand heavy atoms, which is not a dynamic quantity and is not put to the filter & --- & not applicable \\
+\bottomrule
+\end{tabular}

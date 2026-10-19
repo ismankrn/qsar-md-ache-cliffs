@@ -1,0 +1,37 @@
+\begin{tabular}{l>{\raggedright\arraybackslash}p{0.60\linewidth}l}
+\toprule
+Descriptor & Definition & Unit \\
+\midrule
+\addlinespace
+\multicolumn{3}{l}{\itshape Interaction energy, receptor to ligand} \\
+\addlinespace[2pt]
+\texttt{dE\_elec} & Coulomb term between receptor and ligand atoms, on the minimised complex & kcal/mol \\
+\texttt{dE\_vdw} & Lennard-Jones term between the same atoms & kcal/mol \\
+\texttt{dE\_mm} & Sum of the Coulomb and Lennard-Jones terms & kcal/mol \\
+\addlinespace
+\multicolumn{3}{l}{\itshape Desolvation and the assembled estimate} \\
+\addlinespace[2pt]
+\texttt{dG\_mm\_gb} & Energy of the complex less that of the receptor and the ligand apart, each evaluated with the generalised-Born term & kcal/mol \\
+\texttt{dG\_polar\_gb} & Polar desolvation, i.e. $\Delta G_{\mathrm{mm,gb}}$ less $\Delta E_{\mathrm{mm}}$ & kcal/mol \\
+\texttt{dSASA} & Change in solvent-accessible surface area on binding, over interface atoms & \si{\angstrom\squared} \\
+\texttt{dG\_nonpolar} & Nonpolar term, \num{0.0072} times the buried surface area & kcal/mol \\
+\texttt{dG\_total} & Sum of $\Delta G_{\mathrm{mm,gb}}$ and the nonpolar term & kcal/mol \\
+\addlinespace
+\multicolumn{3}{l}{\itshape Per-residue decomposition} \\
+\addlinespace[2pt]
+\texttt{res\_72} & Coulomb and Lennard-Jones terms summed over the atoms of Tyr72 & kcal/mol \\
+\texttt{res\_74} & Coulomb and Lennard-Jones terms summed over the atoms of Asp74 & kcal/mol \\
+\texttt{res\_86} & Coulomb and Lennard-Jones terms summed over the atoms of Trp86 & kcal/mol \\
+\texttt{res\_121} & Coulomb and Lennard-Jones terms summed over the atoms of Gly121 & kcal/mol \\
+\texttt{res\_124} & Coulomb and Lennard-Jones terms summed over the atoms of Tyr124 & kcal/mol \\
+\texttt{res\_203} & Coulomb and Lennard-Jones terms summed over the atoms of Ser203 & kcal/mol \\
+\texttt{res\_286} & Coulomb and Lennard-Jones terms summed over the atoms of Trp286 & kcal/mol \\
+\texttt{res\_295} & Coulomb and Lennard-Jones terms summed over the atoms of Phe295 & kcal/mol \\
+\texttt{res\_297} & Coulomb and Lennard-Jones terms summed over the atoms of Phe297 & kcal/mol \\
+\texttt{res\_334} & Coulomb and Lennard-Jones terms summed over the atoms of Glu334 & kcal/mol \\
+\texttt{res\_337} & Coulomb and Lennard-Jones terms summed over the atoms of Tyr337 & kcal/mol \\
+\texttt{res\_338} & Coulomb and Lennard-Jones terms summed over the atoms of Phe338 & kcal/mol \\
+\texttt{res\_341} & Coulomb and Lennard-Jones terms summed over the atoms of Tyr341 & kcal/mol \\
+\texttt{res\_447} & Coulomb and Lennard-Jones terms summed over the atoms of His447 & kcal/mol \\
+\bottomrule
+\end{tabular}
