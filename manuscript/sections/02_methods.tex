@@ -359,10 +359,13 @@ coordinates written to disk every \SI{10}{\pico\second}. We ran the simulations 
 the GPU-resident mdrun of GROMACS, submitted in batches through its multi-directory
 interface with a wall-clock limit per job and restarts taken from checkpoints. We
 completed 229 production runs over the 217 ligands, 211 of them simulated once and 6
-three times for the replicate pilot, amounting to 6{,}965~ns. The descriptors were
-computed on a common \SI{25}{\nano\second} of production per ligand, of which the
-first \SI{5}{\nano\second} was discarded and the \SI{20}{\nano\second} that follows
-was analysed, so no ligand carries a shorter or a longer record than another.
+three times for the replicate pilot, amounting to 6{,}965~ns. Production was
+\SI{25}{\nano\second} per ligand, of which the first \SI{5}{\nano\second} was
+discarded and the \SI{20}{\nano\second} that follows supplied every descriptor, so
+every ligand carries the same record. Fifty-six runs of the first batch were continued
+to \SI{50}{\nano\second}, and they enter this work only as the evidence that
+\SI{20}{\nano\second} of analysed trajectory is not too short, which
+Section~\ref{sec:duration} reports.
 
 Thirty-two descriptors were computed from each trajectory, and they fall into three
 design classes. Persistence quantities measure how much of the analysed window a contact or a position

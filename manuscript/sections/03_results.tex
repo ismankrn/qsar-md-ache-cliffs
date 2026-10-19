@@ -178,8 +178,8 @@ the receptor and as much as \SI{99}{\angstrom} for the ligand.
   \includegraphics[width=\textwidth]{fig_md_stability.pdf}
   \caption{\textbf{Structural stability across all 229 production runs.}
     (a)~Receptor C$\alpha$ RMSD and (b)~ligand RMSD from the equilibrated pose, each
-    drawn as the median and the interquartile band across runs and split by the
-    25~ns and 50~ns production designs. (c)~Per-residue C$\alpha$ fluctuation
+    drawn as the median and the interquartile band across runs and split by whether
+    the run was continued past the \SI{25}{\nano\second} production length. (c)~Per-residue C$\alpha$ fluctuation
     computed after the first 5~ns, with the fourteen gorge-lining residues marked.}
   \label{fig:stability}
 \end{figure}
@@ -348,7 +348,7 @@ $-0.054$ unfiltered; \framingC{} $0.796$ against $0.721$.}
 \NOTE{8 of 229 runs failed with a ProLIF fragmented-residue error and are excluded;
   report the number.}
 
-\subsection{Trajectory length}
+\subsection{Trajectory length}\label{sec:duration}
 
 \begin{figure}[tb]
   \centering
@@ -360,8 +360,8 @@ $-0.054$ unfiltered; \framingC{} $0.796$ against $0.721$.}
     and 20~ns and does not select the same ones at each, so it confounds trajectory
     length with descriptor choice; the fixed series holds the 20~ns selection at every
     window and isolates length.
-    Only 45 development ligands reach 30~ns, drawn as their own series and never
-    joined to the full-sample line.}
+    Only the 45 development ligands whose runs were continued past production reach
+    30~ns, drawn as their own series and never joined to the full-sample line.}
   \label{fig:duration}
 \end{figure}
 

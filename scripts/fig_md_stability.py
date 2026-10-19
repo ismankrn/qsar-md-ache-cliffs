@@ -15,7 +15,8 @@ stage 16b, reused here rather than reimplemented: unwrap, no-jump against the pr
 put every molecule in the first one's image, then superpose. No-jump is why this iterates
 every frame; a stride would let a molecule cross half a box between samples and break it.
 
-Runs are 251 or 501 frames at 100 ps, from the 25 ns and 50 ns production designs. The common
+Runs are 251 or 501 frames at 100 ps, the longer ones being the first batch continued past the
+25 ns production length. The common
 window is the shorter one, and the two groups are drawn separately rather than averaged into
 a single band that would change composition partway along its own x-axis.
 
@@ -139,7 +140,8 @@ def main() -> None:
 
     FIGS.mkdir(exist_ok=True)
     fig, axes = plt.subplots(1, 3, figsize=(12.5, 3.9))
-    groups = {251: ("25 ns design", "#2166ac"), 501: ("50 ns design", "#762a83")}
+    groups = {251: ("25 ns production", "#2166ac"),
+              501: ("continued to 50 ns", "#762a83")}
 
     for ax, idx, lab in ((axes[0], 1, r"Receptor C$\alpha$ RMSD (\AA)"),
                          (axes[1], 2, r"Ligand RMSD (\AA)")):
