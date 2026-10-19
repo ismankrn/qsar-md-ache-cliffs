@@ -28,11 +28,17 @@ RES, FIGS = ROOT/"results", ROOT/"figures"
 TARGET, WINDOW = "CHEMBL220", 20.0
 EQUIL_NS, ANALYSED_NS, DT_PS = 5.0, 20.0, 10.0
 
-INK = "#1a1a1a"
-BOX = "#f2f4f7"
-EDGE = "#9aa5b1"
-KEEP = "#2166ac"
-FULL = "#4a5568"      # the unfiltered arm, which is an arm and not a rejection
+# One accent family rather than one colour per stage, graded light to dark so the row
+# reads as a progression without turning into five unrelated categories.
+ACCENT = ["#9ec5e8", "#6aa3d4", "#3f7fbd", "#2563a0", "#17457a"]
+FIGURE = "#1d5490"    # one weight for every count, so none reads as the faint one
+INK = "#16212e"
+SOFT = "#5b6b7d"
+CARD = "#ffffff"
+EDGE = "#dde3ea"
+BAND = "#f4f7fa"
+KEEP = "#17457a"
+FULL = "#7b8794"
 
 
 def counts() -> dict:
@@ -43,82 +49,109 @@ def counts() -> dict:
     sl = pd.read_csv(RES/f"03_splits_ligands_{TARGET}.csv")
     pr = pd.read_csv(RES/f"03_splits_pairs_{TARGET}.csv")
     one = json.loads(Path(sorted(glob.glob(str(RES/"16_rung4_per_run"/"*.json")))[0]).read_text())
-    n_res = len([k for k in one["windows"][f"{WINDOW:g}"] if k.startswith("occ_")
-                 and k[4:].isdigit()])
+    w = one["windows"][f"{WINDOW:g}"]
+    n_res = len([k for k in w if k.startswith("occ_") and k[4:].isdigit()])
+    reps = pd.Series([Path(f).stem for f in glob.glob(str(RES/"16_rung4_per_run"/"*.json"))])
+    n_trip = int((reps.str.replace(r"_r\d+$", "", regex=True).value_counts() > 1).sum())
     return dict(runs=runs, total=len(pil), usable=v.get("usable", 0),
-                rejected=len(pil) - v.get("usable", 0),
                 dev_lig=int((sl.split == "dev").sum()),
-                dev_pairs=int((pr.split == "dev").sum()), n_res=n_res)
+                dev_pairs=int((pr.split == "dev").sum()),
+                n_res=n_res, n_trip=n_trip)
 
 
-def box(ax, x, y, w, h, title, lines, fc=BOX, ec=EDGE):
-    ax.add_patch(FancyBboxPatch((x, y), w, h, boxstyle="round,pad=0.012,rounding_size=0.02",
-                                linewidth=0.9, facecolor=fc, edgecolor=ec, zorder=2))
-    ax.text(x + w/2, y + h - 0.052, title, ha="center", va="top", fontsize=9.2,
-            fontweight="bold", color=INK, zorder=3)
-    for i, s in enumerate(lines):
-        ax.text(x + w/2, y + h - 0.125 - i*0.062, s, ha="center", va="top",
-                fontsize=7.9, color=INK, zorder=3)
+# The canvas is the printed size. A figure drawn at 13 inches and scaled into a 16 cm
+# text block loses half its type, which is how 7.6 pt becomes an unreadable 3.6 pt.
+# Five cards abreast cannot hold legible type at that width either, so the flow runs
+# down the page and every stage gets the full measure for its detail.
+W_IN, H_IN = 6.30, 3.90
+PT = 1/(H_IN*72)
+# The axes are the figure. tight_layout would rescale them around the drawn text and
+# move every fractional coordinate here off its intended place.
+FILL = dict(left=0, right=1, top=1, bottom=0)
+
+F_NODE, F_TITLE, F_NUM, F_BODY = 6.3, 8.2, 11.5, 7.0
+LEAD = 9.4*PT
+X_SPINE, X_TEXT, X_RIGHT = 0.026, 0.070, 0.990
 
 
-def arrow(ax, x0, y0, x1, y1, color=INK, style="-|>", lw=1.0, rad=0.0):
-    ax.add_patch(FancyArrowPatch((x0, y0), (x1, y1), arrowstyle=style,
-                                 mutation_scale=11, linewidth=lw, color=color,
-                                 connectionstyle=f"arc3,rad={rad}", zorder=4))
+def stage(ax, y, n, accent, title, figure, detail):
+    """One row of the flow. Node on the spine, title and count, then the detail."""
+    ax.plot([X_SPINE], [y], "o", ms=11, color=accent, zorder=5,
+            markeredgecolor="white", markeredgewidth=0.8)
+    ax.text(X_SPINE, y, str(n), ha="center", va="center", fontsize=F_NODE,
+            fontweight="bold", color="white", zorder=6)
+    ax.text(X_TEXT, y + 4*PT, title, ha="left", va="bottom", fontsize=F_TITLE,
+            fontweight="bold", color=INK, zorder=4)
+    ax.text(X_RIGHT, y + 4*PT, figure, ha="right", va="bottom", fontsize=F_NUM,
+            fontweight="bold", color=FIGURE, zorder=4)
+    for i, s in enumerate(detail):
+        ax.text(X_TEXT, y - 5*PT - i*LEAD, s, ha="left", va="top",
+                fontsize=F_BODY, color=SOFT, zorder=4)
+
+
+def arrow(ax, x0, y0, x1, y1, color=INK, lw=0.9):
+    ax.add_patch(FancyArrowPatch((x0, y0), (x1, y1), arrowstyle="-|>",
+                                 mutation_scale=7, linewidth=lw, color=color, zorder=5))
 
 
 def main() -> None:
     c = counts()
     plt.rcParams["font.family"] = "DejaVu Sans"
-    fig, ax = plt.subplots(figsize=(13.4, 4.2))
+    fig, ax = plt.subplots(figsize=(W_IN, H_IN))
+    fig.subplots_adjust(**FILL)
     ax.set_xlim(0, 1); ax.set_ylim(0, 1); ax.axis("off")
 
-    w, h, y = 0.183, 0.42, 0.555
-    xs = [0.008 + i*0.199 for i in range(5)]
+    rows = [
+        ("Production trajectory", f"{c['runs']} runs",
+         [f"over {c['dev_lig']} ligands, {c['n_trip']} of them simulated in triplicate, "
+          "with a frame written every 10 ps"]),
+        ("Periodic boundary", "4 corrections",
+         ["each molecule made whole along its own bonds, kept from jumping between frames",
+          "and held in the first-frame image, and only then the receptor superposed by Kabsch"]),
+        ("Analysis window", f"{ANALYSED_NS:g} ns",
+         [f"the first {EQUIL_NS:g} ns of every run discarded and the same "
+          f"{ANALYSED_NS:g} ns analysed for every ligand"]),
+        ("Descriptors", f"{c['total']} of them",
+         [f"persistences, fluctuations and event counts, {c['n_res']} of them one per "
+          "gorge-lining residue,", "and none of them a pose descriptor averaged over frames"]),
+        ("Reliability filter", f"{c['usable']} of {c['total']}",
+         ["a descriptor qualifies where the spread between ligands is at least twice",
+          "the spread between replicates of the same ligand"]),
+    ]
 
-    box(ax, xs[0], y, w, h, "Production trajectory",
-        [f"{c['runs']} runs", f"a frame every {DT_PS:g} ps",
-         "receptor, ligand, ions", "and water"])
-    box(ax, xs[1], y, w, h, "Periodic boundary",
-        ["each molecule made whole", "along its own bonds, held",
-         "in the first-frame image,", "then the receptor", "superposed by Kabsch"])
-    box(ax, xs[2], y, w, h, "Analysis window",
-        [f"the first {EQUIL_NS:g} ns discarded", f"the next {ANALYSED_NS:g} ns analysed",
-         "the same window for", "every ligand"])
-    box(ax, xs[3], y, w, h, "Per-frame series",
-        [f"{c['total']} descriptors, being", "persistences, fluctuations",
-         "and event counts,", f"{c['n_res']} of them per residue"])
-    box(ax, xs[4], y, w, h, "Reliability filter",
-        ["between-ligand spread", "against between-replicate", "spread, over the",
-         "replicate pilot"])
+    top, step = 0.928, 0.145
+    ys = [top - i*step for i in range(len(rows))]
+    ax.plot([X_SPINE, X_SPINE], [ys[-1], ys[0]], lw=1.1, color="#d2dbe4", zorder=1)
+    for i, ((title, figtxt, detail), yy) in enumerate(zip(rows, ys)):
+        stage(ax, yy, i + 1, ACCENT[i], title, figtxt, detail)
 
-    for i in range(4):
-        arrow(ax, xs[i] + w + 0.0035, y + h/2, xs[i+1] - 0.0035, y + h/2)
+    # The filter splits one descriptor set in two and both were scored, so the flow ends
+    # in one band rather than in a kept branch beside a discarded one.
+    by, bh = 0.018, 0.190
+    arrow(ax, X_SPINE, ys[-1] - 0.050, X_SPINE, by + bh + 0.013, color="#9fb0c0", lw=1.1)
+    ax.add_patch(FancyBboxPatch((0.0, by), 1.0, bh,
+                                boxstyle="round,pad=0,rounding_size=0.008",
+                                linewidth=0.7, facecolor=BAND, edgecolor=EDGE, zorder=2))
+    ax.add_patch(FancyBboxPatch((0.0, by), 0.005, bh,
+                                boxstyle="round,pad=0,rounding_size=0.004",
+                                linewidth=0, facecolor=ACCENT[4], zorder=3))
+    xb = 0.030
+    ax.text(xb, by + bh - 9*PT, "Two feature sets, both scored", ha="left", va="top",
+            fontsize=F_TITLE, fontweight="bold", color=INK, zorder=4)
+    for i, (lab, col) in enumerate((
+            (f"the {c['usable']} that pass the filter, with the heavy-atom count, "
+             "give 12 features", KEEP),
+            (f"all {c['total']}, with the same covariate, give 33", FULL),
+            (f"one row per ligand over {c['dev_lig']} of them, and a signed difference "
+             f"per pair over {c['dev_pairs']} development pairs", SOFT))):
+        ax.text(xb, by + bh - 24*PT - i*LEAD, lab, ha="left", va="top", fontsize=F_BODY,
+                fontweight="bold" if col is not SOFT else "normal", color=col, zorder=4)
 
-    # The filter does not discard anything. It splits one descriptor set into two, and
-    # both were scored, which a one-way arrow out of the filter would misrepresent.
-    bx, bw, by, bh = 0.008, 0.977, 0.045, 0.285
-    box(ax, bx, by, bw, bh, "Two feature sets, both scored",
-        [f"replicates averaged to one row per ligand, {c['dev_lig']} of them, and a signed "
-         f"difference per pair over {c['dev_pairs']} development pairs",
-         "the heavy-atom count carried beside either set as a size covariate, and it is "
-         "the twelfth feature of the one and the thirty-third of the other"])
-
-    # One arrow with both arms labelled beside it. Two arrows would have to cross each
-    # other's labels at this width, and the split is between feature sets rather than
-    # between paths through the pipeline.
-    xa = xs[4] + w*0.72
-    arrow(ax, xa, y - 0.004, xa, by + bh + 0.004, color=INK)
-    for lab, col, frac in ((f"{c['usable']} pass the filter, 12 features", KEEP, 0.66),
-                           (f"all {c['total']} kept, 33 features", FULL, 0.34)):
-        ax.text(xa - 0.009, by + bh + frac*(y - by - bh), lab, ha="right", va="center",
-                fontsize=8.4, fontweight="bold", color=col)
-
-    fig.tight_layout(pad=0.25)
     FIGS.mkdir(exist_ok=True)
     for ext in ("pdf", "png"):
-        fig.savefig(FIGS/f"fig_md_pipeline.{ext}", dpi=300)
+        fig.savefig(FIGS/f"fig_md_pipeline.{ext}", dpi=400)
     print(f"  {c}")
+    print(f"  canvas {W_IN}x{H_IN} in, printed 1:1 in a 16 cm text block")
     print("  -> figures/fig_md_pipeline.pdf / .png")
 
 
