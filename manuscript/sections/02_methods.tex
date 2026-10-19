@@ -511,10 +511,10 @@ with 300 replicates. The unit is the ligand in framing~A and the pair in framing
 and~C, and a pair was resampled whole, so its two antisymmetric rows travel together.
 Inside every replicate we re-selected the best over the descriptor arms and the
 algorithm families on both sides, because choosing the best is part of the procedure
-whose uncertainty is being measured. Rung~1 entered with both of its feature
-sets for the same reason, as the winner between them depends on the framing. We took
-the interval as the 2.5th and 97.5th percentiles of the resampled gap. It carries a
-bias we state rather than correct, since running folds fixed beforehand over a resample
+whose uncertainty is being measured. Rung~1 entered with both of its feature sets for
+the same reason, as the winner between them depends on the framing. We took the
+interval as the 2.5th and 97.5th percentiles of the resampled gap. It carries a bias
+we state rather than correct, since running folds fixed beforehand over a resample
 puts duplicated units on both sides of a fold boundary and inflates the absolute
 scores. That inflation applies identically to the two sides, so the gap is far less
 affected than either level, and a bootstrap median is accordingly not a performance
@@ -524,7 +524,4 @@ vector machine and the same folds, with the rung-1 baseline re-simulated in ever
 replicate so that its own uncertainty is carried. A gain of 0.26 in the coefficient of
 determination is detected in 90 per cent of simulations and a gain of 0.11 in 36 per
 cent, with a mean interval width near 0.30, which is the resolution this design can
-claim. Measurement noise alone permits more, as the 336 of 5609 compounds carrying a
-repeat assay give a median within-compound spread of 0.064 log units and a ceiling of
-0.995, although that spread is skewed and its upper decile of 0.560 implies a ceiling
-of 0.616.
+claim.

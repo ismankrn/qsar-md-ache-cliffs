@@ -281,6 +281,13 @@ resolved, and it is resolved against rung 4.}
   rung, so the variance the ladder fails to explain is real signal rather than assay
   noise. The limitation is in the descriptors, not in the data -- which is why
   "nothing to find" is not an available reading.}
+\NOTE{How panel (c) is computed, since Section~\ref{sec:eval} no longer carries it.
+  Each compound's within-compound spread of pChEMBL across repeat assays gives a
+  noise variance, and the ceiling is the fraction of the observed variance that a
+  perfect model could still explain. Only 336 of 5{,}609 compounds carry a repeat,
+  the spread is skewed, and the median of 0.064 log units gives 0.995 while the
+  upper decile of 0.560 gives 0.616. Quote the pessimistic figure, from
+  results/17\_noise\_ceiling.csv.}
 
 % ---------------------------------------------------------------------------
 \subsection{Descriptor reliability}
