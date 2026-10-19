@@ -116,13 +116,12 @@ A comparison between descriptor sets has no single answer, as what counts as an
 improvement depends on what is being predicted. Activity cliffs are the standard
 counter-example to QSAR for exactly this reason, since models that predict potency
 well across a series are reported to fail on the near-identical pairs within it
-\citep{vantilborg2022, dablander2023}. The three framings below are different
-functions of the same descriptors, so a result on one does not determine a result on
+\citep{vantilborg2022, dablander2023}. The three framings are different functions of the same descriptors, so a result on one does not determine a result on
 another, and separating cliff pairs from control pairs does not require predicting the
 size of the difference within a pair. Three framings were therefore scored for every
-descriptor set, on the folds of Section~\ref{sec:dataset} and with the same
-algorithms, so that the three results differ in the question being asked and in
-nothing else. Table~\ref{tab:framings} sets them side by side, with $\mathbf{d}_a$ and
+descriptor set, on the folds of Section~\ref{sec:dataset} and with the same algorithms, which are
+described in Section~\ref{sec:algo}, so that the three results differ in the question
+being asked and in nothing else. Table~\ref{tab:framings} sets them side by side, with $\mathbf{d}_a$ and
 $\mathbf{d}_b$ being the descriptor vectors of the two ligands of a pair and the
 number in parentheses the count of units available in the development split.
 
@@ -134,9 +133,9 @@ included it for two reasons. A descriptor set that cannot predict potency at all
 candidate for predicting a difference in potency. A result on this task can also be
 placed beside published models in a way that a pairwise result cannot.
 
-In framing~B the unit is the pair and the target is the signed difference in pChEMBL
-between its two members, scored again by the coefficient of determination, which is
-the quantity that defines an activity cliff. Each pair contributes two rows, with the
+In framing~B the unit is the pair and the target is the signed difference in pChEMBL between its two members, which is the
+quantity that defines an activity cliff, scored again by the coefficient of
+determination. Each pair contributes two rows, with the
 difference between the descriptor vectors taken in both orders, so that the arbitrary
 choice of which member comes first cannot influence what the model learns. The construction also makes the failure mode explicit, since a pair whose two members
 carry identical descriptor vectors yields a row of zeros and any model must then
@@ -151,9 +150,7 @@ receiver operating characteristic curve. The features of a pair have to be invar
 to the order of its two members here, as the label is, and the antisymmetric rows of
 framing~B would leave it ambiguous. A pair was therefore described by the elementwise
 sum and the elementwise absolute difference concatenated. The two classes are close to
-balanced in the development split, at 77 cliff pairs against 68 controls, so the
-metric is not distorted by a rare positive. The algorithms applied to all three
-framings are described together in Section~\ref{sec:algo}. A pair is indivisible in both of the pair framings, so
+balanced in the development split, at 77 cliff pairs against 68 controls, so the metric is not distorted by a rare positive. A pair is indivisible in both of the pair framings, so
 its rows were assigned to the same fold and resampled together, and the pair is also
 the unit of the intervals of Section~\ref{sec:eval}. Treating its two rows as
 independent observations would count every pair twice and would narrow every interval
