@@ -294,22 +294,24 @@ underwrites the whole structure-based half of the ladder and not rung~2 alone.
 
 \subsection{Molecular dynamics}\label{sec:md}
 
-The receptor used for simulation is not the one used for docking. The crystal
-structure does not resolve residues 259 to 264 and 495 to 497, and the force-field
-setup treated each chain as continuous and bridged both gaps with peptide bonds of
-7.11 and \SI{4.05}{\angstrom}. Those two bonds carried 166{,}885 of the system's
-185{,}963~\si{\kilo\joule\per\mole} of bond energy, and a minimisation would have
-pulled the flanking segments together and deformed the fold. Rebuilding the loops was attempted and abandoned, as the best of four attempts gave four non-proline cis
+The simulations used the same 4EY7 coordinates as the docking, prepared differently.
+The crystal structure does not resolve residues 259 to 264 and 495 to 497, and the
+force-field setup treated each chain as continuous and bridged both gaps with peptide
+bonds of 7.11 and \SI{4.05}{\angstrom}. Those two bonds carried 166{,}885 of the
+system's 185{,}963~\si{\kilo\joule\per\mole} of bond energy, and a minimisation would
+have pulled the flanking segments together and deformed the fold. Rebuilding the loops
+was attempted and abandoned, as the best of four attempts gave four non-proline cis
 peptide bonds in one loop of six residues against a natural rate near 0.03 per cent.
 What had to go was the fabricated bond and not the absence of the loop. We therefore
 divided the chain at the breaks into the segments 4--258, 265--494 and 498--541, gave
 each its own chain identifier, and capped it with an acetyl group at its N-terminal
 and an N-methylamide group at its C-terminal side. We used neutral caps, as charged
 termini would have added six artificial formal charges on the surface, and placed them
-by internal coordinates, so that the procedure is deterministic. Bond energy fell to 1{,}145~\si{\kilo\joule\per\mole} and the maximum force from
-$3.3\times10^{8}$ to $2.1\times10^{5}$~\si{\kilo\joule\per\mole\per\nano\metre}. The
-atoms lining the gorge did not move at all, so the docked poses remain valid and
-nothing earlier in this work had to be repeated.
+by internal coordinates, so that the procedure is deterministic. Bond energy fell to
+1{,}145~\si{\kilo\joule\per\mole} and the maximum force from $3.3\times10^{8}$ to
+$2.1\times10^{5}$~\si{\kilo\joule\per\mole\per\nano\metre}. The atoms lining the gorge
+did not move at all, so the docked poses remain valid and nothing earlier in this work
+had to be repeated.
 
 We built one system per ligand and not per trajectory, so that a replicate differs
 from its parent only in the velocity seed and tests the sampling and not the
