@@ -361,13 +361,17 @@ disk every \SI{10}{\pico\second}.
 We ran the simulations with the GPU-resident mdrun of GROMACS, submitted in batches
 through its multi-directory interface with a wall-clock limit per job and restarts
 taken from checkpoints. We completed 229 production runs over the 217 ligands, 211 of
-them simulated once and 6 three times for the replicate pilot, amounting to 6{,}965~ns. The production length was
-\SI{50}{\nano\second} for the first 56 runs and \SI{25}{\nano\second} thereafter, and
-17 of those 56 stopped between 34 and \SI{42}{\nano\second} on reaching their
-wall-clock limit. The mixture of lengths does not affect the descriptors, since the first
-\SI{5}{\nano\second} of every run was discarded and the descriptors were computed on
-the \SI{20}{\nano\second} that follows. Every run supplies that window in full, so no
-ligand contributes a shorter record than another.
+them simulated once and 6 three times for the replicate pilot, amounting to
+6{,}965~ns. Every ligand contributes the same \SI{25}{\nano\second} to the analysis,
+of which the first \SI{5}{\nano\second} was discarded and the \SI{20}{\nano\second}
+that follows supplied every descriptor, so no ligand carries a shorter record than
+another. A run that continued past that window was truncated to it, and 56 of the 229
+did continue, the first batch having been submitted at \SI{50}{\nano\second} before
+the length was settled on the replicate pilot. Of those 56, 17 stopped between 34 and
+\SI{42}{\nano\second} on reaching a wall-clock limit, which changes nothing, as the
+window they are cut to is shorter than the shortest of them. The trajectory beyond the
+common window entered this work only through the duration ablation, where the 55 runs
+reaching a \SI{30}{\nano\second} window were scored as their own subset.
 
 Thirty-two descriptors were computed from each trajectory, and they fall into three
 design classes. Persistence quantities measure how much of the analysed window a contact or a position
