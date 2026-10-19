@@ -34,7 +34,7 @@ def main() -> None:
 
     def row(name, L, P):
         return (name, L.component.nunique(), len(L), int((L.group == "cliff").sum()),
-                int((P.group == "cliff").sum()), int((P.group != "cliff").sum()))
+                len(P), int((P.group == "cliff").sum()), int((P.group != "cliff").sum()))
 
     dev_l, dev_p = lig[lig.split == "dev"], pair[pair.split == "dev"]
     rows = [row(f"Fold {k}", dev_l[dev_l.cv_fold == k], dev_p[dev_p.cv_fold == k])
@@ -46,8 +46,8 @@ def main() -> None:
     def line(r):
         return " & ".join([r[0]] + [str(v) for v in r[1:]]) + r" \\"
 
-    tex = [r"\begin{tabular}{lrrrrr}", r"\toprule",
-           r"Split & Components & Ligands & of which cliff & Cliff pairs & "
+    tex = [r"\begin{tabular}{lrrrrrr}", r"\toprule",
+           r"Split & Components & Ligands & of which cliff & Pairs & Cliff pairs & "
            r"Control pairs \\", r"\midrule"]
     tex += [line(r) for r in rows]
     tex += [r"\midrule", line(dev), line(test), r"\midrule", line(tot),
@@ -56,7 +56,7 @@ def main() -> None:
     print("  -> results/35_splits.tex")
     for r in rows + [dev, test, tot]:
         print(f"    {r[0]:22s} comp {r[1]:3d}  lig {r[2]:3d}  cliff lig {r[3]:3d}  "
-              f"cliff {r[4]:3d}  ctrl {r[5]:3d}")
+              f"pairs {r[4]:3d}  cliff {r[5]:3d}  ctrl {r[6]:3d}")
 
 
 if __name__ == "__main__":
