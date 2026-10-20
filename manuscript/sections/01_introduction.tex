@@ -15,6 +15,17 @@ while \citet{dablander2023} examined nine QSAR models on three targets and repor
 that they fail on cliffs often enough to matter, with the extended-connectivity
 fingerprint remaining the strongest representation tested.
 
+Predicting them matters more than their frequency alone would suggest, because a cliff
+is where a medicinal chemistry programme spends its effort. A small substitution that
+multiplies potency is exactly the move lead optimisation exists to find, so the pairs a
+model handles worst are the pairs a project cares about most \citep{stumpfe2019}. The
+same pairs carry the most structure-activity information per atom changed, which makes
+them the informative cases rather than the awkward ones \citep{cruzmonteagudo2014}.
+Failure on them is also quiet. A model scored over a whole dataset can report a
+respectable average while being wrong on every cliff in it, since cliffs are a minority
+of pairs and an aggregate metric hides them, so a method can be adopted on a benchmark
+that never tested the case it will be used for.
+
 The standard explanation for that failure is representational. An extended-connectivity
 fingerprint encodes which circular substructures a molecule contains
 \citep{rogers2010}, so two molecules differing by a single substituent share almost all
@@ -24,6 +35,22 @@ that follows is equally standard, which is to replace or augment the fingerprint
 representation that carries the physics. Docked pose geometry, receptor ensembles,
 implicit-solvent energies and molecular dynamics are each proposed in that spirit, and
 each is more expensive than the fingerprint it is meant to improve upon.
+
+Most of the effort has gone elsewhere, and its trajectory is worth stating because it
+sets what remains untried. Work on cliff prediction has run almost entirely within the
+two-dimensional representation, and it has escalated in model complexity rather than in
+physical content. \citet{tamura2023} took that escalation to its conclusion, scoring
+machine and deep learning methods of increasing complexity at scale, and found the added
+complexity did not buy accuracy on cliffs. \citet{acgcn2022} applied graph convolution
+directly to matched molecular pairs, and \citet{elaiwat2025} brought deep learning to
+cliffs within a single target family. The benchmarks agree on an uncomfortable result,
+since the fingerprint keeps winning. More recently the field has changed tack, pursuing
+better training objectives instead of larger models. \citet{cui2026} report that making
+a graph network aware of cliffs during training, through a contrastive objective,
+improves on both fingerprint and graph baselines across 52 datasets. That is the current
+state of the art, and the trend it completes is one of extracting more from the same
+representation. Every method named here still sees a molecule as a two-dimensional
+object.
 
 Where that remedy has been tested on cliffs, it has been tested in a setting more
 generous than the one it would be used in. \citet{husby2015} reports that activity
@@ -44,17 +71,19 @@ result to screen a compound collection. The trajectory there supplies the hypoth
 that a screening model is built from, and the question asked of it is whether actives
 can be retrieved.
 
-Three gaps follow from this, and they compound. Descriptors measured on a trajectory
-have not been scored against a cliff endpoint at all, so the most expensive rung of the
-usual remedy is the least tested on the problem it is recommended for. Where
-structure-based methods have been tested, the strong results draw on information that
-a prospective application does not possess, namely the crystallographic pose of the
-answer or a pocket set chosen with the labels, while the arm that withholds that
-information sits near chance. No ligand-based baseline is scored on the same compounds
-and the same splits anywhere in this literature, and no study states how large a
-difference its design could have detected, so a result that favours physics cannot be
-separated from an easier comparison and a result that does not cannot be separated from
-an underpowered one.
+Three gaps follow, and they are gaps in the state of the art rather than oversights in
+any one study. The first is representational. A decade of work on cliff prediction has
+varied the model and left the molecule two-dimensional, so the explanation everyone
+offers for why cliffs are hard, that the fingerprint cannot see what separates the pair,
+has never been tested by supplying what it says is missing. The second is the
+comparison itself. The structure-based work that exists runs no ligand-based baseline,
+and the ligand-based work runs no structure-based one, so the two lines of evidence have
+never met on the same compounds and the same splits. The third is the detection limit.
+No study on either side reports how large a difference its design could have resolved,
+which leaves every negative result indistinguishable from an underpowered one and every
+positive result unbounded. Together these mean the field has a well-supported
+observation, that fingerprints are hard to beat on cliffs, and no measurement of what
+physical detail would add to them.
 
 Closing those gaps calls for a particular shape of experiment rather than one more
 comparison. A single contest between molecular dynamics and a fingerprint cannot
