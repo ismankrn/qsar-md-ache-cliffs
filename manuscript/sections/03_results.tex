@@ -519,17 +519,47 @@ more pairs and more targets are the only things that would narrow it.
 
 % ---------------------------------------------------------------------------
 \subsection{Limitations}
-\TODO{State, not bury:}
-\NOTE{One target. 145 pairs and a 0.30 resolution. 25 ns with no production
-  replicates. Feature counts are not matched in the headline comparison (12 or 33
-  against 2265), and the matched-dimensionality arm is a robustness check rather
-  than a controlled experiment. Bootstrap levels are inflated by resampling inside
-  the folds, so medians are not performance. 18 checkpoints were lost, so 9 ligands
-  cannot be extended without a fresh run. \texttt{SVC(probability=True)} is
-  deprecated in scikit-learn 1.9 and removed in 1.11; replacing it changes
-  \framingC{} and must be done for rungs 2 and 4 together. The distance-only
-  occupancies overstate engagement where the ligand is near a residue without a
-  typed interaction, by up to 77 percentage points. Cliff and control pairs differ
-  in molecular size, and of the 19 pose-geometry and energy descriptors tested
-  against that confound, 4 separated the groups in a raw test and none survived
-  either the stratified or the residual adjustment.}
+
+The central limitation is the number of pairs. One target supplies 145 development
+pairs, and from them follows a 95 per cent interval about $0.3$ wide on the coefficient
+of determination, so this study excludes a large advantage for the structure-based
+descriptors and says nothing about a modest one. A single target also cannot separate a
+property of these descriptors from a property of this binding site, and whether the
+result holds elsewhere is not addressed here.
+
+Each ligand carries one production run, so there are no production replicates and no
+error bar on an individual ligand's descriptor. What the replicate test measures comes
+instead from a pilot of six ligands simulated three times each, and six ligands are a
+narrow basis for a criterion then applied to 32 descriptors across four analysis
+windows. The threshold was fixed before any replicate had been scored, which protects
+the division from being drawn around the answer but not from being imprecise.
+
+The headline comparison is not matched on width. The fingerprints carry 2{,}265
+features at their widest against either 12 or 33 for the trajectory descriptors, and we
+did not equalise them. The arm that cuts the fingerprint to the width of rung~4
+reverses the ordering on the two framings the design cannot resolve and leaves the
+third standing, but it is a robustness check rather than a controlled experiment.
+Cutting a fingerprint to twelve bits does not yield a narrower fingerprint so much as a
+different and much poorer descriptor, so the arm bounds the influence of feature count
+without isolating it.
+
+The bootstrap resamples units inside the frozen folds, which places duplicates of the
+same unit on both sides of a fold boundary and inflates the absolute level of every
+score it reports. That inflation applies to both sides of a gap and largely cancels
+there, so the intervals on the gaps are usable, but the medians are not performance
+estimates and should not be quoted as such.
+
+The dynamic contact descriptors are distance-only. Where a ligand sits within the
+cutoff of a residue without forming a typed interaction, the occupancy credits an
+engagement that a chemical reading would not, and the two disagree by as much as 77
+percentage points on individual residues. Those descriptors are reproducible across
+velocity seeds, which is what they were filtered for, but reproducible is not
+interpretable, and the per-residue quantities should not be read as a chemical account
+of binding.
+
+Cliff and control pairs differ in molecular size, which could separate the two groups
+through a descriptor that measures nothing but size. Nineteen pose-geometry and energy
+descriptors were tested against that confound. Four separated the groups in a raw test
+and none of those four survived either stratification on size or adjustment for size as
+a covariate, so the confound is controlled rather than ignored. The same 145 pairs
+bound that test as well, and it would not detect a small residual effect.
