@@ -83,8 +83,8 @@ def main() -> None:
     # whether the curve is still rising past 20 ns.
     sub_ids = sorted(set(load_md("30").index) & set(dev_ids))
 
-    # The descriptor set the replicate filter selects changes with the window -- 15, 14 and
-    # 12 descriptors at 5, 10 and 20 ns. Scoring each window with its own set confounds two
+    # The descriptor set the replicate filter selects changes with the window -- 14, 14 and
+    # 12 descriptors at 5, 10 and 20 ns, and not the same ones. Scoring each window with its own set confounds two
     # things: how much trajectory the descriptors saw, and which descriptors were chosen. The
     # first draft of this figure reported a clean monotone rise and was titled accordingly;
     # holding the set fixed at the 20 ns selection flattens framing A entirely and makes
@@ -120,12 +120,12 @@ def main() -> None:
                       f"{len(keep):2d} fixed features"
                       + ("" if len(dp) >= 30 else "  -> framing A only"))
         # the 45 ligands that reach 30 ns, at every window, compared only with themselves
-        Xs, sids, _ = md_matrix(w, sub_ids, FIXED)
+        Xs, sids, _sk = md_matrix(w, sub_ids, FIXED)
         ss = dev[dev.molecule_chembl_id.isin(sids)].set_index("molecule_chembl_id").loc[sids]
         rows.append(dict(window_ns=float(w), framing="A", metric="r2",
                          value=best(Xs, ss.pchembl.to_numpy(), ss.cv_fold.to_numpy(),
                                     REG, r2_score),
-                         n_ligands=len(sids), n_pairs=0, n_features=len(FIXED),
+                         n_ligands=len(sids), n_pairs=0, n_features=len(_sk),
                          series="subset"))
 
     out = pd.DataFrame(rows)
@@ -162,7 +162,9 @@ def main() -> None:
         ax.set_xticks([float(w) for w in WINDOWS])
         ax.set_xlabel("Analysed trajectory (ns)", fontsize=8.5)
         ax.set_ylabel(ylabs[fr], fontsize=8.5)
-        ax.text(0.0, 1.02, f"({'abc'['ABC'.index(fr)]})", transform=ax.transAxes,
+        # Above the secondary axis, not on it: at y=1.02 the letter sat on the leftmost
+        # "Simulated per ligand" tick and panels (b) and (c) read as "(1b)" and "(1c)".
+        ax.text(-0.17, 1.17, f"({'abc'['ABC'.index(fr)]})", transform=ax.transAxes,
                 fontsize=11, fontweight="bold", va="bottom", ha="left")
         ax.tick_params(labelsize=8)
         ax.spines[["top", "right"]].set_visible(False)
@@ -177,11 +179,11 @@ def main() -> None:
         top.tick_params(length=2)
 
     cap = ("Descriptors recomputed on the first 5/10/20/30 ns of analysed trajectory; frozen "
-           "5-fold CV, best over algorithm families. The per-window filter selects 15/14/12 "
+           "5-fold CV, best over algorithm families. The per-window filter selects 14/14/12 "
            "descriptors, so it confounds trajectory length with descriptor choice; the fixed "
            "series holds the 20 ns selection at every window and answers length alone. Only "
            "45 dev ligands (11 pairs) reach 30 ns, so the full-sample series stop at 20 ns.")
-    fig.tight_layout(rect=(0, 0.11, 1, 0.95))
+    fig.tight_layout(rect=(0, 0.11, 1, 0.91))
     for ext in ("pdf", "png"):
         fig.savefig(FIGS/f"fig5_duration.{ext}", dpi=300)
     print(f"  -> figures/fig5_duration.pdf / .png")
