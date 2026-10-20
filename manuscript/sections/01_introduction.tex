@@ -7,8 +7,7 @@ since a model built on molecular similarity predicts similar potencies for simil
 structures and a cliff is the case where that inference fails by construction. They are
 neither rare nor confined to awkward corners of chemical space, being distributed
 across target families and compound series in a way that makes them a structural
-feature of bioactivity data rather than a curation problem
-\citep{stumpfe2012,cruzmonteagudo2014}. The failure they cause is documented rather
+feature of bioactivity data rather than a curation problem \citep{stumpfe2012}. The failure they cause is documented rather
 than anecdotal. \citet{vantilborg2022} scored 24 machine-learning methods over 30
 targets and found descriptor-based models outperforming deep learning on cliff pairs,
 while \citet{dablander2023} examined nine QSAR models on three targets and reported
@@ -30,7 +29,7 @@ The standard explanation for that failure is representational. An extended-conne
 fingerprint encodes which circular substructures a molecule contains
 \citep{rogers2010}, so two molecules differing by a single substituent share almost all
 of their bits, and whatever that substituent does to the three-dimensional fit, to the
-hydrogen bonding or to the residence time in the site is invisible to it. The remedy
+hydrogen bonding or to how long a contact is held is invisible to it. The remedy
 that follows is equally standard, which is to replace or augment the fingerprint with a
 representation that carries the physics. Docked pose geometry, receptor ensembles,
 implicit-solvent energies and molecular dynamics are each proposed in that spirit, and
@@ -44,7 +43,7 @@ machine and deep learning methods of increasing complexity at scale, and found t
 complexity did not buy accuracy on cliffs. \citet{acgcn2022} applied graph convolution
 directly to matched molecular pairs, and \citet{elaiwat2025} brought deep learning to
 cliffs within a single target family. The benchmarks agree on an uncomfortable result,
-since the fingerprint keeps winning. More recently the field has changed tack, pursuing
+since the fingerprint keeps winning \citep{vantilborg2022,dablander2023,tamura2023}. More recently the field has changed tack, pursuing
 better training objectives instead of larger models. \citet{cui2026} report that making
 a graph network aware of cliffs during training, through a contrastive objective,
 improves on both fingerprint and graph baselines across 52 datasets. That is the current
@@ -52,8 +51,8 @@ state of the art, and the trend it completes is one of extracting more from the 
 representation. Every method named here still sees a molecule as a two-dimensional
 object.
 
-Where that remedy has been tested on cliffs, it has been tested in a setting more
-generous than the one it would be used in. \citet{husby2015} reports that activity
+Where a structure-based representation has been tested on cliffs, it has been tested
+in a setting more generous than the one it would be used in. \citet{husby2015} reports that activity
 cliffs can be predicted accurately by advanced structure-based methods, and the numbers
 behind that statement repay reading. Template docking reaches a median accuracy of 90
 per cent, using the crystallographic pose of the more potent member of the pair. A
@@ -72,8 +71,8 @@ that a screening model is built from, and the question asked of it is whether ac
 can be retrieved.
 
 Three gaps follow, and they are gaps in the state of the art rather than oversights in
-any one study. The first is representational. A decade of work on cliff prediction has
-varied the model and left the molecule two-dimensional, so the explanation everyone
+any one study. The first is representational. Work on cliff prediction has varied
+the model and left the molecule two-dimensional, so the explanation everyone
 offers for why cliffs are hard, that the fingerprint cannot see what separates the pair,
 has never been tested by supplying what it says is missing. The second is the
 comparison itself. The structure-based work that exists runs no ligand-based baseline,
@@ -110,7 +109,7 @@ varied parameter manufactures a trend that a single fixed selection removes.
 
 Human acetylcholinesterase is the target throughout, and it was chosen for what such a
 comparison needs rather than for being typical. Cliffs are the scarce resource, and this enzyme
-supplies them in quantity, giving 271 ligands and 145 matched pairs of which 77 are
+supplies them in quantity, giving 271 ligands and 183 matched pairs of which 97 are
 constitutional cliffs. It is resolved to high resolution in complex with
 pharmacologically important inhibitors \citep{cheung2012}, so the structure-based rungs
 rest on a crystallographic receptor of the human enzyme rather than on a homology model.
