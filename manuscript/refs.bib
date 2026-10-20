@@ -2,10 +2,9 @@
 %  Every entry has been checked against the publisher record. Each note says
 %  through what and on what date. No STUB entries remain.
 %
-%  Two things are still outstanding and are flagged in the notes themselves,
-%  not here. The ChEMBL release the activity data came from, and the GROMACS
-%  release used for production, are recorded nowhere in this repository and must
-%  be supplied before submission.
+%  The ChEMBL release and the GROMACS release were recovered from the repository
+%  on 2026-10-20 and are now in the Methods; see the notes on those two entries
+%  for the evidence and for what it does not cover.
 %
 %  See ../results/29_literature_check.md for what the search found and, more
 %  importantly, what it did not.
@@ -149,9 +148,11 @@
   volume  = {52}, number = {D1}, pages = {D1180--D1192}, year = {2024},
   doi     = {10.1093/nar/gkad1004},
   note    = {VERIFIED via Crossref 2026-10-20. Print issue January 2024, online
-             November 2023. The release the activity data were drawn from is not
-             recorded in this repository and must be stated in the Methods before
-             submission.}
+             November 2023. The activity data were pulled from the web services on
+             2026-09-22, the date on data/chembl_cache/*.csv.gz and every stage-01
+             output. The live release then was ChEMBL 37, issued 2026-05-01 and
+             still current on 2026-10-20, so no other release can have served that
+             request.}
 }
 
 @article{gromacs,
@@ -163,8 +164,14 @@
   journal = {SoftwareX},
   volume  = {1--2}, pages = {19--25}, year = {2015},
   doi     = {10.1016/j.softx.2015.06.001},
-  note    = {VERIFIED via Crossref 2026-10-20. The release used for production is
-             not recorded in this repository and must be stated before submission.}
+  note    = {VERIFIED via Crossref 2026-10-20. Production ran under GROMACS 2023.
+             Evidence is the tpr header, which records VERSION 2023-plumed_2.9.0,
+             and md/production.slurm, which loads gromacs/2023-plumed-mpi and falls
+             back to 2023.3-mpi. The patch level therefore varies between jobs and
+             is not stated. mdrun on the rented GPU instances came from a conda
+             environment whose version md/vast_worker.sh does not pin and the worker
+             logs do not record; it ran the same tpr files, which mdrun would reject
+             across a major version, but that is inference rather than a record.}
 }
 
 @article{openff_sage,
