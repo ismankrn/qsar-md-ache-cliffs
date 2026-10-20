@@ -35,14 +35,15 @@ contacted in both poses can still gain or lose an interaction, as Tyr341 does. C
 interaction by interaction, the crystal pose carries 18 and the redocked pose 14, of
 which 11 are common, 7 appear only in the crystal pose and 3 only in the docked one.
 Ten of the 18 crystal interactions are typed rather than bare van der Waals contact,
-and 8 of those 10 are recovered, namely the hydrophobic and $\pi$-stacking contacts at
-Trp86 and at Trp286 and the cation--$\pi$ and hydrophobic contacts at Tyr337. The two
-typed interactions that are lost are a hydrogen-bond acceptor contact with Phe295 and a
+and 8 of those 10 are recovered, among them the hydrophobic and $\pi$-stacking contacts
+at Trp86 and at Trp286 and the cation--$\pi$ and hydrophobic contacts at Tyr337, which
+are the six that fall at the three sites the descriptors use. The two typed
+interactions that are lost are a hydrogen-bond acceptor contact with Phe295 and a
 hydrophobic contact with Phe297, and neither lies at one of the three named sites.
-Every remaining difference is van der Waals contact, lost at Tyr72, Ser203, Ser293 and
-His447 and gained at Tyr124, Tyr341 and Gly448. The three sites on which the descriptors
-of this work rest are therefore reproduced in full, and the disagreement is confined to
-the weakest class of contact and to residues outside them. We used the typing for validation only, and it enters no descriptor set.
+Every remaining difference is van der Waals contact, lost at Tyr72, Trp286, Ser203,
+Ser293 and His447 and gained at Tyr124, Tyr341 and Gly448. Every typed interaction at
+the three sites on which the descriptors of this work rest is therefore reproduced, and
+the disagreement is confined to the weakest class of contact. We used the typing for validation only, and it enters no descriptor set.
 
 \begin{figure}[tb]
   \centering
@@ -63,14 +64,14 @@ Figure~\ref{fig:thermo}. The temperature in panel~(a) averages \SI{300.00}{\kelv
 \SI{1018.9}{\kilo\gram\per\metre\cubed} with a spread of
 \SI{0.12}{\kilo\gram\per\metre\cubed}. The potential energy in panel~(c) drifts by
 \SI{-10.5}{\kilo\joule\per\mole\per\nano\second} at the median, against a total near
-$-1.3\times10^{6}$~\si{\kilo\joule\per\mole}, which is two parts in $10^{5}$ per
-nanosecond. Panel~(d) shows the running mean of the pressure, which ends at
+$-1.3\times10^{6}$~\si{\kilo\joule\per\mole}, which is less than one part in $10^{5}$
+per nanosecond. Panel~(d) shows the running mean of the pressure, which ends at
 \SI{1.00}{\bar}, since the instantaneous pressure of a box of this size has a
 within-run spread of about \SI{89}{\bar} and carries no information frame by frame.
 These four quantities were computed on 64 of the 229 runs, and the subset establishes
 only that the simulations were well behaved, no comparison between descriptor sets
 resting on it. What the four panels establish is that the integrator, the thermostat
-and the barostat behaved, and a drift of two parts in $10^{5}$ per nanosecond rules
+and the barostat behaved, and a drift below one part in $10^{5}$ per nanosecond rules
 out a systematic leak of energy.
 
 \begin{figure}[tb]
@@ -86,7 +87,7 @@ out a systematic leak of energy.
 
 Structural stability across the campaign is shown in Figure~\ref{fig:stability}, where
 the receptor C$\alpha$ RMSD in panel~(a) has a median of \SI{1.42}{\angstrom} across
-runs and reaches \SI{2.20}{\angstrom} at worst. The steep rise in that panel is
+runs, and no frame of any run exceeds \SI{2.20}{\angstrom}. The steep rise in that panel is
 complete within the five nanoseconds that are discarded, and the curve creeps only
 slowly over the window that is analysed, so the descriptors are not measured on a
 system still finding its equilibrium. The ligand RMSD from its equilibrated pose in
