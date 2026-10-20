@@ -453,25 +453,59 @@ or more targets are the only things that would.
 \subsection{Effect of an incomplete subset on the apparent gain}
 \label{sec:subset}
 
+An expensive descriptor set does not arrive all at once, and while it is arriving the
+only comparison available is the subset in hand against the baseline's published figure
+over the full set. This study ran that comparison for real, and
+Table~\ref{tab:subset} reconstructs it. The development ligands were ordered by the
+time their first run finished, taken from the file each run wrote, and the prefixes
+that order defines were scored on \framingB{}. At 111 ligands, which is 60 of the 145
+development pairs, rung~4 reaches $+0.500$ against the $+0.200$ the fingerprints reach
+on the full set, a gain of $+0.300$. At the full set the same comparison gives
+$-0.048$. The whole of the apparent advantage was a property of the subset.
+
 \begin{table}[tb]
   \centering
-  \caption{\textbf{The gain reported at 59 of 145 pairs was an artefact worth
-    $+0.277$.} Prefixes follow the real completion order, recovered from each
-    run's file timestamp; random subsets of the same ligand count are the control.
-    Gains are against rung~1's published full-set figure and against rung~1
-    recomputed on the same pairs.}
+  \caption{\textbf{A partial set manufactured a gain of $+0.300$ at 60 of 145 pairs.}
+    \framingB{}, with equally sized random subsets as the control. Gains are against
+    rung~1 on all 145 pairs and on the subset's own.}
   \label{tab:subset}
   \input{../results/21\_subset\_inflation.tex}
 \end{table}
 
-\TODO{Prose. Two findings: it is not a small-sample effect (random subsets of the
-  same size put rung 4 at $+0.093$ where arrival order puts it at $+0.477$), and
-  recomputing the baseline is necessary but not sufficient -- it removes 0.094 of
-  the 0.277 and leaves $+0.183$ standing.}
-\NOTE{Mechanism: state all three co-factors, not the convenient one. The early
-  ligands are smaller (median 31 vs 35 heavy atoms, $p=0.0005$, decaying to
-  $p=0.54$ by 196 ligands), they hold every multi-replicate run, and they average
-  28.8 ns of analysed trajectory against 20.0. 217 ligands cannot separate them.}
+The first thing to rule out is that this is merely the noise of a small sample, and the
+random rows do that. Forty random draws of 111 ligands put rung~4 at $+0.116$, where
+arrival order puts it at $+0.500$. Subsets of that size are noisy, but their noise is
+centred far below the figure arrival order produces. What inflates the estimate is
+which ligands arrived first, not how many had arrived.
+
+The obvious correction is to recompute the baseline on the pairs actually in hand
+instead of quoting its published figure, and it is not enough. On the same 60 pairs the
+fingerprints reach $+0.295$ rather than $+0.200$, which removes $0.094$ of the $+0.300$
+and leaves $+0.206$ standing. That residue falls to $+0.088$ at 85 pairs and crosses
+zero only between 85 and 120. A study that corrects its baseline onto the subset it
+holds and then reports the corrected number is still reporting an inflated one, because
+the correction addresses the baseline and the distortion is in the sample.
+
+What makes the early ligands different is not one thing, and the honest answer names
+all of them. The first 111 to finish carry a median of 31 heavy atoms against 35 for
+the rest, at $p = 0.0005$. That difference decays as a throughput mechanism predicts,
+to $p = 0.030$ at 153 ligands and $p = 0.54$ at 196, while the random draws show no such
+bias at $p$ between $0.42$ and $0.68$. The same ligands also hold every multi-replicate
+run in the study, and averaging over replicates lowers the noise on a descriptor. They
+carry a mean of \SI{28.8}{\nano\second} of analysed trajectory against \SI{20.0}{\nano
+\second} for the rest. Smaller systems finish sooner, the replicate pilot was run
+first, and the longest runs came first, so the three move together and 217 ligands
+cannot separate them. The supported claim is that the early subset was systematically
+different in at least three measured ways, not that ligand size was the cause.
+
+None of this depends on acetylcholinesterase or on molecular dynamics. Any descriptor
+expensive enough to be computed incrementally, whether a free energy perturbation, a
+quantum calculation or a crystal structure, delivers its early subset in an order set
+by cost, and cost correlates with the properties of the molecule. The practice that
+turns this into a false positive is comparing a partial new descriptor set against a
+published full-set baseline, and it is cheap to avoid. Recompute the baseline on the
+same units, state the size of the subset, and treat anything short of the complete set
+as provisional.
 
 % ---------------------------------------------------------------------------
 \subsection{Scope of the comparison}

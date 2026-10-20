@@ -62,5 +62,8 @@ that turns this into a false positive, comparing a partial new descriptor set ag
 published full-set baseline, is common and cheap to avoid: recompute the baseline on the same
 units, report the subset size, and treat anything short of the full set as provisional.
 
+Regenerated 2026-10-20 after the replicate pilot was re-run; the numbers above are the
+Oct 12 values and are superseded by `21_subset_inflation.csv`.
+
 Script: `scripts/table_subset_inflation.py`. Outputs `21_subset_inflation.csv` and
 `21_subset_inflation.tex`.
