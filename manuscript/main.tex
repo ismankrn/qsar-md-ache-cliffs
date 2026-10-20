@@ -2,28 +2,60 @@
 %  Activity cliffs on human acetylcholinesterase: a pre-specified escalation
 %  from 2D descriptors to molecular dynamics
 %
-%  Build:  latexmk -pdf main.tex        (latexmk and bibtex are installed;
-%                                        biber is NOT, so this uses natbib)
+%  Formatted for J. Chem. Inf. Model. following the official ACS LaTeX
+%  template (latex-style-package/acs-latex-template.tex). ACS does not typeset
+%  from LaTeX, so this reproduces the required structure rather than the
+%  journal's appearance.
+%
+%  Build:  latexmk -pdf main.tex        (bibtex, not biber -- the chem-acs
+%                                        biblatex style is not installed, and
+%                                        the template's classical BibTeX route
+%                                        via achemso is used instead)
+%  The supporting information is a separate document, si.tex, as ACS requires.
 %  Figures come from ../figures, generated tables from ../results.
 %  Every number in the text should trace to a CSV in ../results -- see
 %  ../results/INDEX.md for which stage produced what.
 % ============================================================================
-\documentclass[11pt,a4paper]{article}
+\documentclass[letterpaper]{article}
 
-\usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
-\usepackage[margin=2.5cm]{geometry}
+\usepackage[utf8]{inputenc}
+
+\usepackage{geometry}
+\geometry{margin = 1in}
+\usepackage{setspace}
+
+% Classical BibTeX route of the ACS template. achemso loads natbib and sets
+% the ACS bibliography style, so \citet and \citep keep working.
+\usepackage{achemso}
+
 \usepackage{graphicx}
+\usepackage{float}
 \usepackage{array}
 \usepackage{booktabs}
 \usepackage{amsmath}
 \usepackage{siunitx}
-\usepackage[round]{natbib}
 \usepackage{xcolor}
 \usepackage[colorlinks=true,allcolors=blue]{hyperref}
 \usepackage{lineno}
 
+% The supporting information is a separate document, so Table S1--S5 numbers
+% are read from its .aux file. Build si.tex first, or after any change to it.
+\usepackage{xr}
+\externaldocument{si}
+
 \graphicspath{{../figures/}}
+
+% Sections are kept numbered. The ACS template unnumbers them, but this
+% manuscript carries 20 cross-references of the form "Section~\ref{...}" that
+% an unnumbered heading cannot resolve, and a numbered submission is easier to
+% review. Set this to -1 to unnumber, and replace those references first.
+\setcounter{secnumdepth}{3}
+
+% Review copy: double spaced with line numbers, as ACS asks for. Comment both
+% out for a reading copy.
+\doublespacing
+\linenumbers
 
 % Drafting aids. Comment out \draftingtrue before submission and both of these
 % disappear; \TODO is deliberately loud so nothing ships half-written.
@@ -31,7 +63,6 @@
 \ifdrafting
   \newcommand{\TODO}[1]{\textcolor{red}{\textbf{[TODO: #1]}}}
   \newcommand{\NOTE}[1]{\textcolor{teal}{\small[#1]}}
-  \linenumbers
 \else
   \newcommand{\TODO}[1]{}
   \newcommand{\NOTE}[1]{}
@@ -42,23 +73,24 @@
 \newcommand{\framingB}{framing~B}
 \newcommand{\framingC}{framing~C}
 
-\title{Activity cliffs on human acetylcholinesterase:\\
-       a pre-specified escalation from 2D descriptors to molecular dynamics}
-\author{%
-  Isman Kurniawan\textsuperscript{1}\thanks{Corresponding author.
-    \texttt{isman.krn@gmail.com}. ORCID \href{https://orcid.org/0000-0003-3485-3063}%
-    {0000-0003-3485-3063}.}\quad
-  Lela Lailatul Khumaisah\textsuperscript{2}\quad
-  Muhamad Salman Fareza\textsuperscript{3} \\[6pt]
-  \normalsize\textsuperscript{1}School of Computing, Telkom University \\
-  \normalsize\textsuperscript{2}Chemistry Study Program, Faculty of Science and
-    Technology, Universitas Muhammadiyah Sukabumi \\
-  \normalsize\textsuperscript{3}Research Centre of Rural Health, Department of
-    Pharmacy, Universitas Jenderal Soedirman%
-}
-\date{\today}
+\usepackage{authblk}
+\renewcommand\Affilfont{\small}
+\setlength{\affilsep}{0.6em}
+\author[1]{Isman Kurniawan*}
+\author[2]{Lela Lailatul Khumaisah}
+\author[3]{Muhamad Salman Fareza}
+\affil[1]{School of Computing, Telkom University, Bandung, Indonesia}
+\affil[2]{Chemistry Study Program, Faculty of Science and Technology,
+  Universitas Muhammadiyah Sukabumi, Sukabumi, Indonesia}
+\affil[3]{Research Centre of Rural Health, Department of Pharmacy,
+  Universitas Jenderal Soedirman, Purwokerto, Indonesia}
+
+\title{Activity cliffs on human acetylcholinesterase:
+  a pre-specified escalation from 2D descriptors to molecular dynamics}
+\date{*Email: isman.krn@gmail.com}
 
 \begin{document}
+
 \maketitle
 
 \input{sections/00\_abstract}
@@ -67,32 +99,82 @@
 \input{sections/03\_results}
 \input{sections/05\_conclusions}
 
-\section*{Data and code availability}
+\section*{Associated content}
+
+\subsection*{Supporting Information}
+
+The Supporting Information is available free of charge.
+
+\begin{itemize}
+  \item \texttt{si.pdf}: the descriptors of rungs~2, 2e, 3 and~4 named one by
+    one with the quantity each measures (Tables~S1--S3), the reliability ratio
+    and verdict of every dynamic descriptor (Table~S3), and the full grid of
+    scores behind the headline comparison, every rung crossed against every
+    descriptor arm and every algorithm family, split by regression
+    (Table~S4) and classification (Table~S5).
+\end{itemize}
+
+\subsection*{Data and code availability}
+
 All analysis code is in a public repository at
 \url{https://github.com/ismankrn/qsar-md-ache-cliffs}, archived at
-\url{https://doi.org/10.5281/zenodo.23498751}. The deposit carries the 229 per-run descriptor files, one JSON per
-trajectory and \SI{1.8}{\mega\byte} in total, together with the curated ligand set, the
-frozen splits and every derived table the figures and the reported numbers are computed
-from. Those files are sufficient to reproduce every result in this paper without
-rerunning a simulation.
+\url{https://doi.org/10.5281/zenodo.23498751}. The deposit carries the 229
+per-run descriptor files, one JSON per trajectory and \SI{1.8}{\mega\byte} in
+total, together with the curated ligand set, the frozen splits and every
+derived table the figures and the reported numbers are computed from. Those
+files are sufficient to reproduce every result in this paper without rerunning
+a simulation.
 
-The trajectories themselves are not deposited. Reduced protein and ligand coordinates at
-\SI{100}{\pico\second}, \SI{2.6}{\giga\byte} over the 229 runs, are available from the
-corresponding author on request. Any trajectory supplied this way needs the treatment of
-the periodic boundary described in Section~\ref{sec:md} before anything is measured on
-it, since the archives are wrapped molecule-wise and the capped receptor is three
-separate chains. Over the 229 archives an RMSD computed directly on one returns a
-median of \SI{45}{\angstrom} for the receptor backbone and \SI{24}{\angstrom} for the
-ligand, against the \SI{1.4}{\angstrom} and \SI{3.0}{\angstrom} the same quantities
-give once the boundary has been handled.
+The trajectories themselves are not deposited. Reduced protein and ligand
+coordinates at \SI{100}{\pico\second}, \SI{2.6}{\giga\byte} over the 229 runs,
+are available from the corresponding author on request. Any trajectory supplied
+this way needs the treatment of the periodic boundary described in
+Section~\ref{sec:md} before anything is measured on it, since the archives are
+wrapped molecule-wise and the capped receptor is three separate chains. Over
+the 229 archives an RMSD computed directly on one returns a median of
+\SI{45}{\angstrom} for the receptor backbone and \SI{24}{\angstrom} for the
+ligand, against the \SI{1.4}{\angstrom} and \SI{3.0}{\angstrom} the same
+quantities give once the boundary has been handled.
+
+\section*{Author information}
+
+\subsection*{Corresponding author}
+
+Isman Kurniawan, School of Computing, Telkom University, Bandung, Indonesia.
+Email: \texttt{isman.krn@gmail.com}. ORCID:
+\href{https://orcid.org/0000-0003-3485-3063}{0000-0003-3485-3063}.
+
+\subsection*{Author contributions}
+
+\TODO{CRediT statement. Assign conceptualisation, methodology, software,
+  formal analysis, investigation, data curation, writing (original draft),
+  writing (review and editing), visualisation, supervision and funding
+  acquisition among the three authors.}
+
+\subsection*{Notes}
+
+The authors declare no competing financial interest.
 
 \section*{Acknowledgements}
-The author thanks QuasiLab and Mahameru BRIN \citep{mahameru2025} for their
+
+The authors thank QuasiLab and Mahameru BRIN \citep{mahameru2025} for their
 mini-cluster and HPC facilities.
 
-\bibliographystyle{plainnat}
 \bibliography{refs}
 
-\input{sections/90\_si}
+\clearpage
+\singlespacing
+\nolinenumbers
+\section*{For Table of Contents use only}
+
+\noindent
+\rule{0.05in}{1.75in}%
+\begin{minipage}[b][1.75in]{3.25in}
+  \sffamily
+  \frenchspacing
+  \centering
+  \includegraphics[height=1.6in]{fig\_gap\_forest.pdf}
+\end{minipage}%
+\rule{0.05in}{1.75in}
 
 \end{document}
