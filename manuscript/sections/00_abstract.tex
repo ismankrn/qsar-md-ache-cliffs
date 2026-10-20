@@ -1,11 +1,30 @@
 \begin{abstract}
-\TODO{Write last, from the Results section, not from intention.}
-\NOTE{The claim the data supports, stated so it cannot drift during drafting:
-  across three endpoints and five descriptor rungs, no structure-based descriptor
-  set resolvably outperforms 2D fingerprints; on absolute potency the MD set is
-  significantly worse (gap $-0.330$, 95\% CI $[-0.607,-0.203]$); the design
-  separates $R^2$ values about 0.30 apart and the observed gaps are smaller than
-  that on the two pair endpoints. Do not write "MD does not help" -- that
-  overstates \framingB{} and \framingC{}. Do not write "MD is promising" -- that
-  ignores \framingA{}.}
+\noindent
+Activity cliffs, pairs of near-identical compounds separated by orders of magnitude in
+potency, are the standard counter-example to quantitative structure-activity
+relationships, and the standard remedy is a representation carrying three-dimensional
+detail that a fingerprint cannot. That remedy is rarely tested against a ligand-based
+baseline scored on the same data, and no study reports how large a difference its
+design could have detected. We escalated four structure-based representations against
+one fingerprint baseline on human acetylcholinesterase, from the geometry of a single
+docked pose through an eight-member receptor ensemble and an implicit-solvent energy to
+descriptors extracted from \SI{25}{\nano\second} molecular dynamics trajectories. The
+ladder was scored on 271 ligands and 145 matched pairs, 77 of them constitutional
+cliffs, on three framings of the endpoint, with the splits frozen beforehand and the
+detection limit measured in advance. No structure-based representation was resolvably
+better than the fingerprint on any framing, the design separating coefficients of
+determination about $0.3$ apart. On per-ligand potency the dynamics descriptors were
+resolvably worse, the gap being $-0.375$ with a 95 per cent interval of $[-0.596,
+-0.184]$, while both pair endpoints gave intervals containing zero. The unexplained
+variance lies far beyond what assay reproducibility accounts for and does not move with
+trajectory length, which places the limitation in the descriptors rather than the data.
+A replicate test found that a trajectory of this length reproduces how long a contact
+is held, in 53 of 100 combinations of descriptor and analysis window, but the amplitude
+of motion in only 3 of 35. What would settle the question left open is the number of
+pairs and of targets, not the nanoseconds spent on each.
 \end{abstract}
+
+\noindent\textbf{Keywords.} Activity cliff; quantitative structure-activity
+relationship; molecular dynamics descriptor; ensemble docking; acetylcholinesterase;
+detection limit
+\vspace{1em}
