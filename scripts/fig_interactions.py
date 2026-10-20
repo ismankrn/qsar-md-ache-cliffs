@@ -126,7 +126,7 @@ def main() -> None:
         col = COLOUR.get(kinds[0], "0.4")
         site = NAMED.get(r.resnum, "")
         lab = r.residue + (f"\n{site}" if site else "")
-        ax.annotate(lab, xy=(310, 310), xytext=(x, y), fontsize=7, ha="center",
+        ax.annotate(lab, xy=(310, 310), xytext=(x, y), fontsize=7.8, ha="center",
                     va="center", color=col,
                     bbox=dict(boxstyle="round,pad=0.25", fc="white", ec=col, lw=0.9),
                     arrowprops=dict(arrowstyle="-", lw=0.9, color=col, alpha=0.75,
@@ -143,7 +143,7 @@ def main() -> None:
         if (k, c) not in seen:
             seen.append((k, c))
     ax.legend(handles=[Line2D([], [], color=c, lw=2, label=k) for k, c in seen],
-              fontsize=7, frameon=False, loc="lower center", ncol=3,
+              fontsize=7.8, frameon=False, loc="lower center", ncol=3,
               bbox_to_anchor=(0.5, -0.06))
 
     # ---- (b) crystal vs docked, by residue and interaction type ----
@@ -162,10 +162,10 @@ def main() -> None:
                                color=COLOUR.get(kind, "0.4"),
                                edgecolors="0.25", linewidths=0.5)
     ax.set_xticks(range(len(kinds)))
-    ax.set_xticklabels(kinds, rotation=30, ha="right", fontsize=7.5)
+    ax.set_xticklabels(kinds, rotation=30, ha="right", fontsize=7.8)
     ax.set_yticks(range(len(rows)))
     ax.set_yticklabels([f"{r[1]}" + (f"  [{r[2]}]" if r[2] else "") for r in rows],
-                       fontsize=7)
+                       fontsize=7.8)
     ax.set_ylim(-0.8, len(rows)-0.2)
     ax.grid(color="0.93", lw=0.6)
     ax.set_axisbelow(True)
@@ -175,7 +175,7 @@ def main() -> None:
     # Outside the axes: the first version sat on the TYR72 row and hid its only marker.
     ax.legend(handles=[Line2D([], [], marker="o", ls="", color="0.35", label="crystal"),
                        Line2D([], [], marker="s", ls="", color="0.35", label="docked")],
-              fontsize=7.5, frameon=False, loc="lower left", bbox_to_anchor=(0.0, 1.02),
+              fontsize=7.8, frameon=False, loc="lower left", bbox_to_anchor=(0.0, 1.02),
               ncol=2)
 
     only_x = set(ix.residue) - set(idk.residue)

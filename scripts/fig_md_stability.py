@@ -157,11 +157,11 @@ def main() -> None:
             ax.fill_between(T, lo, hi, color=col, alpha=0.22, lw=0)
             ax.plot(T, med, color=col, lw=1.4, label=f"{gl} (n={len(ser)})")
         ax.axvline(EQUIL_NS, color="0.45", lw=0.9, ls="--")
-        ax.text(EQUIL_NS, ax.get_ylim()[1], " analysis starts", fontsize=6.8,
+        ax.text(EQUIL_NS, ax.get_ylim()[1], " analysis starts", fontsize=8.1,
                 color="0.45", va="top", rotation=90)
         ax.set_xlabel("Time (ns)", fontsize=8.5)
         ax.set_ylabel(lab.replace(r"\AA", "Å"), fontsize=8.5)
-        ax.legend(fontsize=7, frameon=False, loc="upper left")
+        ax.legend(fontsize=8.1, frameon=False, loc="upper left")
     axes[0].text(0.0, 1.02, "a", transform=axes[0].transAxes, fontsize=11, fontweight="bold", va="bottom", ha="left")
     axes[1].text(0.0, 1.02, "b", transform=axes[1].transAxes, fontsize=11, fontweight="bold", va="bottom", ha="left")
 
@@ -185,10 +185,10 @@ def main() -> None:
             if rn in set(resids):
                 j = int(np.where(resids == rn)[0][0])
                 dy = (0.55, 1.15, 0.55)[k % 3]
-                ax.annotate(nm, xy=(rn, med[j]), xytext=(rn, med[j]+dy), fontsize=6.5,
+                ax.annotate(nm, xy=(rn, med[j]), xytext=(rn, med[j]+dy), fontsize=8.1,
                             ha="center", color="#b2182b",
                             arrowprops=dict(arrowstyle="-", lw=0.7, color="#b2182b"))
-        ax.legend(fontsize=7, frameon=False, loc="upper right")
+        ax.legend(fontsize=8.1, frameon=False, loc="upper right")
         ax.set_xlabel("Residue number", fontsize=8.5)
         ax.set_ylabel("C$\\alpha$ RMSF (Å)", fontsize=8.5)
         ax.text(0.0, 1.02, "c", transform=ax.transAxes, fontsize=11, fontweight="bold", va="bottom", ha="left")

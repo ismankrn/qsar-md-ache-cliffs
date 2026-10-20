@@ -64,7 +64,7 @@ def main() -> None:
     ax.plot(x, 100*power, "o-", color="#2166ac", ms=5, lw=1.3)
     ax.axhline(100*TARGET_POWER, color="0.6", lw=0.9, ls=":")
     ax.axvline(base, color="#b2182b", lw=1.0, ls="--")
-    ax.text(base, 4, f" rung 1 = {base:.3f}", color="#b2182b", fontsize=7,
+    ax.text(base, 4, f" rung 1 = {base:.3f}", color="#b2182b", fontsize=7.4,
             rotation=90, va="bottom")
     if np.isfinite(hit):
         ax.annotate(f"{TARGET_POWER:.0%} power\nat $R^2$ ≈ {hit:.2f}", xy=(hit, 100*TARGET_POWER),
@@ -74,7 +74,7 @@ def main() -> None:
         r4 = ladder[(ladder.framing == "B") & ladder.key.eq("r4")].value
         if len(r4):
             ax.axvline(float(r4.iloc[0]), color="#1b7837", lw=1.0, ls="-.")
-            ax.text(float(r4.iloc[0]), 96, " rung 4 observed", color="#1b7837", fontsize=7,
+            ax.text(float(r4.iloc[0]), 96, " rung 4 observed", color="#1b7837", fontsize=7.4,
                     rotation=90, va="top")
     ax.set_xlabel("Candidate descriptor set, true $R^2$", fontsize=8.5)
     ax.set_ylabel("Power to call it better than rung 1 (%)", fontsize=8.5)
@@ -108,7 +108,7 @@ def main() -> None:
         dy = {"median": 0.035, "mean": -0.040}.get(r.sigma_kind, 0.0)
         ax.text(1.02, float(r.ceiling_r2) + dy,
                 f"σ {r.sigma_kind} = {r.sigma:.2f}  →  ceiling {r.ceiling_r2:.3f}",
-                fontsize=5.8, color="0.45", va="center",
+                fontsize=7.4, color="0.45", va="center",
                 transform=ax.get_yaxis_transform())
     if ladder is not None:
         b = ladder[ladder.framing == "B"]
@@ -117,7 +117,7 @@ def main() -> None:
         ax.set_xticks(xs)
         # "Rung 2 pose" and "Rung 2 ensemble" both start "Rung 2", so keep the qualifier
         ax.set_xticklabels([s.replace("Rung ", "R").replace(" ", "\n", 1) for s in b.rung],
-                           fontsize=6.8)
+                           fontsize=7.4)
         ax.set_xlabel("Rung (framing B)", fontsize=8.5)
     ax.set_ylabel("$R^2$", fontsize=8.5)
     ax.set_ylim(-0.1, 1.0)

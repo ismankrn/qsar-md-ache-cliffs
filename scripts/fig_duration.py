@@ -158,7 +158,7 @@ def main() -> None:
             if series == "subset":
                 lab = f"{int(d.n_ligands.iloc[0])}-ligand subset, fixed filter"
             ax.plot(d.window_ns, d.value, fmt, color=col, ms=5, lw=1.3, label=lab)
-        ax.legend(fontsize=6.6, frameon=False, loc="best")
+        ax.legend(fontsize=7.4, frameon=False, loc="best")
         ax.set_xticks([float(w) for w in WINDOWS])
         ax.set_xlabel("Analysed trajectory (ns)", fontsize=8.5)
         ax.set_ylabel(ylabs[fr], fontsize=8.5)
@@ -174,7 +174,7 @@ def main() -> None:
             ax.axhline(0.0, color="0.75", lw=0.8)
         top = ax.secondary_xaxis("top")
         top.set_xticks([float(w) for w in WINDOWS])
-        top.set_xticklabels([f"{float(w)+EQUIL_NS:.0f}" for w in WINDOWS], fontsize=7)
+        top.set_xticklabels([f"{float(w)+EQUIL_NS:.0f}" for w in WINDOWS], fontsize=7.4)
         top.set_xlabel("Simulated per ligand (ns)", fontsize=7.5, labelpad=2)
         top.tick_params(length=2)
 

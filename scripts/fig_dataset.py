@@ -63,7 +63,7 @@ def main() -> None:
                 f"binary Tanimoto = 1.000, a median of\n"
                 f"{au[au.t_bit>=0.9995].d_heavy.median():.0f} heavy atoms apart",
                 xy=(0.9995, au[au.t_bit >= 0.9995].t_count.quantile(0.25)),
-                xytext=(0.902, 0.955), fontsize=7, ha="left", va="top",
+                xytext=(0.902, 0.955), fontsize=8.2, ha="left", va="top",
                 arrowprops=dict(arrowstyle="->", lw=0.8, color="0.4",
                                 connectionstyle="arc3,rad=-0.2"))
     plt.colorbar(s, ax=ax, label="heavy-atom difference", fraction=0.046, pad=0.03)
@@ -79,7 +79,7 @@ def main() -> None:
                    edgecolors="none", label=f"{lab} (n={len(q)})")
     ax.axhline(CLIFF_DELTA, color="0.35", lw=1.0, ls="--")
     ax.text(0.99, CLIFF_DELTA, f"|$\\Delta$pChEMBL| = {CLIFF_DELTA:g} ",
-            transform=ax.get_yaxis_transform(), ha="right", fontsize=7, va="bottom",
+            transform=ax.get_yaxis_transform(), ha="right", fontsize=8.2, va="bottom",
             color="0.35")
     # Verified identical to t_bit in the audit file: the pair-selection criterion is the
     # binary fingerprint, which panel (a) shows saturates. So the measure that chose these
@@ -88,7 +88,7 @@ def main() -> None:
                   fontsize=8.5)
     ax.set_ylabel(r"$|\Delta$pChEMBL$|$", fontsize=8.5)
     ax.text(0.0, 1.02, "b", transform=ax.transAxes, fontsize=11, fontweight="bold", va="bottom", ha="left")
-    ax.legend(fontsize=7, frameon=False, loc="upper left", bbox_to_anchor=(0.0, 0.98))
+    ax.legend(fontsize=8.2, frameon=False, loc="upper left", bbox_to_anchor=(0.0, 0.98))
 
     # ---- (d) the size confound ----
     ax = axes[2]
@@ -99,7 +99,7 @@ def main() -> None:
     for key in ("cbars", "cmins", "cmaxes", "cmedians"):
         parts[key].set_color("0.3"); parts[key].set_linewidth(1.0)
     for i, d in enumerate(data):
-        ax.text(i, d.max()+0.5, f"mean {d.mean():.1f}", ha="center", fontsize=7.5)
+        ax.text(i, d.max()+0.5, f"mean {d.mean():.1f}", ha="center", fontsize=8.2)
     ax.set_xticks([0, 1]); ax.set_xticklabels(["cliff", "control"], fontsize=8.5)
     ax.set_ylabel("Heavy-atom difference within a pair", fontsize=8.5)
     ax.text(0.0, 1.02, "c", transform=ax.transAxes, fontsize=11, fontweight="bold", va="bottom", ha="left")

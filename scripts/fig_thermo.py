@@ -114,8 +114,8 @@ def main() -> None:
         if tgt is not None:
             ax.axhline(tgt, color="0.35", lw=0.9, ls=":")
         ax.axvline(EQUIL_NS, color="0.55", lw=0.8, ls="--")
-        ax.set_xlabel("Time (ns)", fontsize=8.5)
-        ax.set_ylabel(ylab, fontsize=8.5)
+        ax.set_xlabel("Time (ns)", fontsize=8.7)
+        ax.set_ylabel(ylab, fontsize=8.7)
         ax.text(0.0, 1.02, title.split(")")[0] + ")", transform=ax.transAxes,
                 fontsize=11, fontweight="bold", va="bottom", ha="left")
         ax.tick_params(labelsize=8)

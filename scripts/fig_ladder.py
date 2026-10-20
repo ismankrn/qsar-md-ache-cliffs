@@ -172,7 +172,7 @@ def draw(out, a) -> None:
                 ax.axhline(0.5, color="0.75", lw=0.8, ls=":", zorder=1)
                 ax.set_ylim(0.45, 0.92)
                 ax.text(0.02, 0.5, "chance", transform=ax.get_yaxis_transform(),
-                        va="bottom", fontsize=6.5, color="0.5")
+                        va="bottom", fontsize=7.4, color="0.5")
         axes[0].legend(fontsize=7.5, frameon=False, loc="lower left")
         # The first draft said "does not improve any endpoint". That is false as written: on
         # framing B the ensemble rung 2 reaches +0.274 against rung 1's +0.200. Stage 15 showed

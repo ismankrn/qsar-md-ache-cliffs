@@ -93,11 +93,11 @@ def main() -> None:
              .agg(lambda s: s.mode().iat[0]))
     for name, verdict in undef.items():
         if name in ypos:
-            ax.text(0.0016, ypos[name], f"{verdict} - ratio undefined", fontsize=6.5,
+            ax.text(0.0016, ypos[name], f"{verdict} - ratio undefined", fontsize=7.4,
                     color="0.45", va="center", ha="left", style="italic")
     ax.set_xscale("log")
     ax.set_yticks(range(len(order)))
-    ax.set_yticklabels(order, fontsize=7)
+    ax.set_yticklabels(order, fontsize=7.4)
     for lab in ax.get_yticklabels():
         lab.set_color(COLOUR[family_of(lab.get_text())])
     ax.set_ylim(-1, len(order))
@@ -112,7 +112,7 @@ def main() -> None:
                       ms=np.sqrt(s), label=f"{w} ns") for w, s in zip(windows, sizes)]
     handles += [Line2D([], [], marker="s", ls="", color=COLOUR[f], label=f)
                 for f in ("persistence", "fluctuation", "event")]
-    ax.legend(handles=handles, fontsize=7, frameon=False, loc="lower right", ncol=2)
+    ax.legend(handles=handles, fontsize=7.4, frameon=False, loc="lower right", ncol=2)
 
     # ---- (b) verdict composition per window ----
     ax = axes[1]
@@ -131,7 +131,7 @@ def main() -> None:
     ax.set_xlabel("Analysis window (ns)", fontsize=9)
     ax.set_ylabel("Descriptors", fontsize=9)
     ax.text(0.0, 1.02, "b", transform=ax.transAxes, fontsize=11, fontweight="bold", va="bottom", ha="left")
-    ax.legend(fontsize=7, frameon=False, loc="upper right")
+    ax.legend(fontsize=7.4, frameon=False, loc="upper right")
     ax.tick_params(labelsize=8)
     ax.spines[["top", "right"]].set_visible(False)
 

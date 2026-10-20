@@ -113,15 +113,15 @@ def figure(d, a) -> None:
         ax = axes[0]
         im = ax.imshow(piv.to_numpy()*100, aspect="auto", cmap="YlGnBu", vmin=0, vmax=100)
         ax.set_xticks(range(len(piv.columns)))
-        ax.set_xticklabels(piv.columns, rotation=30, ha="right", fontsize=7.5)
+        ax.set_xticklabels(piv.columns, rotation=30, ha="right", fontsize=7.8)
         ax.set_yticks(range(len(piv.index)))
         ax.set_yticklabels([f"{r}" + (f"  {NAMED[r].split()[0]}" if r in NAMED else "")
-                            for r in piv.index], fontsize=7.5)
+                            for r in piv.index], fontsize=7.8)
         for yi, r in enumerate(piv.index):
             for xi, c in enumerate(piv.columns):
                 v = piv.iloc[yi, xi]*100
                 if v >= 5:
-                    ax.text(xi, yi, f"{v:.0f}", ha="center", va="center", fontsize=6.2,
+                    ax.text(xi, yi, f"{v:.0f}", ha="center", va="center", fontsize=7.8,
                             color="white" if v > 55 else "0.25")
         plt.colorbar(im, ax=ax, label="median occupancy (%)", fraction=0.035, pad=0.02)
         ax.text(0.0, 1.02, "a", transform=ax.transAxes, fontsize=11, fontweight="bold", va="bottom", ha="left")
@@ -156,7 +156,7 @@ def figure(d, a) -> None:
         ax.set_xlabel("Distance-only occupancy, this study (%)", fontsize=8.5)
         ax.set_ylabel("ProLIF typed occupancy, any type (%)", fontsize=8.5)
         ax.text(0.0, 1.02, "b", transform=ax.transAxes, fontsize=11, fontweight="bold", va="bottom", ha="left")
-        ax.legend(fontsize=7, frameon=False, loc="lower right")
+        ax.legend(fontsize=7.8, frameon=False, loc="lower right")
         P.to_csv(RES/"26b_occupancy_agreement.csv", index=False)
 
         for ax in axes:
