@@ -231,17 +231,12 @@ of \framingB{}. The baseline in that simulation is itself synthetic, built by tu
 the signal strength of a descriptor block until its out-of-fold coefficient of
 determination matched the $0.200$ that rung~1 reaches, which the tuning met at $0.209$.
 Figure~\ref{fig:power}(a) gives, against that baseline, the share of simulations in
-which a candidate of a given strength is called the better of the two. A candidate whose own score
-reaches $0.335$ is called the better of the two in 36 per cent of simulations, and one
-reaching $0.479$ in 90 per cent. Averaged over those simulations the advantage such a
-candidate actually holds is $0.114$ and $0.256$ respectively, which is measured within
-each simulation rather than taken as the difference of the two calibrated scores. Eighty per cent power arrives at a candidate score of about
-$0.45$, where the advantage held averages $0.23$, so that is the smallest gain this
-design is likely to detect. Panel~(b) gives the same fact in the
-form that travels better, as the 95 per cent interval on the gap is $0.32$ wide on
-average and varies only between $0.28$ and $0.34$ across the range tested. The portable
-statement is therefore that this study separates two values of the coefficient of
-determination about $0.3$ apart, and not less.
+which a candidate of a given strength is called the better of the two. A candidate
+scoring $0.335$ is called better in 36 per cent of them and one scoring $0.479$ in 90
+per cent, while 80 per cent power arrives only at about $0.45$. The curve runs along
+the bottom until roughly $0.3$ and climbs steeply after it, so the design is not merely
+less sensitive to a small advantage but close to blind to one. The dash-dotted line
+marks where rung~4 landed, to the left of the baseline and inside that flat stretch.
 
 \begin{figure}[tb]
   \centering
@@ -256,7 +251,11 @@ determination about $0.3$ apart, and not less.
   \label{fig:power}
 \end{figure}
 
-That number was fixed before the comparison it bounds had been scored, so it describes
+Panel~(b) carries the same limit as a width rather than as a probability. The 95 per
+cent interval on the gap is $0.32$ wide on average and stays between $0.28$ and $0.34$
+across every candidate tested, so the limit barely depends on how strong the candidate
+is. The portable statement is therefore that this study separates two values of the
+coefficient of determination about $0.3$ apart, and not less. That number was fixed before the comparison it bounds had been scored, so it describes
 the design rather than the outcome. It bounds the null rather than leaving it open, and
 both halves of the bound deserve stating. Differences larger than about $0.3$ are excluded, so the claim
 that molecular dynamics adds a large advantage over fingerprints is ruled out on this
@@ -270,9 +269,10 @@ endpoint itself is too noisy to predict. A model cannot explain more of the vari
 than the measurement reproduces, and we estimated that ceiling from the 336 of 5609
 compounds carrying a repeat assay. Each compound's spread across its repeats gives a
 noise variance, and the ceiling is the share of the observed variance that a perfect
-model could still account for. Even on the pessimistic reading, which takes the
-upper decile of the within-compound spread rather than its median, the ceiling stands
-at $0.616$ and lies far above every rung of the ladder. The variance the ladder fails
+model could still account for. The panel draws that ceiling for three readings of the spread, whose median is
+$0.06$ log units, whose mean is $0.18$ and whose upper decile is $0.56$, and shades
+the variance above it as unreachable. Even the pessimistic reading taken from the
+upper decile leaves every rung of the ladder far below the shaded band. The variance the ladder fails
 to explain is therefore real signal and not assay noise, which places the limitation in
 the descriptors rather than in the data, and removes the reading that there was nothing
 there to find.
