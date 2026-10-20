@@ -20,6 +20,7 @@
 \usepackage{booktabs}
 \usepackage{amsmath}
 \usepackage{siunitx}
+\usepackage{longtable}
 \usepackage[colorlinks=true,allcolors=blue]{hyperref}
 
 \graphicspath{{../figures/}}
@@ -41,6 +42,18 @@
 \begin{document}
 
 \maketitle
+
+Table~\ref{tab:sistructures} lists every molecular structure the study used, which the
+journal's guidance on QSAR submissions asks to be reported here rather than only
+deposited. Each ligand appears with both of the forms it was carried in, with its
+measured potency, and with the split and fold it was frozen into before any descriptor
+was computed.
+
+\footnotesize
+\input{../results/38_si_structures.tex}
+\normalsize
+
+\clearpage
 
 Each descriptor is named here as it appears in the deposited descriptor tables, so a
 quantity discussed in the main text can be traced to the column it was computed in.
