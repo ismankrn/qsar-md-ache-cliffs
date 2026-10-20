@@ -101,8 +101,15 @@ def main() -> None:
             va="center", fontsize=7.5, color="0.45")
     for _, r in nc.iterrows():
         ax.axhline(float(r.ceiling_r2), color="0.55", lw=0.8, ls=":")
-        ax.text(1.02, float(r.ceiling_r2), f"σ {r.sigma_kind} = {r.sigma:.2f}", fontsize=6.5,
-                color="0.45", va="center", transform=ax.get_yaxis_transform())
+        # The line sits at the CEILING, not at sigma. Labelling it with sigma alone made
+        # the smallest spread produce the highest line, which reads as an error. The
+        # median and mean ceilings are 0.04 apart, so their labels are pushed clear of
+        # each other rather than left to overlap.
+        dy = {"median": 0.035, "mean": -0.040}.get(r.sigma_kind, 0.0)
+        ax.text(1.02, float(r.ceiling_r2) + dy,
+                f"σ {r.sigma_kind} = {r.sigma:.2f}  →  ceiling {r.ceiling_r2:.3f}",
+                fontsize=5.8, color="0.45", va="center",
+                transform=ax.get_yaxis_transform())
     if ladder is not None:
         b = ladder[ladder.framing == "B"]
         xs = np.arange(len(b))
