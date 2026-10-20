@@ -289,34 +289,51 @@ there to find.
 
 % ---------------------------------------------------------------------------
 \subsection{Reliability of the dynamic descriptors}\label{sec:reliability}
+Which descriptors a trajectory can carry at all was settled by the replicate pilot, and
+Figure~\ref{fig:reliability}(a) shows the ratio it measures for every descriptor at
+every analysis window. Of the 160 combinations of descriptor and window, 60 clear the
+threshold of 2 and 100 do not, and the failures are not spread evenly over the three
+design classes. Persistence quantities clear it in 53 of 100 combinations, fluctuation
+quantities in 3 of 35, and event counts in 4 of 20, which panel~(b) gives as the
+composition of verdicts at each window. How much of the window a contact is held
+therefore reproduces across velocity seeds, while how widely something moves within
+that window, at this trajectory length, largely does not. The threshold itself was
+fixed before any replicate trajectory existed, so the division is not a line drawn
+around the answer.
+
 \begin{figure}[tb]
   \centering
   \includegraphics[width=\textwidth]{fig4_reliability.pdf}
-  \caption{\textbf{Of three descriptor design classes, only persistence survives a
-    replicate test.} (a)~Ratio of the spread across ligands to the spread across
-    replicates of the same ligand, for each descriptor at each analysis window;
-    the threshold of 2 was fixed before the pilot ran. (b)~Verdict composition by
-    window. Not one of the 20 event-count descriptor--window combinations is
-    usable at any length, against 57 of 100 for persistence.}
+  \caption{\textbf{Reliability of each descriptor against the replicate test.}
+    (a)~Ratio of the spread across ligands to the spread across replicates of the same
+    ligand, for each descriptor at each analysis window, against the threshold of 2
+    fixed before the pilot ran. (b)~Verdict composition by window, with the
+    descriptors grouped by design class.}
   \label{fig:reliability}
 \end{figure}
 
-\TODO{Prose. The counts: 81 of 160 combinations seed-dominated; by design class,
-  persistence 57/100 usable, fluctuation 6/35, event \textbf{0/20}. At the 20~ns
-  window 11 survive and 8 of them are contact occupancies.}
-\NOTE{The zero is the quotable number. How long a contact persists reproduces
-  across seeds; how fast something fluctuates, at this length, largely does not.}
+The event counts behave as a class only in the sense that three of their four members
+never survive. Every one of the four combinations that does is the rate of bridging
+episodes, which clears the threshold at 5, 10, 20 and \SI{45}{\nano\second}. It fails
+only at \SI{30}{\nano\second}, the one window where the between-ligand spread rests on
+45 ligands rather than on all 217, so that failure reflects the sample rather than the
+descriptor. The longest bridging episode is dominated by the seed at every length, the
+Tyr337 rotamer count is either too sparse to assess or seed-dominated, and whether the
+ligand left the gorge is constant because no ligand ever did. A rate can therefore
+survive a replicate test, but only where the events it counts are frequent enough to be
+counted reliably in the window available.
 
-\NOTE{Discussion. This is the most transferable result in the paper and the one
-  least tied to hAChE. Anyone building descriptors from trajectories of this length
-  should expect persistence-type observables to survive a replicate test and
-  fluctuation and event-rate observables not to, and should run the test rather than
-  assume. Note also that the filter earns its place within this study: the filtered
-  set beats the unfiltered one on both pair endpoints, so this is not a diagnostic
-  that was merely interesting.}
-
-\TODO{Show that the filter earns its place: \framingB{} $+0.152$ filtered against
-$-0.054$ unfiltered; \framingC{} $0.796$ against $0.721$.}
+At the \SI{20}{\nano\second} window that production uses, 11 of the 32 descriptors
+pass, and 9 of those are contact occupancies. That concentration is the practical
+finding of this subsection and the one least tied to this target. Anyone building
+descriptors from trajectories of this length should expect persistence-type observables
+to survive a replicate test and fluctuation-type observables not to, and should measure
+that rather than assume it. The filter also earns its place within this study rather
+than remaining a diagnostic, since the filtered set reaches $+0.152$ on \framingB{}
+against $-0.054$ for the unfiltered one and $0.796$ on \framingC{} against $0.721$.
+Removing the descriptors that measure the seed therefore improves what remains on both
+pair endpoints, which is what a filter of this kind is supposed to do and is not
+guaranteed to achieve.
 
 % ---------------------------------------------------------------------------
 \subsection{Interpretation of the distance-based contact occupancies}\label{sec:typed}
@@ -421,7 +438,9 @@ $-0.054$ unfiltered; \framingC{} $0.796$ against $0.721$.}
   The measurement ceiling puts the unexplained variance beyond assay noise, so the
   descriptors are the limitation. (4) Two measurement artefacts biasing in opposite
   directions are quantified here and generalise past this target and past MD. (5)
-  Of three descriptor design classes only persistence survives a replicate test.
+  Persistence survives a replicate test in quantity, 53 of 100 combinations, while
+  fluctuation manages 3 of 35 and the event counts 4 of 20, all four being the rate
+  of bridging episodes.
   (6) Length is not the lever; $n$ is.}
 
 \NOTE{\citet{husby2015} reports that structure-based methods predict
