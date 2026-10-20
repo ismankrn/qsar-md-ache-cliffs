@@ -1,0 +1,37 @@
+cff-version: 1.2.0
+message: >-
+  If you use this software or the descriptor data deposited with it, please cite
+  the archived release below. Once the accompanying paper is published, cite that
+  instead.
+title: >-
+  Activity cliffs on human acetylcholinesterase: a pre-registered escalation from
+  2D descriptors to molecular dynamics
+abstract: >-
+  Analysis code and derived data for a ladder of five descriptor sets scored on
+  activity cliffs of human acetylcholinesterase (CHEMBL220). The ladder runs from
+  2D fingerprints through docked pose geometry, an eight-member receptor ensemble
+  and MM/GBSA to descriptors extracted from 25 ns molecular dynamics trajectories,
+  each scored on three framings of the endpoint against a matched ligand-based
+  baseline on splits frozen before any descriptor was computed. The deposit
+  carries the 229 per-run descriptor files, the curated ligand set, the frozen
+  splits and every derived table, which together reproduce every number in the
+  paper without rerunning a simulation. The reduced trajectories are available
+  from the author on request.
+type: software
+authors:
+  - given-names: Isman
+    family-names: Kurniawan
+    email: isman.krn@gmail.com
+    # orcid: "https://orcid.org/0000-0000-0000-0000"
+    # affiliation: ""
+repository-code: "https://github.com/ismankrn/qsar-md-ache-cliffs"
+version: "1.0"
+date-released: "2026-10-20"
+license: MIT
+keywords:
+  - activity cliff
+  - quantitative structure-activity relationship
+  - molecular dynamics
+  - molecular docking
+  - acetylcholinesterase
+  - descriptor benchmarking
