@@ -399,6 +399,19 @@ scored would be post hoc, so it is left as a question for a later study.
 
 \subsection{Dependence on trajectory length}\label{sec:duration}
 
+Whether \SI{20}{\nano\second} is longer than the descriptors need was tested by
+recomputing them on the first 5, 10, 20 and \SI{30}{\nano\second} of each trajectory
+and scoring each window on the frozen folds. Two series are drawn in
+Figure~\ref{fig:duration}, because the replicate filter selects a different set at each
+window, 14 features at 5 and \SI{10}{\nano\second} against 12 at 20, and letting it do
+so would confound how much trajectory a descriptor saw with which descriptors were
+chosen. The fixed series holds the \SI{20}{\nano\second} selection at every window and
+is the one that isolates length. On it, \framingA{} in panel~(a) moves between $+0.030$ and
+$+0.044$, \framingB{} in panel~(b) between $+0.149$ and $+0.196$, and \framingC{} in
+panel~(c) between $0.747$ and $0.796$. Each of those spreads is smaller than the
+interval the corresponding framing carries, so none of them is a dependence this design
+can resolve.
+
 \begin{figure}[tb]
   \centering
   \includegraphics[width=\textwidth]{fig5\_duration.pdf}
@@ -414,19 +427,25 @@ scored would be post hoc, so it is left as a question for a later study.
   \label{fig:duration}
 \end{figure}
 
-\TODO{Prose. With a fixed descriptor set, \framingA{} is flat ($+0.030$, $+0.044$,
-  $+0.043$), \framingB{} peaks at 10 ns ($+0.149$, $+0.196$, $+0.152$) and \framingC{}
-  rises a little with length ($0.747$, $0.788$, $0.796$). Every spread is inside the
-  study's resolution, so the conclusion is no resolvable dependence on length -- which
-  answers the cost objection with data.}
-\NOTE{Do NOT quote the $+0.196$ as a result. It is the best of six cells computed
-  together and it is the kind of number this paper exists to warn about.}
+The \SI{30}{\nano\second} point is drawn apart because only the 45 development ligands
+whose runs were continued reach it, and on \framingA{} it rests on 11 pairs rather than
+145. It is shown so that the curve does not appear to stop for want of data, and it
+should not be read as a fall at longer trajectories, since the sample changes with it. Nothing in the three panels supports the
+view that the simulations were too short, which is the first objection a null result
+from molecular dynamics attracts. What they establish between them is that trajectory
+length is not the lever. The descriptors are no better
+at \SI{20}{\nano\second} than at 10, and the practical reading is that they can be
+computed from \SI{15}{\nano\second} of simulation rather than the 50 the original design
+called for, which answers the cost objection with a measurement rather than an argument.
 
-\NOTE{Discussion. Trajectory length is not the lever, and the practical reading is
-  that these descriptors can be computed from 10 ns of simulation rather than 50, a
-  fivefold saving that answers the cost objection with data. What would move the
-  result is $n$: the resolution of 0.30 follows from 145 pairs, and only more pairs
-  or more targets change it. More nanoseconds do not.}
+One number in these panels should not be quoted on its own. The $+0.196$ that
+\framingB{} reaches at \SI{10}{\nano\second} is the best of six cells computed together,
+and reporting it as the performance of molecular dynamics at 10 nanoseconds would be
+exactly the selection this paper exists to warn against. The spread across the three
+windows is the quantity to read, not its maximum. What would move the result is
+not the length of the trajectories but the number of pairs, since the resolution of
+about $0.3$ follows from 145 of them. More nanoseconds do not change it, and more pairs
+or more targets are the only things that would.
 
 % ---------------------------------------------------------------------------
 \subsection{Effect of an incomplete subset on the apparent gain}
