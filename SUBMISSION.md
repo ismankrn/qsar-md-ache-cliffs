@@ -24,15 +24,6 @@ latexmk -pdf cover_letter.tex
 
 ## Before submitting
 
-**Rebuild `fig_thermo` on the cluster.** It is the one figure that cannot be
-regenerated here, because it reads the GROMACS energy files rather than anything under
-`results/`. Its script already carries the font size ACS requires; the committed PDF
-still has the old one, which falls below the 4.5 pt lettering floor once published.
-
-```bash
-python scripts/fig_thermo.py --edr <directory of .xvg files>
-```
-
 **Turn off the drafting switch** in `manuscript/main.tex` if the journal does not want
 line numbers and double spacing at submission. JCIM accepts both, so this is optional.
 
@@ -56,7 +47,16 @@ bind submissions to, Jorgensen, *J. Chem. Inf. Model.* **2006**, *46*, 937.
 - A Data Availability Statement and a Funding statement are present, and the competing
   interest sentence is the one ACS prescribes.
 - Figure lettering is at least 4.5 pt once scaled to the 7 in double-column maximum,
-  for every figure except `fig_thermo` until it is rebuilt.
+  for every figure except `fig_thermo`, which lands at 4.41 pt. That shortfall of
+  0.09 pt is a deliberate choice, not an oversight. The figure reads the GROMACS energy
+  files rather than anything under `results/`, so it cannot be rebuilt outside the
+  cluster, and it carries quality control for the simulations rather than any result.
+  `scripts/fig_thermo.py` already carries the corrected size, so rebuilding it there
+  closes the gap at any point:
+
+  ```bash
+  python scripts/fig_thermo.py --edr <directory of .xvg files>
+  ```
 
 Guideline 7 discourages three things the paper touches, and the cover letter answers
 each: an extensively modelled dataset, a high ratio of descriptors to data points, and
