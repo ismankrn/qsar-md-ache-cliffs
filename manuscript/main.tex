@@ -57,14 +57,20 @@
 \input{sections/05\_conclusions}
 
 \section*{Data and code availability}
-\TODO{repository URL, archived DOI, which artefacts are deposited}
-Any trajectory taken from the deposited archive needs the treatment of the periodic
-boundary described in Section~\ref{sec:md} before anything is measured on it. The
-archives are wrapped molecule-wise and the capped receptor is three separate chains, so
-an RMSD computed directly on an archive returns \SI{25.8}{\angstrom} for the receptor
-and as much as \SI{99}{\angstrom} for the ligand.
-\NOTE{md/reduced/ is 2.7 GB of protein+ligand trajectories at 100 ps and is the
-  largest depositable artefact; the 229 descriptor JSONs are 1.8 MB.}
+All analysis code is in a public repository, \TODO{repository URL}, archived at
+\TODO{archived DOI}. The deposit carries the 229 per-run descriptor files, one JSON per
+trajectory and \SI{1.8}{\mega\byte} in total, together with the curated ligand set, the
+frozen splits and every derived table the figures and the reported numbers are computed
+from. Those files are sufficient to reproduce every result in this paper without
+rerunning a simulation.
+
+The trajectories themselves are not deposited. Reduced protein and ligand coordinates at
+\SI{100}{\pico\second}, \SI{2.6}{\giga\byte} over the 229 runs, are available from the
+corresponding author on request. Any trajectory supplied this way needs the treatment of
+the periodic boundary described in Section~\ref{sec:md} before anything is measured on
+it, since the archives are wrapped molecule-wise and the capped receptor is three
+separate chains. An RMSD computed directly on an archive returns \SI{25.8}{\angstrom}
+for the receptor and as much as \SI{99}{\angstrom} for the ligand.
 
 \section*{Acknowledgements}
 The authors thank QuasiLab and Mahameru BRIN \citep{mahameru2025} for their
