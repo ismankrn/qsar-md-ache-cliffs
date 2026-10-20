@@ -53,37 +53,40 @@ def main() -> None:
     ax.axhspan(base - RESOLUTION, base + RESOLUTION, color="#d9d9d9", zorder=0)
     ax.axhline(base, color="#4d4d4d", lw=0.8, ls="--", zorder=1)
 
+    # "pose" and "MM/GBSA" share an x, so they are labelled to the left into the
+    # empty stretch between the fingerprint and the docked rungs instead of above,
+    # where they would stack on each other and on the 2 min tick.
+    PLACE = {"2D":       ((0, 11),  "center"),
+             "pose":     ((-8, -3), "right"),
+             "MM/GBSA":  ((-8, -3), "right"),
+             "ensemble": ((0, 11),  "center"),
+             "MD":       ((0, 11),  "center")}
     for lab, x, y, is_base in pts:
-        ax.scatter([x], [y], s=46 if is_base else 34,
+        ax.scatter([x], [y], s=50 if is_base else 38,
                    c="#b2182b" if is_base else "#2166ac",
                    marker="o" if is_base else "^",
-                   edgecolors="white", linewidths=0.6, zorder=3)
-        dy = 0.085 if lab not in ("MM/GBSA",) else -0.135
-        ax.annotate(lab, (x, y), textcoords="offset points",
-                    xytext=(0, 9 if dy > 0 else -13), ha="center",
-                    fontsize=6.4, color="#1a1a1a", zorder=4)
+                   edgecolors="white", linewidths=0.7, zorder=3)
+        off, ha = PLACE[lab]
+        ax.annotate(lab, (x, y), textcoords="offset points", xytext=off,
+                    ha=ha, va="center" if ha != "center" else "bottom",
+                    fontsize=8.0, color="#1a1a1a", zorder=4)
 
     ax.set_xscale("log")
-    ax.set_xlim(2e-3, 4e5)
-    ax.set_ylim(base - RESOLUTION - 0.06, base + RESOLUTION + 0.10)
+    ax.set_xlim(2.5e-3, 6e5)
+    ax.set_ylim(base - RESOLUTION - 0.09, base + RESOLUTION + 0.06)
     ax.set_xticks([1e-2, 1e0, 1e2, 1e4])
-    ax.set_xticklabels(["10 ms", "1 s", "2 min", "3 h"], fontsize=6.4)
+    ax.set_xticklabels(["10 ms", "1 s", "2 min", "3 h"], fontsize=8.0)
     ax.set_yticks([0.0, 0.2, 0.4])
-    ax.set_yticklabels(["0.0", "0.2", "0.4"], fontsize=6.4)
-    ax.set_xlabel("Cost per ligand", fontsize=7.2, labelpad=1.5)
-    ax.set_ylabel("$R^2$ on $\\Delta$pChEMBL", fontsize=7.2, labelpad=1.5)
+    ax.set_yticklabels(["0.0", "0.2", "0.4"], fontsize=8.0)
+    ax.set_xlabel("Cost per ligand", fontsize=8.5, labelpad=1.0)
+    ax.set_ylabel("$R^2$ on $\\Delta$pChEMBL", fontsize=8.5, labelpad=1.0)
     ax.tick_params(length=2, pad=1.5)
     ax.spines[["top", "right"]].set_visible(False)
 
-    ax.text(0.985, 0.975,
-            "seven orders of magnitude of cost,\nnothing the design can resolve",
-            transform=ax.transAxes, ha="right", va="top",
-            fontsize=6.8, color="#1a1a1a", linespacing=1.25)
-    ax.text(2.6e-3, base - RESOLUTION + 0.022,
-            r"band $=\pm0.3$, the resolvable range",
-            fontsize=5.8, color="#595959", va="bottom")
+    ax.set_title("Seven orders of magnitude of cost,\nno resolvable gain",
+                 fontsize=8.6, color="#1a1a1a", pad=3, linespacing=1.2)
 
-    fig.tight_layout(pad=0.25)
+    fig.tight_layout(pad=0.35)
     FIGS.mkdir(exist_ok=True)
     for ext in ("pdf", "png"):
         fig.savefig(FIGS/f"fig_toc.{ext}", dpi=600)
