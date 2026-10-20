@@ -375,18 +375,27 @@ difference, which has a median of zero but reaches $+75$ and $+77$ percentage po
 There are therefore runs in which the ligand sits within \SI{4.5}{\angstrom} of the
 tryptophan for nearly every frame while ProLIF recognises no interaction there at all.
 
-This comparison names a gap rather than closing one, and it is reported for that
-reason alone. The two descriptors count proximity, and for
-the ligands that are not simply pinned against the site, which are exactly the ones a
-cliff comparison turns on, they overstate how far the ligand is engaged. Nothing in
-this subsection enters any model, and a typed descriptor family introduced after the
-ladder had been scored would be post hoc, so the comparison is reported as a property
-of the descriptors rather than acted on. What it suggests for a later study is that a
-typed occupancy may separate ligands that a distance cutoff cannot, which is a
-hypothesis this work has not tested. It also bears on the reliability result above,
-since the descriptors that survived the replicate test are the ones that saturate, and
-a quantity at 100 per cent in most runs is reproducible for a reason that has nothing
-to do with its usefulness.
+The disagreement is not evidence that one measure is right and the other wrong, since
+neither is a ground truth and the typed criteria are thresholds of their own. The
+distance-only descriptors measure what they are defined to measure, which is proximity,
+and they measure it reproducibly. What the panel shows is that proximity saturates,
+so for the ligands that are not simply pinned against the site, which are exactly the
+ones a cliff comparison turns on, the descriptor returns the same value whatever the
+chemistry is doing. That bears on the reliability result above, because a quantity
+sitting at 100 per cent in most runs is reproducible for a reason that has nothing to
+do with its usefulness. The filter of Section~\ref{sec:reliability} will therefore
+favour a saturated quantity over a discriminating one, which is a property of that
+filter worth stating rather than a fault in these descriptors.
+
+The typed occupancy is not a ready replacement for it either, and the same replicate
+test says why. Put through that test, it gives a ratio of $2.63$ at Trp86 and $1.05$ at Trp286, against $103$ and $52$
+for the distance-only descriptors, so one of the two would not pass the filter of
+Section~\ref{sec:reliability} at all. Part of that noise is the coarser sampling, and
+a typing computed on every frame might fare better. The exchange is therefore
+discrimination against reproducibility rather than chemistry against geometry, and
+this work has tested neither side of it as a predictor. Nothing in this subsection
+enters any model, since a typed descriptor family introduced after the ladder had been
+scored would be post hoc, so it is left as a question for a later study.
 
 \subsection{Dependence on trajectory length}\label{sec:duration}
 
