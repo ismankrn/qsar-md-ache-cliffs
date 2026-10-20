@@ -75,11 +75,13 @@ The trajectories themselves are not deposited. Reduced protein and ligand coordi
 corresponding author on request. Any trajectory supplied this way needs the treatment of
 the periodic boundary described in Section~\ref{sec:md} before anything is measured on
 it, since the archives are wrapped molecule-wise and the capped receptor is three
-separate chains. An RMSD computed directly on an archive returns \SI{25.8}{\angstrom}
-for the receptor and as much as \SI{99}{\angstrom} for the ligand.
+separate chains. Over the 229 archives an RMSD computed directly on one returns a
+median of \SI{45}{\angstrom} for the receptor backbone and \SI{24}{\angstrom} for the
+ligand, against the \SI{1.4}{\angstrom} and \SI{3.0}{\angstrom} the same quantities
+give once the boundary has been handled.
 
 \section*{Acknowledgements}
-The authors thank QuasiLab and Mahameru BRIN \citep{mahameru2025} for their
+The author thanks QuasiLab and Mahameru BRIN \citep{mahameru2025} for their
 mini-cluster and HPC facilities.
 
 \bibliographystyle{plainnat}
