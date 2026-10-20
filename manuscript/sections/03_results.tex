@@ -453,26 +453,71 @@ or more targets are the only things that would.
 \subsection{Scope of the comparison}
 \label{sec:synthesis}
 
-\TODO{Draft the cross-cutting argument here. Beats, in order:}
-\NOTE{(1) Five descriptor rungs on three endpoints, one target, 145 pairs, with a
-  resolution of about 0.30 in $R^2$ stated in advance and holding. (2) No
-  structure-based rung is resolvably better than a fingerprint on any endpoint;
-  every structure-based interval crosses the rung-1 level. On \framingA{} the gap
-  is resolved and negative, which says rung 4 is worse rather than unproven. (3)
-  The measurement ceiling puts the unexplained variance beyond assay noise, so the
-  descriptors are the limitation. (4) [removed with the incomplete-subset
-  subsection -- this beat claimed two artefacts biasing in opposite directions and
-  one of them is gone; drop it or name what remains] (5)
-  Persistence survives a replicate test in quantity, 53 of 100 combinations, while
-  fluctuation manages 3 of 35 and the event counts 4 of 20, all four being the rate
-  of bridging episodes.
-  (6) Length is not the lever; $n$ is.}
+Five descriptor sets were carried up a ladder of physical detail, from two-dimensional
+fingerprints through the geometry of a docked pose, the same geometry over a receptor
+ensemble, an implicit-solvent energy and finally a molecular dynamics trajectory. Each
+met three framings of the same data on the same frozen splits, 217 development ligands
+and 145 development pairs of one well-characterised target. What the design can see was
+fixed before any of it was scored, and it held. The 95 per cent interval on a gap is
+$0.32$ wide on average and lies between $0.28$ and $0.34$ whatever the strength of the
+candidate, so this study separates two coefficients of determination about $0.3$ apart
+and not less.
 
-\NOTE{\citet{husby2015} reports that structure-based methods predict
-  activity cliffs accurately; its prospective cross-docking arm sits at a median
-  53\%, both partners carry crystal structures, and no ligand-based baseline is
-  run. This study is the prospective case with a matched baseline, and its answer
-  is consistent with that arm rather than with the abstract.}
+Within that limit the answer is uniform. The largest advantage any structure-based rung
+holds over the fingerprints anywhere is the $0.074$ by which the receptor ensemble leads
+on the signed pair difference. That is a quarter of what the design can resolve, so no
+rung of the ladder is resolvably better than a fingerprint on any of the three framings.
+The one comparison that does resolve runs the other way. On per-ligand potency the gap
+between the trajectory descriptors and the fingerprints is $-0.375$ with an interval of
+$[-0.596, -0.184]$, the only interval in this study that excludes zero. Its sign carries
+as much as its width, because it reports the dynamic descriptors not as unproven but as
+worse. On the two pair framings the intervals contain zero and support no claim in
+either direction.
+
+Two readings would make that result uninteresting, and neither survives. The first is
+that the endpoint is too noisy to predict, and the 336 of 5{,}609 compounds carrying a
+repeat assay answer it. Even the pessimistic reading of their spread, the upper decile at
+$0.56$ log units, leaves every rung of the ladder far below the variance that assay
+reproducibility puts out of reach. The variance the ladder fails to explain is signal
+and not noise, which places the limitation in the descriptors rather than in the data.
+The second reading is that the simulations were too short. Holding the descriptor set
+fixed and varying only the trajectory, per-ligand potency moves between $+0.030$ and
+$+0.044$, the signed pair difference between $+0.149$ and $+0.196$ and the
+classification between $0.747$ and $0.796$. Every one of those spreads is smaller than
+the interval its framing carries, so none is a dependence this design can resolve, and
+nothing in them suggests a curve still climbing at the point it was cut.
+
+What a trajectory can carry at all was settled separately and constrains how the null
+should be read. Of 160 combinations of descriptor and analysis window put to a
+replicate test, 60 clear the threshold and 100 do not, and the failures fall by design
+class rather than at random. Persistence quantities clear in 53 of 100 combinations,
+fluctuation quantities in 3 of 35 and event counts in 4 of 20. How long a contact is
+held reproduces across velocity seeds; how far things move, at this trajectory length,
+largely does not. The null therefore applies to a trajectory read for persistence, which
+is most of what survives a reproducibility criterion, rather than to every quantity a
+trajectory could in principle supply.
+
+One measurement artefact quantified along the way generalises past this target and past
+molecular dynamics. A descriptor filter re-fitted at each trajectory length selects
+fourteen quantities at the shortest window and twelve at the longest, and not the same
+ones, so a curve built that way confounds how much trajectory a descriptor saw with
+which descriptors were chosen. Read that way the ladder appears to rise monotonically
+with trajectory length; held to one selection it is flat. Any study that varies a
+parameter and re-selects features at each of its values is exposed to this, and the
+remedy costs nothing beyond fixing the selection once and carrying it across.
+
+These results occupy a gap in the existing evidence rather than contradicting it.
+\citet{husby2015} reports that structure-based methods predict activity cliffs
+accurately, and the figure behind that claim comes from template docking onto the
+crystal pose of the stronger ligand together with a pocket ensemble selected using the
+cliff labels, which those authors describe as retrospective. Their prospective arm,
+cross-docking, sits at a median of 53 per cent. This study is the prospective case run
+with a matched ligand-based baseline and a stated detection limit, and its answer is
+consistent with that arm rather than with the abstract.
+
+What would move any of this is not more nanoseconds. The width of the interval follows
+from the number of pairs, so more pairs and more targets are the only things that would
+narrow it.
 
 % ---------------------------------------------------------------------------
 \subsection{Limitations}
