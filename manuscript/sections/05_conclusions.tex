@@ -1,13 +1,28 @@
 \section{Conclusions}
 
-Across five descriptor sets of increasing physical detail, scored on three framings of
-145 activity-cliff pairs of human acetylcholinesterase against a detection limit of
-about $0.3$ in the coefficient of determination that was fixed before any of them was
-scored, no structure-based representation was resolvably better than a two-dimensional
-fingerprint on any framing. The one comparison the design did resolve runs against the
-molecular dynamics descriptors on per-ligand potency, and the variance the ladder
-leaves unexplained is far larger than assay reproducibility can account for, which
-places the limitation in the descriptors rather than in the data or in the length of
-the trajectories. A modest advantage remains possible and this design cannot see one,
-so what would settle the question is the number of pairs and of targets rather than the
-nanoseconds spent on each.
+This study measures what escalating physical detail buys on activity cliffs, with a
+ligand-based baseline scored on the same frozen splits and a detection limit fixed
+before anything had been compared, which is the combination the existing evidence on
+this question lacks. Across 145 matched pairs of human acetylcholinesterase, 77 of them
+activity cliffs, and three framings of the endpoint, none of the four structure-based
+representations is resolvably better than a two-dimensional fingerprint, and on
+per-ligand potency the molecular dynamics descriptors are resolvably worse. That is a
+result with a direction rather than an absence of one. The two readings that would make
+it uninteresting are excluded by measurement rather than by argument, since the
+variance the ladder leaves unexplained is far beyond what assay reproducibility can
+account for, and the scores do not move with trajectory length once the descriptor set
+is held fixed.
+
+Three findings transfer beyond this target. A \SI{25}{\nano\second} trajectory
+reproduces how long a contact is held, in 53 of 100 combinations of descriptor and
+analysis window, while it reproduces the amplitude of motion in 3 of 35 and the rate of
+discrete events in 4 of 20. Persistence is therefore what a trajectory of this length
+can be asked for, and amplitude largely is not. A descriptor filter refitted at every
+trajectory length manufactures a rise that disappears once a single selection is
+carried across the windows, which exposes any study that re-selects features at each
+value of a parameter it is varying. And the descriptors that survive the
+reproducibility criterion are available from \SI{15}{\nano\second} of simulation rather
+than the 50 the original design called for, which answers the cost objection with a
+measurement rather than an argument. What this design cannot see is a modest advantage,
+and the quantity that would settle that is the number of pairs and of targets rather
+than the nanoseconds spent on each.
