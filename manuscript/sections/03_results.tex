@@ -330,37 +330,53 @@ guaranteed to achieve.
 % ---------------------------------------------------------------------------
 \subsection{Interpretation of the distance-based contact occupancies}\label{sec:typed}
 
+Two of the eleven descriptors that survive the replicate test are \texttt{occ\_cas}
+and \texttt{occ\_pas}, which count the fraction of frames in which a ligand heavy atom
+lies within \SI{4.5}{\angstrom} of Trp86 or Trp286. That criterion is geometric and
+says nothing about whether a chemical interaction is present, so we recomputed typed
+interaction fingerprints over the trajectories with ProLIF \citep{prolif2021} and
+compared the two. Figure~\ref{fig:dyninteractions}(a) gives the median occupancy of
+each type at each gorge-lining residue. Hydrophobic engagement at Trp86 and at Trp286
+occupies the whole window at the median, $\pi$-stacking reaches 70 and 57 per cent, and
+the cation--$\pi$ contact that the cationic ligands were expected to form reaches 43
+per cent at Trp86 and 38 at Trp286. Eight of the 229 runs could not be typed because
+ProLIF reported a fragmented residue, so the panel rests on 221.
+
 \begin{figure}[tb]
   \centering
   \includegraphics[width=\textwidth]{fig_dynamic_interactions.pdf}
-  \caption{\textbf{Typed interaction occupancy over the trajectories, and what the
-    distance-only descriptors summarise.} (a)~Median occupancy of each interaction
-    type at each gorge-lining residue across 221 runs. Trp86 and Trp286 are
-    hydrophobically engaged in every frame and $\pi$-stack in 70\% and 57\%;
-    Glu334 forms a salt bridge with the protonated ligand amine in 87\%.
-    (b)~ProLIF's typed occupancy at Trp86 and Trp286 against this study's
-    distance-only \texttt{occ\_cas} and \texttt{occ\_pas}, one point per run. Points
-    lie on or below the diagonal, and many sit at 100\% on the distance axis while
-    the typed occupancy falls as low as 20\%.}
+  \caption{\textbf{Typed interaction occupancy, and what the distance-only
+    descriptors summarise.} (a)~Median occupancy of each interaction type at each
+    gorge-lining residue across 221 runs, with cells left blank where the interaction
+    occurs in fewer than a tenth of them. (b)~The typed occupancy of any type at
+    Trp86 and Trp286 against the distance-only \texttt{occ\_cas} and \texttt{occ\_pas}
+    of this work, one point per run, against the diagonal on which the two would
+    agree.}
   \label{fig:dyninteractions}
 \end{figure}
 
-\TODO{Prose. State the ceiling honestly before quoting any correlation.}
-\NOTE{Both measures are at 100\% for 77\% of runs at Trp86 and 56\% at Trp286, so
-  the overall Spearman values of 0.61 and 0.55 are mostly ties. Among the runs where
-  at least one measure is below saturation they fall to 0.39 and 0.22. The
-  informative statistic is the signed difference: distance-only minus typed has a
-  median of zero but reaches $+75$ and $+77$ percentage points. There are runs in
-  which the ligand sits within 4.5~\AA{} of the tryptophan for nearly every frame
-  while no typed interaction is detected there at all -- proximity without a
-  recognised chemical interaction.}
-\NOTE{This names a gap rather than fixing one: \texttt{occ\_cas} and
-  \texttt{occ\_pas} count proximity, and for the ligands that are not simply pinned
-  to the site -- exactly the ones a cliff comparison depends on -- they overstate
-  engagement. Descriptive only; nothing here enters any model, and a typed
-  descriptor family introduced after the ladder was scored would be post hoc.}
-\NOTE{8 of 229 runs failed with a ProLIF fragmented-residue error and are excluded;
-  report the number.}
+Panel~(b) places the typed occupancy against the distance-only one, run by run, and the
+points lie on or below the diagonal throughout. The Spearman coefficients of $0.61$ at
+Trp86 and $0.55$ at Trp286 overstate the agreement, because both measures sit at 100
+per cent for 77 per cent of runs at Trp86 and 56 per cent at Trp286, so most of the
+coefficient is ties. Recomputed on the runs where at least one measure is below
+saturation, they fall to $0.39$ and $0.22$. The informative statistic is the signed
+difference, which has a median of zero but reaches $+75$ and $+77$ percentage points.
+There are therefore runs in which the ligand sits within \SI{4.5}{\angstrom} of the
+tryptophan for nearly every frame while ProLIF recognises no interaction there at all.
+
+This comparison names a gap rather than closing one, and it is reported for that
+reason alone. The two descriptors count proximity, and for
+the ligands that are not simply pinned against the site, which are exactly the ones a
+cliff comparison turns on, they overstate how far the ligand is engaged. Nothing in
+this subsection enters any model, and a typed descriptor family introduced after the
+ladder had been scored would be post hoc, so the comparison is reported as a property
+of the descriptors rather than acted on. What it suggests for a later study is that a
+typed occupancy may separate ligands that a distance cutoff cannot, which is a
+hypothesis this work has not tested. It also bears on the reliability result above,
+since the descriptors that survived the replicate test are the ones that saturate, and
+a quantity at 100 per cent in most runs is reproducible for a reason that has nothing
+to do with its usefulness.
 
 \subsection{Dependence on trajectory length}\label{sec:duration}
 

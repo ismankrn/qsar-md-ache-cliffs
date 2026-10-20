@@ -99,8 +99,17 @@ def figure(d, a) -> None:
 
         # (a) median occupancy per residue per type, gorge residues only
         g = d[d.resid_4ey7.isin(LINING)]
+        # A median over one run looked exactly like a median over two hundred: the
+        # Glu334 salt bridge and the Trp286 hydrogen bond were each a single
+        # trajectory, printed as 87 and 52 beside cells backed by the whole campaign.
+        # Cells supported by fewer than MIN_SHARE of runs are therefore blanked.
+        MIN_SHARE = 0.10
+        n_runs = d.run.nunique()
         piv = g.pivot_table(index="resid_4ey7", columns="kind", values="occupancy",
                             aggfunc="median").fillna(0.0)
+        sup = (g.pivot_table(index="resid_4ey7", columns="kind", values="run",
+                             aggfunc="nunique").reindex_like(piv).fillna(0) / n_runs)
+        piv = piv.where(sup >= MIN_SHARE, 0.0)
         ax = axes[0]
         im = ax.imshow(piv.to_numpy()*100, aspect="auto", cmap="YlGnBu", vmin=0, vmax=100)
         ax.set_xticks(range(len(piv.columns)))
