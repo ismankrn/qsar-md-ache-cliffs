@@ -363,8 +363,10 @@ ProLIF reported a fragmented residue, so the panel rests on 221.
   \label{fig:dyninteractions}
 \end{figure}
 
-Panel~(b) places the typed occupancy against the distance-only one, run by run, and the
-points lie on or below the diagonal throughout. The Spearman coefficients of $0.61$ at
+Panel~(b) places the typed occupancy against the distance-only one, run by run. The two
+are not computed on the same frames, since the distance-only occupancy uses all 2000
+frames of the window while the typing uses 21, so a small disagreement in either
+direction is expected and a few points sit above the diagonal. The Spearman coefficients of $0.61$ at
 Trp86 and $0.55$ at Trp286 overstate the agreement, because both measures sit at 100
 per cent for 77 per cent of runs at Trp86 and 56 per cent at Trp286, so most of the
 coefficient is ties. Recomputed on the runs where at least one measure is below
