@@ -173,19 +173,6 @@ them, but that no rung is separated from any other by more than the noise. The o
 comparison that does separate is the gap between rung~4 and the fingerprints on
 \framingA{}, and it runs against rung~4.
 
-The ladder does not describe one chemical species throughout, since the fingerprints
-are computed on the neutral structures while every structure-based rung uses the
-protonated form, and the comparison is not an artefact of that asymmetry. On the
-protonated structures the fingerprint baseline rises rather than falls, by $0.018$ on
-\framingA{} and by $0.010$ on \framingC{}, so no gap above narrows and the baseline
-reported here is if anything the weaker of the two. On \framingB{} the rescored value is unchanged to six
-decimal places, which follows from the construction of that framing rather than from
-chance. Protonation flips a median of 22 ECFP4 bits per ligand, but \framingB{} trains
-on the difference between the two fingerprints of a pair, and that difference is
-unchanged for 130 of the 145 development pairs because the two members of a
-near-identical pair protonate alike. On the endpoint that defines an activity cliff,
-protonation is therefore invisible to a 2D fingerprint by construction.
-
 The headline comparison gives rung~1 thousands of features and rung~4 twelve, so the
 obvious objection is that the fingerprint wins on width rather than on content. We
 therefore scored an arm in which the fingerprint is cut to the width of rung~4 by a

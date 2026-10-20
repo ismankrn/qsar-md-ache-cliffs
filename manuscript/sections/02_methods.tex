@@ -222,14 +222,16 @@ are chosen.
 
 Rung~1 uses no three-dimensional information, and it is computed on the standardised
 neutral structures, while every structure-based rung uses the protonated form of
-Section~\ref{sec:dataset}. The ladder therefore does not describe one chemical species throughout, and rung~1 was
-scored on both forms so that the asymmetry could be quantified rather than assumed
-harmless. Two feature sets were carried here, the binary ECFP4 that defined the cliffs in
-Section~\ref{sec:dataset} and a count-based ECFP4 of the same width combined with the
-217 physicochemical descriptors of RDKit, and we took the better of the two in every
-framing. Those 217 are the standard RDKit set, covering molecular size, polarity,
-flexibility and a range of topological indices, and they enter the second feature set
-alone. Neither dominates the other, and scoring only one would have
+Section~\ref{sec:dataset}. The ladder therefore does not describe one chemical species
+throughout, so rung~1 was scored on both forms. The protonated form is never the
+weaker of the two, gaining $0.018$ on \framingA{} and $0.010$ on \framingC{} and
+leaving \framingB{} unchanged, so the baseline reported throughout is if anything
+understated. Two feature sets were carried here, the binary ECFP4 that defined the
+cliffs in Section~\ref{sec:dataset} and a count-based ECFP4 of the same width combined
+with the 217 physicochemical descriptors of RDKit, and we took the better of the two
+in every framing. Those 217 are the standard RDKit set, covering molecular size,
+polarity, flexibility and a range of topological indices, and they enter the second
+feature set alone. Neither dominates the other, and scoring only one would have
 handicapped the baseline against which every other rung was measured, in the direction
 that flatters the more expensive rungs.
 
