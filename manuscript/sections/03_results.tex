@@ -35,9 +35,9 @@ contacted in both poses can still gain or lose an interaction, as Tyr341 does. C
 interaction by interaction, the crystal pose carries 18 and the redocked pose 14, of
 which 11 are common, 7 appear only in the crystal pose and 3 only in the docked one.
 Ten of the 18 crystal interactions are typed rather than bare van der Waals contact,
-and 8 of those 10 are recovered, among them the hydrophobic and $\pi$-stacking contacts
-at Trp86 and at Trp286 and the cation--$\pi$ and hydrophobic contacts at Tyr337, which
-are the six that fall at the three sites the descriptors use. The two typed
+and 8 of those 10 are recovered. Among them are the hydrophobic and $\pi$-stacking
+contacts at Trp86 and at Trp286 and the cation--$\pi$ and hydrophobic contacts at
+Tyr337, which are the six that fall at the three sites the descriptors use. The two typed
 interactions that are lost are a hydrogen-bond acceptor contact with Phe295 and a
 hydrophobic contact with Phe297, and neither lies at one of the three named sites.
 Every remaining difference is van der Waals contact, lost at Tyr72, Trp286, Ser203,
@@ -137,7 +137,7 @@ one the descriptors actually require.
   \label{fig:stability}
 \end{figure}
 
-\subsection{Comparison of the four descriptor sets}\label{sec:ladder}
+\subsection{Comparison of the five descriptor sets}\label{sec:ladder}
 
 Table~\ref{tab:benchmark} gives the best score each rung reached on each framing,
 together with the algorithm family that reached it. On \framingA{} the 2D
@@ -155,9 +155,8 @@ carrying a rung throughout.
 \begin{table}[tb]
   \centering
   \caption{\textbf{Best score per rung on each framing}, over the rung's descriptor
-    arms and the algorithm families, on 217 development ligands and 145 development
-    pairs. The winning family is named in parentheses. The full grid is
-    the supplementary tables at the end of this section.}
+    arms and the algorithm families, with the winning family in parentheses. The full
+    grid is in the supplementary tables.}
   \label{tab:benchmark}
   \input{../results/22_benchmark_main.tex}
 \end{table}
@@ -382,16 +381,16 @@ distance-only descriptors measure what they are defined to measure, which is pro
 and they measure it reproducibly. What the panel shows is that proximity saturates,
 so for the ligands that are not simply pinned against the site, which are exactly the
 ones a cliff comparison turns on, the descriptor returns the same value whatever the
-chemistry is doing. That bears on the reliability result above, because a quantity
+chemistry is doing. That bears on the replicate test, because a quantity
 sitting at 100 per cent in most runs is reproducible for a reason that has nothing to
-do with its usefulness. The filter of Section~\ref{sec:reliability} will therefore
+do with its usefulness. A reliability filter will therefore
 favour a saturated quantity over a discriminating one, which is a property of that
 filter worth stating rather than a fault in these descriptors.
 
 The typed occupancy is not a ready replacement for it either, and the same replicate
 test says why. Put through that test, it gives a ratio of $2.63$ at Trp86 and $1.05$ at Trp286, against $103$ and $52$
-for the distance-only descriptors, so one of the two would not pass the filter of
-Section~\ref{sec:reliability} at all. Part of that noise is the coarser sampling, and
+for the distance-only descriptors, so one of the two would not clear the threshold of
+two at all. Part of that noise is the coarser sampling, and
 a typing computed on every frame might fare better. The exchange is therefore
 discrimination against reproducibility rather than chemistry against geometry, and
 this work has tested neither side of it as a predictor. Nothing in this subsection
@@ -404,9 +403,9 @@ Whether \SI{20}{\nano\second} is longer than the descriptors need was tested by
 recomputing them on the first 5, 10, 20 and \SI{30}{\nano\second} of each trajectory
 and scoring each window on the frozen folds. Two series are drawn in
 Figure~\ref{fig:duration}, because the replicate filter selects a different set at each
-window, 14 features at 5 and \SI{10}{\nano\second} against 12 at 20, and letting it do
-so would confound how much trajectory a descriptor saw with which descriptors were
-chosen. The fixed series holds the \SI{20}{\nano\second} selection at every window and
+window. It passes 13 descriptors at 5 and \SI{10}{\nano\second} against 11 at 20, which
+with the heavy-atom covariate make 14 features against 12, and letting it vary would
+confound how much trajectory a descriptor saw with which descriptors were chosen. The fixed series holds the \SI{20}{\nano\second} selection at every window and
 is the one that isolates length. On it, \framingA{} in panel~(a) moves between $+0.030$ and
 $+0.044$, \framingB{} in panel~(b) between $+0.149$ and $+0.196$, and \framingC{} in
 panel~(c) between $0.748$ and $0.796$. Each of those spreads is smaller than the
@@ -419,8 +418,9 @@ can resolve.
   \caption{\textbf{Trajectory length is not the limiting factor between 5 and
     20~ns.} Panels show (a)~\framingA{}, (b)~\framingB{} and (c)~\framingC{}, with
     descriptors recomputed on the first 5, 10, 20 and 30~ns of analysed
-    trajectory. The per-window replicate filter gives 14, 14 and 12 features at 5, 10
-    and 20~ns and does not select the same ones at each, so it confounds trajectory
+    trajectory. The per-window replicate filter passes 13, 13 and 11 descriptors at 5, 10
+    and 20~ns, 14, 14 and 12 features with the heavy-atom covariate, and does not
+    select the same ones at each, so it confounds trajectory
     length with descriptor choice; the fixed series holds the 20~ns selection at every
     window and isolates length.
     Only the 45 development ligands whose runs were continued past production reach

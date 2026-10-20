@@ -188,12 +188,16 @@ the unit of the intervals of Section~\ref{sec:eval}. Treating its two rows as
 independent observations would count every pair twice and would narrow every interval
 by a factor that the data does not support.
 
-\subsection{Four descriptor sets of increasing computational
+\subsection{Five descriptor sets of increasing computational
 cost}\label{sec:rungs}
 
-We compared four descriptor families, ordered by the cost of producing them, and we refer to each as a rung of that ladder. The first needs only the molecular
-graph, the second a docked pose, the third an energy evaluation on that pose and the
-fourth a molecular-dynamics trajectory. The ordering is the point of the comparison,
+We compared five descriptor sets, ordered by the cost of producing them, and we refer
+to each as a rung of that ladder. The first needs only the molecular graph, the next
+two a docked pose, taken from one receptor conformation and from an ensemble of eight,
+the fourth an energy evaluation on that pose and the fifth a molecular-dynamics
+trajectory. The ensemble rung is labelled 2e rather than 3 because it shares its input
+with rung~2 and differs only in how many receptor conformations that input comes
+from. The ordering is the point of the comparison,
 as the question is not whether a more expensive representation can be built but
 whether it buys anything. We therefore scored every rung with the same algorithms, on
 the same folds and in the three framings of Section~\ref{sec:framings}, so that a
@@ -214,7 +218,7 @@ are chosen.
 \begin{table}[tb]
   \centering
   \small
-  \caption{\textbf{The four descriptor sets.} The input each rung requires, what its
+  \caption{\textbf{The five descriptor sets.} The input each rung requires, what its
     descriptors capture, the number of features it was scored with, and the cost of
     producing it for one ligand.}
   \label{tab:rungs}
