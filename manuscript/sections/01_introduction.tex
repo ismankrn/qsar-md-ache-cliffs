@@ -21,63 +21,74 @@ fingerprint encodes which circular substructures a molecule contains
 of their bits, and whatever that substituent does to the three-dimensional fit, to the
 hydrogen bonding or to the residence time in the site is invisible to it. The remedy
 that follows is equally standard, which is to replace or augment the fingerprint with a
-representation carrying the physics. That reasoning is plausible, widely repeated, and
-rarely tested in the form in which it is stated. Testing it requires three things at
-once, namely a structure-based representation scored on a cliff endpoint, a
-ligand-based baseline scored on the same splits and the same folds, and a statement of
-how large a difference the design could have detected had one been there.
+representation that carries the physics. Docked pose geometry, receptor ensembles,
+implicit-solvent energies and molecular dynamics are each proposed in that spirit, and
+each is more expensive than the fingerprint it is meant to improve upon.
 
-The closest precedent supplies the first of those three and not the other two.
-\citet{husby2015} reports that activity cliffs can be predicted accurately by advanced
-structure-based methods, and the numbers behind that statement repay reading. Template
-docking reaches a median accuracy of 90 per cent, using the crystallographic pose of
-the more potent member of the pair. A pocket ensemble selected with the cliff labels
-themselves reaches 71 to 100 per cent, which those authors describe as a purely
-retrospective exercise. The prospective arm, cross-docking, sits at a median of 53 per
-cent on a two-way ranking task. Both members of every pair in that benchmark carry a
-crystal structure, the endpoint is pairwise ranking rather than a signed difference,
-and no ligand-based comparison is run anywhere in the paper. What this leaves open is
-the prospective setting with one receptor, a harder endpoint, and a matched
-two-dimensional baseline.
+Where that remedy has been tested on cliffs, it has been tested in a setting more
+generous than the one it would be used in. \citet{husby2015} reports that activity
+cliffs can be predicted accurately by advanced structure-based methods, and the numbers
+behind that statement repay reading. Template docking reaches a median accuracy of 90
+per cent, using the crystallographic pose of the more potent member of the pair. A
+pocket ensemble selected with the cliff labels themselves reaches 71 to 100 per cent,
+which those authors describe as a purely retrospective exercise. The prospective arm,
+cross-docking, sits at a median of 53 per cent on a two-way ranking task. Both members
+of every pair in that benchmark carry a crystal structure, the endpoint is pairwise
+ranking rather than a signed difference, and no ligand-based comparison is run anywhere
+in the paper.
 
 Molecular dynamics has been brought to a cliff-infested target before, in a different
 role. \citet{abudayah2022} extracts pharmacophore models from trajectory frames of a
 potent binder and selects among them with a genetic-algorithm QSAR, then uses the
 result to screen a compound collection. The trajectory there supplies the hypothesis
 that a screening model is built from, and the question asked of it is whether actives
-can be retrieved. Whether quantities measured on a trajectory predict the potency
-difference within a cliff pair better than a fingerprint does is a different question,
-and it is the one addressed here.
+can be retrieved.
 
-This study answers it by escalation. Four structure-based representations of increasing
-physical detail were built for the same ligands and scored against the same fingerprint
-baseline, running from the geometry of a single docked pose, through the same geometry
-measured over an eight-member receptor ensemble \citep{amaro2018}, to an
-implicit-solvent interaction energy \citep{genheden2015}, and finally to descriptors
-extracted from molecular dynamics trajectories of \SI{25}{\nano\second}. The target is
-human acetylcholinesterase, which supplies 271 ligands and 145 matched pairs, 77 of
-them constitutional activity cliffs. Each representation met three framings of the same
-data, namely per-ligand potency, the signed potency difference within a pair, and the
-separation of cliff pairs from controls. The splits were frozen before any descriptor
-was computed and a test set was sealed. What the comparison could have detected was
-measured on synthetic descriptor matrices pushed through the same models and the same
-folds, and was stated before the comparison it bounds had been scored.
+Three gaps follow from this, and they compound. Descriptors measured on a trajectory
+have not been scored against a cliff endpoint at all, so the most expensive rung of the
+usual remedy is the least tested on the problem it is recommended for. Where
+structure-based methods have been tested, the strong results draw on information that
+a prospective application does not possess, namely the crystallographic pose of the
+answer or a pocket set chosen with the labels, while the arm that withholds that
+information sits near chance. No ligand-based baseline is scored on the same compounds
+and the same splits anywhere in this literature, and no study states how large a
+difference its design could have detected, so a result that favours physics cannot be
+separated from an easier comparison and a result that does not cannot be separated from
+an underpowered one.
 
-Little of the descriptor machinery is new, and this paper does not claim otherwise.
-Residue-wise interaction fingerprints date to \citet{sift2004}, \citet{prolif2021}
-computes them from molecular dynamics trajectories, and \citet{ifp_md_2024} aggregates
-them over a trajectory into occupancies. The contribution is the application of such
-descriptors to activity cliffs against a matched baseline with a stated detection
-limit, rather than the descriptors themselves.
+Closing those gaps calls for a particular shape of experiment rather than one more
+comparison. A single contest between molecular dynamics and a fingerprint cannot
+distinguish physical detail failing to help from one implementation of it failing, so
+the representations are better arranged as a ladder in which each rung adds one kind of
+information to the one below it, since the rung at which an advantage appears, if any
+does, identifies what supplied it. The baseline must be the fingerprint as it would
+actually be used, scored on the same frozen splits and the same folds, because a
+handicapped baseline turns a comparison of representations into a comparison of feature
+counts. The detection limit must be measured on the design itself and fixed before the
+comparison is scored, because a null without one reports the size of the study rather
+than the size of the effect. Each of these answers one of the three gaps directly.
 
-Five contributions follow. A ladder of five descriptor sets is scored on three framings
-of one well-characterised target with frozen splits, and no structure-based rung is
-resolvably better than a two-dimensional fingerprint on any of them. The detection
-limit of that comparison is measured rather than assumed, which bounds the null instead
-of leaving it open. The variance the ladder leaves unexplained is placed beyond what
-assay reproducibility accounts for and shown not to move with trajectory length, which
-locates the limitation in the descriptors rather than in the data. A replicate test
-establishes which dynamic quantities a trajectory of this length can carry at all,
-separating persistence from amplitude. One measurement artefact is quantified, in which
-a descriptor filter refitted at each value of a varied parameter manufactures a trend
-that a single fixed selection removes.
+The objectives of this study follow from that shape. The first is to measure whether
+structure-based representations of increasing physical detail predict activity-cliff
+behaviour better than a two-dimensional fingerprint, on three framings of the same
+data, against a matched baseline and on splits frozen before any descriptor was
+computed. The second is to establish what difference such a design could have detected,
+so that the outcome bounds the question rather than merely failing to answer it. The
+third is to determine which dynamic quantities a trajectory of affordable length can
+supply reproducibly, since a descriptor that does not survive a change of velocity seed
+cannot carry an endpoint whatever its physical appeal. The fourth is to quantify a
+measurement artefact encountered in the course of the work, in which a descriptor
+filter refitted at each value of a varied parameter manufactures a trend that a single
+fixed selection removes.
+
+Human acetylcholinesterase is the target throughout, supplying 271 ligands and 145
+matched pairs, 77 of them constitutional activity cliffs. The ladder runs from the
+geometry of a single docked pose, through the same geometry measured over an
+eight-member receptor ensemble \citep{amaro2018}, to an implicit-solvent interaction
+energy \citep{genheden2015}, and finally to descriptors extracted from molecular
+dynamics trajectories of \SI{25}{\nano\second}. Little of that machinery is new and
+this paper does not claim otherwise, since residue-wise interaction fingerprints date
+to \citet{sift2004}, \citet{prolif2021} computes them from molecular dynamics
+trajectories, and \citet{ifp_md_2024} aggregates them over a trajectory into
+occupancies. What is offered here is the comparison these descriptors have not yet been
+put to, together with the detection limit that makes its outcome readable.
