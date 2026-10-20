@@ -310,14 +310,14 @@ a force field is applied, and the receptor is rigid throughout the docking.
   \label{fig:structure}
 \end{figure}
 
-We docked all ligands into the prepared 4EY7 receptor by using AutoDock Vina
+We docked all ligands into the prepared 4EY7 receptor by using AutoDock Vina~1.2.7
 \citep{vina_orig,vina}. The search box was a cube of \SI{30}{\angstrom} per side centred at
 $(-14.257, -42.544, 30.646)$~\AA{}, midway between the CAS and the PAS so that poses
 spanning the gorge were accessible, and we set the exhaustiveness to 32. Ligand structures were generated from the protonated SMILES of
 Section~\ref{sec:dataset} by adding hydrogens, embedding a single conformer with the
 ETKDGv3 method under a fixed random seed and optimising it with the MMFF94 force
-field, all by using RDKit \citep{rdkit}. The resulting structures were converted to
-the PDBQT format by using Meeko \citep{meeko}, and each ligand was docked with three
+field, all by using RDKit~2026.03.1 \citep{rdkit}. The resulting structures were converted to
+the PDBQT format by using Meeko~0.8 \citep{meeko}, and each ligand was docked with three
 independent seeds, since the search of Vina is stochastic and a single run can settle
 on a different pose. The cationic state matters here, as the catalytic site binds its
 ligands through a cation--$\pi$ interaction with Trp86. The pose-geometry descriptors were computed on the top-ranked pose of each seed and
@@ -421,7 +421,7 @@ the 32. Extracting them requires
 the periodic boundary to be handled before anything is measured. Each molecule is made
 whole along its bonds, prevented from jumping between consecutive frames and placed in
 the periodic image of the first frame, and only then is the receptor superposed by the
-Kabsch algorithm, all of it through MDAnalysis \citep{mdanalysis}. An earlier version did none of this and compared coordinates against
+Kabsch algorithm, all of it through MDAnalysis~2.10.0 \citep{mdanalysis}. An earlier version did none of this and compared coordinates against
 a frozen reference, which absorbed the rotation and the diffusion of the complex and
 left molecules cut by box faces. Re-extracting one raw trajectory under both
 treatments changed 19 of some 30 descriptors, with the ligand RMSD falling from 26.70
@@ -478,8 +478,8 @@ Six regression families carried framings~A and~B, chosen to span the model class
 rather than to find the best one. They were ridge regression \citep{ridge}, partial
 least squares \citep{pls}, $k$-nearest neighbours \citep{knn}, a support vector machine
 with a radial basis function kernel \citep{svm}, a random forest \citep{rf} and
-histogram-based gradient boosting \citep{gbm}, all as implemented in scikit-learn
-\citep{sklearn}. A linear model, a latent-variable model, an instance-based one, a
+histogram-based gradient boosting \citep{gbm}, all as implemented in
+scikit-learn~1.9.0 \citep{sklearn}. A linear model, a latent-variable model, an instance-based one, a
 kernel method and two ensembles between them cover the shapes a structure-activity
 relationship is usually assumed to take, so a rung that fails on all six has not simply
 been given the wrong model. We fixed the hyperparameters before any rung was scored and
