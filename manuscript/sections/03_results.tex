@@ -226,8 +226,12 @@ design can see, and leave the question open where it cannot.
 \subsection{Statistical power of the comparison}\label{sec:power}
 
 The resolution of the comparison was measured on synthetic descriptor matrices pushed
-through the same pipeline, and Figure~\ref{fig:power}(a) gives the result against a
-rung-1 baseline of $0.209$. A candidate reaching $0.335$, which is a gain of $0.114$,
+through the same support vector machine and the same frozen folds, on the pair endpoint
+of \framingB{}. The baseline in that simulation is itself synthetic, built by tuning
+the signal strength of a descriptor block until its out-of-fold coefficient of
+determination matched the $0.200$ that rung~1 reaches, which the tuning met at $0.209$.
+Figure~\ref{fig:power}(a) gives, against that baseline, the share of simulations in
+which a candidate of a given strength is called the better of the two. A candidate reaching $0.335$, which is a gain of $0.114$,
 is called better than the baseline in 36 per cent of simulations, and one reaching
 $0.479$, a gain of $0.256$, in 90 per cent. Eighty per cent power arrives at about
 $0.45$, so the smallest advantage this design is likely to detect is a gain of roughly
@@ -242,9 +246,9 @@ determination about $0.3$ apart, and not less.
   \includegraphics[width=\textwidth]{fig3\_power.pdf}
   \caption{\textbf{The design separates large effects only, and what it leaves
     unexplained is signal rather than assay noise.}
-    (a)~Power to call a candidate descriptor set better than rung~1, with the
-    baseline re-simulated inside every replicate; 80\% power requires
-    $R^2 \approx 0.45$ against a rung-1 baseline of 0.209.
+    (a)~Power to call a candidate descriptor set the better of the two, against a
+    synthetic baseline tuned to the $0.200$ of rung~1 and re-simulated inside every
+    replicate; 80\% power requires $R^2 \approx 0.45$.
     (b)~The 95\% interval on the gap is 0.32 wide on average and nearly flat
     across the range.
     (c)~The measurement-noise ceiling, from 336 of 5{,}609 compounds carrying a
