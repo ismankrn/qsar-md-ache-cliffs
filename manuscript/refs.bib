@@ -2,10 +2,10 @@
 %  Every entry has been checked against the publisher record. Each note says
 %  through what and on what date. No STUB entries remain.
 %
-%  Three things are still outstanding and are flagged in the notes themselves,
-%  not here: the ChEMBL release the activity data came from, the GROMACS
-%  release used for production, and canonical citations for the rmsf_*,
-%  n_bridge_water, gate_chi1_sd and gate_flips_per_ns observables.
+%  Two things are still outstanding and are flagged in the notes themselves,
+%  not here. The ChEMBL release the activity data came from, and the GROMACS
+%  release used for production, are recorded nowhere in this repository and must
+%  be supplied before submission.
 %
 %  See ../results/29_literature_check.md for what the search found and, more
 %  importantly, what it did not.
@@ -424,4 +424,82 @@
              the NCI set. It does not score MD-derived descriptors on a cliff
              endpoint against a ligand-based baseline, so it does not overlap
              the comparison made here.}
+}
+
+% ------------------------------------------------------- MD OBSERVABLES --
+% Canonical references for the dynamic quantities of Section 2.5, found and
+% verified through Crossref on 2026-10-20. These were the last entries the
+% literature check had left unsearched.
+
+@article{mdfluct,
+  author  = {Karplus, Martin and McCammon, J. Andrew},
+  title   = {Molecular Dynamics Simulations of Biomolecules},
+  journal = {Nature Structural Biology},
+  volume  = {9}, number = {9}, pages = {646--652}, year = {2002},
+  doi     = {10.1038/nsb0902-646},
+  note    = {VERIFIED via Crossref 2026-10-20. Cited for the atomic fluctuation
+             a trajectory supplies and a single structure does not, which is what
+             rmsf\_lig and rmsf\_gorge measure.}
+}
+
+@article{rmsf_bfactor,
+  author  = {Kuzmanic, Antonija and Zagrovic, Bojan},
+  title   = {Determination of Ensemble-Average Pairwise Root Mean-Square
+             Deviation from Experimental {B}-Factors},
+  journal = {Biophysical Journal},
+  volume  = {98}, number = {5}, pages = {861--871}, year = {2010},
+  doi     = {10.1016/j.bpj.2009.11.011},
+  note    = {VERIFIED via Crossref 2026-10-20. The quantitative treatment of
+             root-mean-square fluctuation against the crystallographic B-factor,
+             cited for what an RMSF is and what it can be compared with.}
+}
+
+@article{gating1998,
+  author  = {Zhou, Huan-Xiang and Wlodek, Stanislaw T. and McCammon, J. Andrew},
+  title   = {Conformation Gating as a Mechanism for Enzyme Specificity},
+  journal = {Proceedings of the National Academy of Sciences},
+  volume  = {95}, number = {16}, pages = {9280--9283}, year = {1998},
+  doi     = {10.1073/pnas.95.16.9280},
+  note    = {VERIFIED via Crossref 2026-10-20. The title is printed as
+             "Conformation gating", not "Conformational", and is reproduced as
+             printed. Establishes conformational gating of the acetylcholinesterase
+             gorge, which is what gate\_chi1\_sd and gate\_flips\_per\_ns are
+             measuring on Tyr337.}
+}
+
+@article{gorge2017,
+  author  = {Cheng, Shanmei and Song, Wanling and Yuan, Xiaojing and Xu, Yechun},
+  title   = {Gorge Motions of Acetylcholinesterase Revealed by Microsecond
+             Molecular Dynamics Simulations},
+  journal = {Scientific Reports},
+  volume  = {7}, number = {1}, pages = {3219}, year = {2017},
+  doi     = {10.1038/s41598-017-03088-y},
+  note    = {VERIFIED via Crossref 2026-10-20. Identifies the gorge bottleneck as
+             formed mainly by Phe330 and Tyr121 in Torpedo numbering, where
+             Phe330 is the position occupied by Tyr337 in the human enzyme
+             simulated here.}
+}
+
+@article{water_ladbury,
+  author  = {Ladbury, John E.},
+  title   = {Just Add Water! The Effect of Water on the Specificity of
+             Protein-Ligand Binding Sites and Its Potential Application to Drug
+             Design},
+  journal = {Chemistry \& Biology},
+  volume  = {3}, number = {12}, pages = {973--980}, year = {1996},
+  doi     = {10.1016/S1074-5521(96)90164-7},
+  note    = {VERIFIED via Crossref 2026-10-20. Cited for the water that bridges
+             ligand and protein rather than being displaced by binding, which is
+             what n\_bridge\_water counts.}
+}
+
+@article{water_levy,
+  author  = {Levy, Yaakov and Onuchic, Jos\'{e} N.},
+  title   = {Water Mediation in Protein Folding and Molecular Recognition},
+  journal = {Annual Review of Biophysics and Biomolecular Structure},
+  volume  = {35}, pages = {389--415}, year = {2006},
+  doi     = {10.1146/annurev.biophys.35.040405.102134},
+  note    = {VERIFIED via Crossref 2026-10-20. Cited beside Ladbury for
+             water-mediated recognition as an established mechanism rather than
+             one proposed here.}
 }

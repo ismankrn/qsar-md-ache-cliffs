@@ -405,9 +405,18 @@ fraction of the analysed window over which a contact or a position is held,
 fluctuation quantities the amplitude of motion, and event counts the rate at which
 something happens. None of them is a frame-averaged version of a rung-2 quantity, since
 averaging a pose descriptor over a trajectory would test the averaging rather than the
-dynamics. They are computed on the same fourteen gorge-lining residues, with Trp86 at
-the CAS, Trp286 at the PAS and Tyr337 as the gate, and the heavy-atom count is carried
-beside them as a size covariate rather than as one of the 32. Extracting them requires
+dynamics. The fluctuation class rests on the root-mean-square fluctuation of an atom
+about its own mean position, which is the quantity a trajectory supplies and a single
+structure cannot \citep{mdfluct,rmsf_bfactor}, taken over the ligand atoms and over the
+gorge-lining side chains. Two event counts follow the Tyr337 side chain, whose rotation
+gates the gorge \citep{gating1998,gorge2017} and which occupies the position of Phe330
+in the Torpedo enzyme where that gating was characterised. One further quantity counts
+the water molecules hydrogen bonding to ligand and protein at the same time, since a
+bridging water participates in recognition rather than being displaced by it
+\citep{water_ladbury,water_levy}. They are computed on the same fourteen gorge-lining
+residues, with Trp86 at the CAS, Trp286 at the PAS and Tyr337 as the gate, and the
+heavy-atom count is carried beside them as a size covariate rather than as one of
+the 32. Extracting them requires
 the periodic boundary to be handled before anything is measured. Each molecule is made
 whole along its bonds, prevented from jumping between consecutive frames and placed in
 the periodic image of the first frame, and only then is the receptor superposed by the
