@@ -1,8 +1,11 @@
 % ============================================================================
-%  Entries marked VERIFIED were checked against the publisher or PubMed record
-%  on 2026-10-13 and may be cited. Entries marked STUB were not, and must be
-%  before submission -- a plausible-looking wrong citation is worse than an
-%  obviously missing one.
+%  Every entry has been checked against the publisher record. Each note says
+%  through what and on what date. No STUB entries remain.
+%
+%  Three things are still outstanding and are flagged in the notes themselves,
+%  not here: the ChEMBL release the activity data came from, the GROMACS
+%  release used for production, and canonical citations for the rmsf_*,
+%  n_bridge_water, gate_chi1_sd and gate_flips_per_ns observables.
 %
 %  See ../results/29_literature_check.md for what the search found and, more
 %  importantly, what it did not.
@@ -17,8 +20,8 @@
   journal = {Journal of Chemical Information and Modeling},
   volume  = {55}, number = {5}, pages = {1062--1076}, year = {2015},
   doi     = {10.1021/ci500742b},
-  note    = {VERIFIED journal/volume/pages/DOI. AUTHOR LIST NOT YET VERIFIED --
-             check before submission. Engage with this paper rather than citing
+  note    = {VERIFIED via Crossref 2026-10-20, author list included. Engage with
+             this paper rather than citing
              its abstract: template docking reaches a median 90\% but uses the
              X-ray pose of the stronger ligand, the ALiBERO arm selects pockets
              using the cliff labels and the authors call it purely
@@ -42,13 +45,15 @@
 }
 
 @article{dablander2023,
-  title   = {Exploring {QSAR} models for activity-cliff prediction},
+  author  = {Dablander, Markus and Hanser, Thierry and Lambiotte, Renaud and
+             Morris, Garrett M.},
+  title   = {Exploring {QSAR} Models for Activity-Cliff Prediction},
   journal = {Journal of Cheminformatics},
-  year    = {2023},
+  volume  = {15}, number = {1}, pages = {47}, year = {2023},
   doi     = {10.1186/s13321-023-00708-w},
-  note    = {VERIFIED journal/year/DOI. AUTHOR LIST AND PAGES NOT YET VERIFIED.
-             Nine QSAR models on three targets; models frequently fail on
-             cliffs and ECFP remains the strongest representation.}
+  note    = {VERIFIED via Crossref 2026-10-20: full author list, volume, article
+             number and DOI. Nine QSAR models on three targets; models frequently
+             fail on cliffs and ECFP remains the strongest representation.}
 }
 
 @article{sift2004,
@@ -57,7 +62,8 @@
              Analyzing Three-Dimensional Protein--Ligand Binding Interactions},
   journal = {Journal of Medicinal Chemistry},
   volume  = {47}, number = {2}, pages = {337--344}, year = {2004},
-  note    = {VERIFIED via PubMed record. The foundational residue-wise
+  doi     = {10.1021/jm030331x},
+  note    = {VERIFIED via Crossref 2026-10-20, DOI added. The foundational residue-wise
              interaction fingerprint; this is what the occ\_* descriptors are,
              computed per frame instead of per structure.}
 }
@@ -67,24 +73,26 @@
   title   = {{ProLIF}: A Library to Encode Molecular Interactions as
              Fingerprints},
   journal = {Journal of Cheminformatics},
-  year    = {2021},
+  volume  = {13}, number = {1}, pages = {72}, year = {2021},
   doi     = {10.1186/s13321-021-00548-6},
-  note    = {VERIFIED DOI and scope: interaction fingerprints from MD
+  note    = {VERIFIED via Crossref 2026-10-20, volume and article number added. Scope is interaction fingerprints from MD
              trajectories, docking and experimental structures. Used here for
              the typed-interaction figures, and the reason trajectory-averaged
              occupancy must not be claimed as new.}
 }
 
 @article{ifp_md_2024,
-  title   = {Aggregated interaction fingerprints from molecular dynamics},
+  author  = {Jaeger-Honz, Sabrina and Klein, Karsten and Schreiber, Falk},
+  title   = {Systematic Analysis, Aggregation and Visualisation of Interaction
+             Fingerprints for Molecular Dynamics Simulation Data},
   journal = {Journal of Cheminformatics},
-  year    = {2024},
+  volume  = {16}, number = {1}, pages = {28}, year = {2024},
   doi     = {10.1186/s13321-024-00822-3},
-  note    = {TITLE AND AUTHORS NOT VERIFIED -- DOI is from a search result and
-             resolves to a J. Cheminform. 2024 paper that aggregates per-frame
-             interaction fingerprints into occupancies with a 30\% presence
-             threshold. Fetch the record and complete this entry; it is the
-             closest precedent for the occ\_* construction.}
+  note    = {VERIFIED via Crossref 2026-10-20: title, full author list, journal,
+             volume, article number, year and DOI. Aggregates per-frame
+             interaction fingerprints over a trajectory, which is the closest
+             precedent for the occ\_* construction and the reason no novelty is
+             claimed for it.}
 }
 
 @article{cheung2012,
@@ -123,20 +131,150 @@
              one invented for this study.}
 }
 
-% -------------------------------------------------------------------- STUB --
-% Software and data. Standard, but the version actually used must be cited, and
-% none of these has been checked against its publisher record.
+% ------------------------------------------------------------- SOFTWARE & DATA --
+% All verified through Crossref on 2026-10-20 except where noted. Versions are
+% those pinned in environment-full-osx-arm64.yml / environment-hpc.yml.
 
-@misc{chembl,     title = {ChEMBL database},                 note = {STUB: cite the database paper and the release used}}
-@misc{gromacs,    title = {GROMACS},                         note = {STUB: cite the version in environment-hpc.yml}}
-@misc{openff_sage,title = {Open Force Field Sage 2.3.0},     note = {STUB: Sage paper plus the toolkit}}
-@misc{amber_ff14sb,title = {ff14SB protein force field},     note = {STUB}}
-@misc{tip3p,      title = {TIP3P water model},               note = {STUB}}
-@misc{rdkit,      title = {RDKit: open-source cheminformatics}, note = {STUB: cite the version used}}
-@misc{sklearn,    title = {scikit-learn: machine learning in Python}, note = {STUB}}
-@misc{vina,       title = {AutoDock Vina},                   note = {STUB: cite the Vina paper and the version used; the Python bindings are used here}}
-@misc{meeko,      title = {Meeko: ligand preparation for AutoDock},  note = {STUB: used to write ligand PDBQT files}}
-@misc{mdanalysis, title = {MDAnalysis},                      note = {STUB: used for trajectory analysis}}
+@article{chembl,
+  author  = {Zdrazil, Barbara and Felix, Eloy and Hunter, Fiona and
+             Manners, Emma J. and Blackshaw, James and Corbett, Sybilla and
+             de Veij, Marleen and Ioannidis, Harris and Mendez, David and
+             Mosquera, Juan F. and Magarinos, Maria Paula and Bosc, Nicolas and
+             Arcila, Ricardo and Kizil\"{o}ren, Tevfik and Gaulton, Anna and
+             Bento, A. Patr\'{i}cia and Adasme, Melissa F. and Monecke, Peter and
+             Landrum, Gregory A. and Leach, Andrew R.},
+  title   = {The {ChEMBL} Database in 2023: A Drug Discovery Platform Spanning
+             Multiple Bioactivity Data Types and Time Periods},
+  journal = {Nucleic Acids Research},
+  volume  = {52}, number = {D1}, pages = {D1180--D1192}, year = {2024},
+  doi     = {10.1093/nar/gkad1004},
+  note    = {VERIFIED via Crossref 2026-10-20. Print issue January 2024, online
+             November 2023. The release the activity data were drawn from is not
+             recorded in this repository and must be stated in the Methods before
+             submission.}
+}
+
+@article{gromacs,
+  author  = {Abraham, Mark James and Murtola, Teemu and Schulz, Roland and
+             P\'{a}ll, Szil\'{a}rd and Smith, Jeremy C. and Hess, Berk and
+             Lindahl, Erik},
+  title   = {{GROMACS}: High Performance Molecular Simulations Through
+             Multi-Level Parallelism from Laptops to Supercomputers},
+  journal = {SoftwareX},
+  volume  = {1--2}, pages = {19--25}, year = {2015},
+  doi     = {10.1016/j.softx.2015.06.001},
+  note    = {VERIFIED via Crossref 2026-10-20. The release used for production is
+             not recorded in this repository and must be stated before submission.}
+}
+
+@article{openff_sage,
+  author  = {Boothroyd, Simon and Behara, Pavan Kumar and Madin, Owen C. and
+             Hahn, David F. and Jang, Hyesu and Gapsys, Vytautas and
+             Wagner, Jeffrey R. and Horton, Joshua T. and Dotson, David L. and
+             Thompson, Matthew W. and Maat, Jessica and Gokey, Trevor and
+             Wang, Lee-Ping and Cole, Daniel J. and Gilson, Michael K. and
+             Chodera, John D. and Bayly, Christopher I. and Shirts, Michael R. and
+             Mobley, David L.},
+  title   = {Development and Benchmarking of Open Force Field 2.0.0:
+             The Sage Small Molecule Force Field},
+  journal = {Journal of Chemical Theory and Computation},
+  volume  = {19}, number = {11}, pages = {3251--3275}, year = {2023},
+  doi     = {10.1021/acs.jctc.3c00039},
+  note    = {VERIFIED via Crossref 2026-10-20. This is the Sage line paper; the
+             parameters used here are Sage 2.3.0, applied through
+             openff-toolkit 0.18.0 with openff-forcefields 2026.01.0.}
+}
+
+@article{amber_ff14sb,
+  author  = {Maier, James A. and Martinez, Carmenza and Kasavajhala, Koushik and
+             Wickstrom, Lauren and Hauser, Kevin E. and Simmerling, Carlos},
+  title   = {{ff14SB}: Improving the Accuracy of Protein Side Chain and Backbone
+             Parameters from {ff99SB}},
+  journal = {Journal of Chemical Theory and Computation},
+  volume  = {11}, number = {8}, pages = {3696--3713}, year = {2015},
+  doi     = {10.1021/acs.jctc.5b00255},
+  note    = {VERIFIED via Crossref 2026-10-20.}
+}
+
+@article{tip3p,
+  author  = {Jorgensen, William L. and Chandrasekhar, Jayaraman and
+             Madura, Jeffry D. and Impey, Roger W. and Klein, Michael L.},
+  title   = {Comparison of Simple Potential Functions for Simulating Liquid
+             Water},
+  journal = {The Journal of Chemical Physics},
+  volume  = {79}, number = {2}, pages = {926--935}, year = {1983},
+  doi     = {10.1063/1.445869},
+  note    = {VERIFIED via Crossref 2026-10-20.}
+}
+
+@article{sklearn,
+  author  = {Pedregosa, Fabian and Varoquaux, Ga\"{e}l and Gramfort, Alexandre and
+             Michel, Vincent and Thirion, Bertrand and Grisel, Olivier and
+             Blondel, Mathieu and Prettenhofer, Peter and Weiss, Ron and
+             Dubourg, Vincent and Vanderplas, Jake and Passos, Alexandre and
+             Cournapeau, David and Brucher, Matthieu and Perrot, Matthieu and
+             Duchesnay, \'{E}douard},
+  title   = {Scikit-learn: Machine Learning in {P}ython},
+  journal = {Journal of Machine Learning Research},
+  volume  = {12}, pages = {2825--2830}, year = {2011},
+  note    = {VERIFIED against the JMLR listing for v12 (85) on 2026-10-20. JMLR
+             assigns no DOI. Version 1.9.0 was used.}
+}
+
+@article{vina,
+  author  = {Eberhardt, Jerome and Santos-Martins, Diogo and Tillack, Andreas F.
+             and Forli, Stefano},
+  title   = {{AutoDock Vina} 1.2.0: New Docking Methods, Expanded Force Field,
+             and {P}ython Bindings},
+  journal = {Journal of Chemical Information and Modeling},
+  volume  = {61}, number = {8}, pages = {3891--3898}, year = {2021},
+  doi     = {10.1021/acs.jcim.1c00203},
+  note    = {VERIFIED via Crossref 2026-10-20. Version 1.2.7 was used, through
+             the Python bindings this paper introduces.}
+}
+
+@article{vina_orig,
+  author  = {Trott, Oleg and Olson, Arthur J.},
+  title   = {{AutoDock Vina}: Improving the Speed and Accuracy of Docking with a
+             New Scoring Function, Efficient Optimization, and Multithreading},
+  journal = {Journal of Computational Chemistry},
+  volume  = {31}, number = {2}, pages = {455--461}, year = {2010},
+  doi     = {10.1002/jcc.21334},
+  note    = {VERIFIED via Crossref 2026-10-20. Print issue January 2010, online
+             June 2009. The original Vina paper, cited beside the 1.2.0 release.}
+}
+
+@misc{meeko,
+  author  = {{Forli Lab, Scripps Research}},
+  title   = {Meeko: Preparation of Small Molecules for {AutoDock}},
+  year    = {2024},
+  howpublished = {\url{https://github.com/forlilab/Meeko}},
+  note    = {Version 0.8, used to write ligand PDBQT files. Meeko has no paper of
+             its own; a Crossref search on 2026-10-20 returned none, and the
+             AutoDock Vina 1.2.0 paper is cited beside it as the tooling it
+             belongs to.}
+}
+
+@misc{rdkit,
+  author  = {{RDKit}},
+  title   = {{RDKit}: Open-Source Cheminformatics},
+  year    = {2026},
+  howpublished = {\url{https://www.rdkit.org}},
+  note    = {Version 2026.03.1. RDKit has no citable paper; the project asks to be
+             cited as software with the version used.}
+}
+
+@article{mdanalysis,
+  author  = {Michaud-Agrawal, Naveen and Denning, Elizabeth J. and
+             Woolf, Thomas B. and Beckstein, Oliver},
+  title   = {{MDAnalysis}: A Toolkit for the Analysis of Molecular Dynamics
+             Simulations},
+  journal = {Journal of Computational Chemistry},
+  volume  = {32}, number = {10}, pages = {2319--2327}, year = {2011},
+  doi     = {10.1002/jcc.21787},
+  note    = {VERIFIED via Crossref 2026-10-20. Version 2.10.0 was used for
+             trajectory analysis.}
+}
 
 % ------------------------------------------------------------------ MISSING --
 % Searched for and not found; see ../results/29_literature_check.md
@@ -151,46 +289,63 @@
 %  * Canonical citations for rmsf_*, n_bridge_water, gate_chi1_sd,
 %    gate_flips_per_ns -- not searched for yet.
 
-% -------------------------------------------------------------------- STUB --
-% The learning algorithms of Section 2.6. The author and the year are the canonical
-% ones; the journal, volume, pages and DOI of each still need checking against the
-% publisher record.
+% ------------------------------------------------------- LEARNING ALGORITHMS --
+% The six families of Section 2.6. All verified through Crossref on 2026-10-20.
 
 @article{ridge,
-  author = {Hoerl, Arthur E. and Kennard, Robert W.},
-  title  = {Ridge regression, biased estimation for nonorthogonal problems},
-  year   = {1970},
-  note   = {STUB: Technometrics; verify volume, pages and DOI}}
+  author  = {Hoerl, Arthur E. and Kennard, Robert W.},
+  title   = {Ridge Regression: Biased Estimation for Nonorthogonal Problems},
+  journal = {Technometrics},
+  volume  = {12}, number = {1}, pages = {55--67}, year = {1970},
+  doi     = {10.1080/00401706.1970.10488634},
+  note    = {VERIFIED via Crossref 2026-10-20.}
+}
 
 @article{pls,
-  author = {Wold, Svante and Sj{\"o}str{\"o}m, Michael and Eriksson, Lennart},
-  title  = {{PLS}-regression, a basic tool of chemometrics},
-  year   = {2001},
-  note   = {STUB: Chemometrics and Intelligent Laboratory Systems; verify volume, pages and DOI}}
+  author  = {Wold, Svante and Sj\"{o}str\"{o}m, Michael and Eriksson, Lennart},
+  title   = {{PLS}-Regression: A Basic Tool of Chemometrics},
+  journal = {Chemometrics and Intelligent Laboratory Systems},
+  volume  = {58}, number = {2}, pages = {109--130}, year = {2001},
+  doi     = {10.1016/S0169-7439(01)00155-1},
+  note    = {VERIFIED via Crossref 2026-10-20.}
+}
 
 @article{knn,
-  author = {Cover, Thomas M. and Hart, Peter E.},
-  title  = {Nearest neighbor pattern classification},
-  year   = {1967},
-  note   = {STUB: IEEE Transactions on Information Theory; verify volume, pages and DOI}}
+  author  = {Cover, Thomas M. and Hart, Peter E.},
+  title   = {Nearest Neighbor Pattern Classification},
+  journal = {IEEE Transactions on Information Theory},
+  volume  = {13}, number = {1}, pages = {21--27}, year = {1967},
+  doi     = {10.1109/TIT.1967.1053964},
+  note    = {VERIFIED via Crossref 2026-10-20. Crossref lists the authors with
+             initials only; the full given names are as written here.}
+}
 
 @article{svm,
-  author = {Cortes, Corinna and Vapnik, Vladimir},
-  title  = {Support-vector networks},
-  year   = {1995},
-  note   = {STUB: Machine Learning; verify volume, pages and DOI}}
+  author  = {Cortes, Corinna and Vapnik, Vladimir},
+  title   = {Support-Vector Networks},
+  journal = {Machine Learning},
+  volume  = {20}, number = {3}, pages = {273--297}, year = {1995},
+  doi     = {10.1007/BF00994018},
+  note    = {VERIFIED via Crossref 2026-10-20.}
+}
 
 @article{rf,
-  author = {Breiman, Leo},
-  title  = {Random forests},
-  year   = {2001},
-  note   = {STUB: Machine Learning; verify volume, pages and DOI}}
+  author  = {Breiman, Leo},
+  title   = {Random Forests},
+  journal = {Machine Learning},
+  volume  = {45}, number = {1}, pages = {5--32}, year = {2001},
+  doi     = {10.1023/A:1010933404324},
+  note    = {VERIFIED via Crossref 2026-10-20.}
+}
 
 @article{gbm,
-  author = {Friedman, Jerome H.},
-  title  = {Greedy function approximation, a gradient boosting machine},
-  year   = {2001},
-  note   = {STUB: The Annals of Statistics; verify volume, pages and DOI}}
+  author  = {Friedman, Jerome H.},
+  title   = {Greedy Function Approximation: A Gradient Boosting Machine},
+  journal = {The Annals of Statistics},
+  volume  = {29}, number = {5}, pages = {1189--1232}, year = {2001},
+  doi     = {10.1214/aos/1013203451},
+  note    = {VERIFIED via Crossref 2026-10-20.}
+}
 
 @article{maggiora2006,
   author  = {Maggiora, Gerald M.},

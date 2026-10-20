@@ -4,8 +4,8 @@
 
 This work is concerned with activity cliffs, i.e. pairs of compounds that are
 near-identical in structure and yet far apart in potency. All of the bioactivity data
-used here were taken from ChEMBL, which records measured potencies against individual
-protein targets. The target whose
+used here were taken from ChEMBL \citep{chembl}, which records measured potencies
+against individual protein targets. The target whose
 cliffs are studied here is human acetylcholinesterase (hAChE), with the ChEMBL target
 identifier being CHEMBL220. The
 enzyme hydrolyses acetylcholine, and its inhibition raises the synaptic concentration
@@ -310,7 +310,7 @@ a force field is applied, and the receptor is rigid throughout the docking.
 \end{figure}
 
 We docked all ligands into the prepared 4EY7 receptor by using AutoDock Vina
-\citep{vina}. The search box was a cube of \SI{30}{\angstrom} per side centred at
+\citep{vina_orig,vina}. The search box was a cube of \SI{30}{\angstrom} per side centred at
 $(-14.257, -42.544, 30.646)$~\AA{}, midway between the CAS and the PAS so that poses
 spanning the gorge were accessible, and we set the exhaustiveness to 32. Ligand structures were generated from the protonated SMILES of
 Section~\ref{sec:dataset} by adding hydrogens, embedding a single conformer with the
@@ -354,9 +354,10 @@ nothing earlier in this work had to be repeated.
 
 We built one system per ligand and not per trajectory, so that a replicate differs
 from its parent only in the velocity seed and tests the sampling and not the
-structure. The protein was described by the amber14SB force field, the ligand by
-OpenFF Sage 2.3.0 through a SMIRNOFF template generator and the solvent by the TIP3P
-water model with sodium chloride at \SI{0.15}{\mole\per\litre}. This is the
+structure. The protein was described by the amber14SB force field \citep{amber_ff14sb}, the
+ligand by OpenFF Sage 2.3.0 \citep{openff_sage} through a SMIRNOFF template generator
+and the solvent by the TIP3P water model \citep{tip3p} with sodium chloride at
+\SI{0.15}{\mole\per\litre}. This is the
 combination we used for the MM/GBSA calculation of Section~\ref{sec:rungs}, as a
 difference there would have turned a comparison of rungs into a comparison of force
 fields. Each ligand was placed in its docked pose in a cubic box of \SI{100.1}{\angstrom} per
@@ -388,8 +389,8 @@ the energy and the pressure. Temperature was held by the velocity-rescaling ther
 at \SI{300}{\kelvin} with a coupling time of \SI{0.1}{\pico\second}, and pressure by
 the c-rescale barostat at \SI{1}{\bar}, isotropic, with a coupling time of
 \SI{2}{\pico\second} and a compressibility of $4.5\times10^{-5}$~\si{\per\bar}, with
-coordinates written to disk every \SI{10}{\pico\second}. We ran the simulations with the GPU-resident mdrun of GROMACS, which keeps the whole
-step on the accelerator. We
+coordinates written to disk every \SI{10}{\pico\second}. We ran the simulations with the GPU-resident mdrun of GROMACS \citep{gromacs}, which
+keeps the whole step on the accelerator. We
 completed 229 production runs over the 217 ligands, 211 of them simulated once and 6
 three times for the replicate pilot, amounting to 6{,}965~ns. Production was
 \SI{25}{\nano\second} per ligand, of which the first \SI{5}{\nano\second} was
@@ -410,7 +411,7 @@ beside them as a size covariate rather than as one of the 32. Extracting them re
 the periodic boundary to be handled before anything is measured. Each molecule is made
 whole along its bonds, prevented from jumping between consecutive frames and placed in
 the periodic image of the first frame, and only then is the receptor superposed by the
-Kabsch algorithm. An earlier version did none of this and compared coordinates against
+Kabsch algorithm, all of it through MDAnalysis \citep{mdanalysis}. An earlier version did none of this and compared coordinates against
 a frozen reference, which absorbed the rotation and the diffusion of the complex and
 left molecules cut by box faces. Re-extracting one raw trajectory under both
 treatments changed 19 of some 30 descriptors, with the ligand RMSD falling from 26.70
