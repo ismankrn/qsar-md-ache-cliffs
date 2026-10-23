@@ -11,7 +11,9 @@
 set -e
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 MANIFEST=${MANIFEST:-$ROOT/results/14_md_runs_phase1.csv}
-BRIN=${BRIN:-mahameru}
+# BRIN is no longer in the chain: grompp runs on the instance, so nothing is
+# pulled from the cluster. The variable is kept out deliberately rather than
+# left dangling.
 HOSTS=("$@")
 [ ${#HOSTS[@]} -eq 0 ] && { echo "pakai: bash md/stage_vast.sh vast1 [vast2 ...]"; exit 1; }
 # TOTAL fixes how many slices the manifest is cut into, independent of how many hosts exist
@@ -37,25 +39,36 @@ for i in "${!HOSTS[@]}"; do
   n=$(wc -l < "$SLICE")
   echo "== $H : $n run =="
 
-  ssh -n -o BatchMode=yes "$H" 'mkdir -p /root/qsar/{tpr,work,out,reduced,logs}' 
+  ssh -n -o BatchMode=yes "$H" 'mkdir -p /root/qsar/{tpr,systems,mdp,work,out,reduced,logs}'
+  # NSTEPS_PROD rides along deliberately. Without it the worker finds no override, drops
+  # -nsteps, and runs the tpr's full 25,000,000 steps: 50 ns instead of the 25 ns the rest
+  # of the project used, which would look fine and not be comparable with anything.
   scp -q "$ROOT/scripts/rung4_descriptors.py" "$ROOT/md/vast_worker.sh" \
-         "$ROOT/docking/4ey7_rec_md.pdb" "$SLICE" "$H:/root/qsar/" 
+         "$ROOT/md/NSTEPS_PROD" "$ROOT/docking/4ey7_rec_md.pdb" "$SLICE" "$H:/root/qsar/"
   ssh -n -o BatchMode=yes "$H" "mv /root/qsar/$(basename $SLICE) /root/qsar/slice.txt"
+  scp -q "$ROOT"/md/mdp/{em,npt,prod}.mdp "$H:/root/qsar/mdp/"
 
-  # tpr files come from BRIN; pull only this instance's share rather than all 217
+  # Systems rather than tprs. grompp happens on the instance, so nothing has to exist on
+  # a third machine first; see vast_worker.sh. Only this instance's share is sent.
   miss=0
   while read -r R; do
     # ssh -n: without it ssh reads the loop's stdin and swallows the rest of the slice
     # file, so only the first run is ever staged.
-    if ! ssh -n -o BatchMode=yes "$H" "[ -f /root/qsar/tpr/$R.prod.tpr ]" 2>/dev/null; then
-      scp -q "$BRIN:~/qsar-md/md/runs/$R/prod.tpr" "$STAGE/$R.prod.tpr" 2>/dev/null \
-        && scp -q "$STAGE/$R.prod.tpr" "$H:/root/qsar/tpr/$R.prod.tpr" \
-        && rm -f "$STAGE/$R.prod.tpr" \
-        || { echo "   ! tpr gagal: $R"; miss=$((miss+1)); }
+    CID=${R%_r*}
+    if ssh -n -o BatchMode=yes "$H" "[ -f /root/qsar/tpr/$R.prod.tpr ] || [ -f /root/qsar/systems/$CID/system.gro ]" 2>/dev/null; then
+      :
+    else
+      ssh -n -o BatchMode=yes "$H" "mkdir -p /root/qsar/systems/$CID" \
+        && scp -q "$ROOT/md/systems/$CID/system.gro" "$ROOT/md/systems/$CID/system.top" \
+              "$H:/root/qsar/systems/$CID/" \
+        || { echo "   ! sistem gagal: $CID"; miss=$((miss+1)); continue; }
     fi
+    # the per-run velocity seed lives in nvt.mdp, so it is sent per run and not per ligand
+    scp -q "$ROOT/md/runs/$R/nvt.mdp" "$H:/root/qsar/mdp/$R.nvt.mdp" 2>/dev/null \
+      || { echo "   ! nvt.mdp gagal: $R"; miss=$((miss+1)); }
   done < "$SLICE"
-  have=$(ssh -n -o BatchMode=yes "$H" 'ls /root/qsar/tpr/*.prod.tpr 2>/dev/null | wc -l')
-  echo "   tpr di instance: $have / $n   (gagal $miss)"
+  have=$(ssh -n -o BatchMode=yes "$H" 'ls -d /root/qsar/systems/*/ 2>/dev/null | wc -l')
+  echo "   sistem di instance: $have / $n   (gagal $miss)"
 done
 echo
 echo "siap. jalankan di tiap instance:  ssh <host> 'cd /root/qsar && nohup bash vast_worker.sh > logs/worker.log 2>&1 &'"

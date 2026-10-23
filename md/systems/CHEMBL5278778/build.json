@@ -1,0 +1,24 @@
+{
+  "ligand": "CHEMBL5278778",
+  "seed": 1,
+  "n_atoms": 96269,
+  "n_receptor": 8173,
+  "n_ligand": 72,
+  "ligand_formal_charge": 1,
+  "system_charge": 1.7053025658242404e-13,
+  "box_A": [
+    100.11755864979921,
+    100.11755864979921,
+    100.11755864979921
+  ],
+  "min_dist_receptor_ligand_A": 2.2971358384064584,
+  "ligand_energy_before_H_relax": 797.8241823252848,
+  "ligand_energy_after_H_relax": 485.0254697829577,
+  "energy_kJ_per_mol": -840859.2418539169,
+  "forcefield": {
+    "protein": "amber14-all.xml",
+    "ligand": "openff-2.3.0",
+    "water": "amber14/tip3p.xml"
+  },
+  "n_replicates": 1
+}

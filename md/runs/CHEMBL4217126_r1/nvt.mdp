@@ -1,0 +1,29 @@
+; 100 ps NVT at 300 K with protein and ligand heavy atoms restrained, so the solvent
+; relaxes around the docked pose without the pose itself drifting before it is solvated
+; properly. POSRES is defined; the restraint indices live in system.top.
+define                  = -DPOSRES
+integrator              = md
+dt                      = 0.002
+nsteps                  = 50000
+cutoff-scheme           = Verlet
+nstlist                 = 20
+coulombtype             = PME
+rcoulomb                = 1.0
+rvdw                    = 1.0
+DispCorr                = EnerPres
+pbc                     = xyz
+constraints             = h-bonds
+constraint_algorithm    = lincs
+lincs-iter              = 1
+lincs-order             = 4
+tcoupl                  = v-rescale
+tc-grps                 = System
+tau-t                   = 0.1
+ref-t                   = 300
+pcoupl                  = no
+gen-vel                 = yes
+gen-temp                = 300
+gen-seed                = 1896238890
+nstxout-compressed      = 5000
+nstlog                  = 5000
+nstenergy               = 5000

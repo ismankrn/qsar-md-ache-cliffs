@@ -94,4 +94,6 @@ if a.slices:
         f.write_text("\n".join(chunk) + "\n")
         print(f"  {f.relative_to(ROOT)}: {len(chunk)} run")
 print(f"seed unik            : {df.gen_seed.nunique()} / {len(df)}")
-print(f"ns total @ 50 ns     : {len(df)*50:,}")
+ns = int((ROOT/"md"/"NSTEPS_PROD").read_text().strip()) * 0.002 / 1000 \
+     if (ROOT/"md"/"NSTEPS_PROD").exists() else 50
+print(f"ns total @ {ns:g} ns     : {len(df)*ns:,.0f}")

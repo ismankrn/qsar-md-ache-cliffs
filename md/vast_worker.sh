@@ -53,8 +53,57 @@ done_n=0; skip=0; fail=0; consec=0
 while read -r RUN; do
   [ -z "$RUN" ] && continue
   if [ -f "$ROOT/out/$RUN.json" ]; then skip=$((skip+1)); continue; fi
+  t_eq=$SECONDS
   TPR="$ROOT/tpr/$RUN.prod.tpr"
-  if [ ! -f "$TPR" ]; then echo "  $RUN: tpr tidak ada, dilewati"; fail=$((fail+1)); continue; fi
+  # No tpr, but the system is here: equilibrate and grompp on this instance rather than
+  # pulling a tpr built elsewhere. Equilibration is 200 ps against 25 ns of production,
+  # about a minute on this GPU, so keeping it local costs almost nothing and takes one
+  # machine out of the chain. Stages, order and the -r/-t arguments are run_md.sh's:
+  #   em   from system.gro
+  #   nvt  from em.gro,  restrained to em.gro      (nvt.mdp defines -DPOSRES)
+  #   npt  from nvt.gro, restrained to nvt.gro, continuing nvt.cpt
+  #   prod from npt.gro, continuing npt.cpt
+  if [ ! -f "$TPR" ]; then
+    CID=${RUN%_r*}
+    SYS="$ROOT/systems/$CID"
+    if [ ! -f "$SYS/system.gro" ] || [ ! -f "$SYS/system.top" ]; then
+      echo "  $RUN: tidak ada tpr maupun sistem, dilewati"; fail=$((fail+1)); continue
+    fi
+    E="$ROOT/work/$RUN"; mkdir -p "$E"
+    cp -f "$SYS/system.gro" "$SYS/system.top" "$E/"
+    # nvt.mdp is per run, carrying that replicate's velocity seed; the rest are shared.
+    cp -f "$ROOT/mdp/$RUN.nvt.mdp" "$E/nvt.mdp"
+    for m in em npt prod; do cp -f "$ROOT/mdp/$m.mdp" "$E/$m.mdp"; done
+
+    eq_ok=1
+    for st in em nvt npt; do
+      case $st in
+        em)  GARGS=(-c system.gro) ;;
+        nvt) GARGS=(-c em.gro  -r em.gro) ;;
+        npt) GARGS=(-c nvt.gro -r nvt.gro -t nvt.cpt) ;;
+      esac
+      ( cd "$E" \
+        && gmx grompp -f "$st.mdp" "${GARGS[@]}" -p system.top -o "$st.tpr" -maxwarn 10 \
+             > "grompp_$st.log" 2>&1 \
+        && gmx mdrun -s "$st.tpr" -deffnm "$st" -ntmpi 1 -ntomp "$NTOMP" -nb gpu \
+             > "mdrun_$st.log" 2>&1 ) || eq_ok=0
+      [ -f "$E/$st.gro" ] || eq_ok=0
+      if [ $eq_ok -ne 1 ]; then
+        echo "  $RUN: EKUILIBRASI GAGAL di $st"
+        tail -5 "$E/grompp_$st.log" "$E/mdrun_$st.log" 2>/dev/null
+        break
+      fi
+    done
+    if [ $eq_ok -ne 1 ]; then fail=$((fail+1)); consec=$((consec+1)); continue; fi
+
+    ( cd "$E" && gmx grompp -f prod.mdp -c npt.gro -t npt.cpt -p system.top \
+        -o "$TPR" -maxwarn 10 > grompp_prod.log 2>&1 )
+    if [ ! -f "$TPR" ]; then
+      echo "  $RUN: GROMPP PROD GAGAL"; tail -5 "$E/grompp_prod.log" 2>/dev/null
+      fail=$((fail+1)); consec=$((consec+1)); continue
+    fi
+    echo "  $RUN: ekuilibrasi selesai ($((SECONDS-t_eq))s), tpr dibuat"
+  fi
 
   W="$ROOT/work/$RUN"; mkdir -p "$W"
   # Link the tpr into the work directory. mdrun takes -s explicitly, but the extractor
