@@ -1,13 +1,13 @@
-\begin{tabular}{l l l l c}
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{2.9cm}>{\raggedright\arraybackslash}p{4.5cm}c>{\raggedright\arraybackslash}p{4.3cm}c@{}}
 \toprule
-Family & \framingA{} and \framingB{} & \framingC{} & Settings & Scaled \\
+Family & scikit-learn estimator & Framings & Settings & Scaled \\
 \midrule
-Ridge (linear) & Ridge & --- & alpha $=$ 10 & yes \\
-Logistic regression & --- & LogisticRegression & max.\ iter $=$ 3000 & yes \\
-PLS & PLSRegression & --- & components $=$ 5 & yes \\
-$k$-nearest neighbours & KNeighborsRegressor & KNeighborsClassifier & neighbours $=$ 5 & yes \\
-SVM (RBF) & SVR & SVC & C $=$ 10, probability estimates $=$ on (clf.) & yes \\
-Random Forest & RandomForestRegressor & RandomForestClassifier & trees $=$ 500 & no \\
-Gradient Boosting & HistGradientBoostingRegressor & HistGradientBoostingClassifier & library defaults & no \\
+Ridge (linear) & Ridge & A, B & alpha $=$ 10 & yes \\
+Logistic regression & LogisticRegression & C & max.\ iter $=$ 3000 & yes \\
+PLS & PLSRegression & A, B & components $=$ 5 & yes \\
+$k$-nearest neighbours & KNeighbors\allowbreak\{Regressor, Classifier\} & A, B, C & neighbours $=$ 5 & yes \\
+SVM (RBF) & SVR, SVC & A, B, C & C $=$ 10, probability $=$ on (clf.) & yes \\
+Random Forest & RandomForest\allowbreak\{Regressor, Classifier\} & A, B, C & trees $=$ 500 & no \\
+Gradient Boosting & HistGradientBoosting\allowbreak\{Regressor, Classifier\} & A, B, C & library defaults & no \\
 \bottomrule
 \end{tabular}

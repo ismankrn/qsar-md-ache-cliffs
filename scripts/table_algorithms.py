@@ -23,7 +23,7 @@ SKIP = {"n_jobs", "random_state", "verbose", "copy_X", "copy"}
 ALWAYS = {"n_neighbors"}
 PRETTY = {"alpha": "alpha", "n_components": "components", "n_neighbors": "neighbours",
           "C": "C", "gamma": "gamma", "n_estimators": "trees", "max_iter": "max.\\ iter",
-          "probability": "probability estimates"}
+          "probability": "probability"}
 
 
 def fmt(v):
@@ -70,24 +70,36 @@ def main() -> None:
         r = dissect(M.REG[fam]) if fam in M.REG else None
         c = dissect(M.CLF[fam]) if fam in M.CLF else None
         name = fam.replace("k-NN (k=5)", "$k$-nearest neighbours")
-        scaled = (r or c)[2]
-        rows.append(" & ".join([
-            name,
-            r[0] if r else "---",
-            c[0] if c else "---",
-            settings(r, c),
-            "yes" if scaled else "no",
-        ]) + r" \\")
+
+        # One estimator cell rather than two columns: where the two sides differ only by
+        # the suffix, the shared stem is factored out, which is what makes the table fit.
+        if r and c:
+            rn, cn = r[0], c[0]
+            stem = rn[:len(rn) - len("Regressor")] if rn.endswith("Regressor") else ""
+            est = (f"{stem}" + r"\allowbreak" + r"\{Regressor, Classifier\}"
+                   if stem and cn == stem + "Classifier" else f"{rn}, {cn}")
+            where = "A, B, C"
+        elif r:
+            est, where = r[0], "A, B"
+        else:
+            est, where = c[0], "C"
+
+        rows.append(" & ".join([name, est, where, settings(r, c),
+                                "yes" if (r or c)[2] else "no"]) + r" \\")
 
     out = (
-        r"\begin{tabular}{l l l l c}" "\n" r"\toprule" "\n"
-        r"Family & \framingA{} and \framingB{} & \framingC{} & Settings & Scaled \\"
-        "\n" r"\midrule" "\n" + "\n".join(rows) + "\n" r"\bottomrule" "\n"
+        r"\begin{tabular}{@{}>{\raggedright\arraybackslash}p{2.9cm}"
+        r">{\raggedright\arraybackslash}p{4.5cm}"
+        r"c"
+        r">{\raggedright\arraybackslash}p{4.3cm}c@{}}" "\n"
+        r"\toprule" "\n"
+        r"Family & scikit-learn estimator & Framings & Settings & Scaled \\" "\n"
+        r"\midrule" "\n" + "\n".join(rows) + "\n" r"\bottomrule" "\n"
         r"\end{tabular}" "\n")
     (RES/"39_algorithms.tex").write_text(out)
     for row in rows:
-        print("   ", " | ".join(x.strip() for x in row.rstrip(r" \\").split("&")))
-    print(f"\n  seed {M.SEED}, scikit-learn as pinned in the environment files")
+        print("   ", " | ".join(x.strip() for x in row.rstrip(" \\\\").split("&")))
+    print(f"\n  seed {M.SEED}")
     print("  -> results/39_algorithms.tex")
 
 
