@@ -41,38 +41,41 @@ to whoever compromises it.
 
 ## Sequence
 
-On this machine, prepare the manifest and the run list:
+Everything up to staging runs **on this machine**, not on the instances. The instances
+only run `gmx mdrun`; they build nothing. Use the project environment, since the base
+environment has no OpenMM:
 
 ```bash
+conda activate qsar-md
 python scripts/build_md_systems.py --manifest 13b_md_ligands_test.csv
-python scripts/make_md_runs.py --manifest 13b_md_ligands_test.csv --out 14m_md_runs_test.csv
+python scripts/make_md_runs.py --manifest 13b_md_ligands_test.csv \
+       --out 14m_md_runs_test.csv --slices 3
 ```
 
-Split the run list three ways and stage each third:
+The second command writes `md/slice_01.txt` through `md/slice_03.txt`, 18 runs each.
+Then stage each slice to its instance:
 
 ```bash
-tail -n +2 results/14m_md_runs_test.csv | cut -d, -f1 | split -n l/3 - slice_
-wc -l slice_a*            # expect 18, 18, 18
-bash md/stage_vast.sh vast-1   # takes slice_aa
-bash md/stage_vast.sh vast-2   # takes slice_ab
-bash md/stage_vast.sh vast-3   # takes slice_ac
+bash md/stage_vast.sh vast-1   # takes md/slice_01.txt
+bash md/stage_vast.sh vast-2   # takes md/slice_02.txt
+bash md/stage_vast.sh vast-3   # takes md/slice_03.txt
 ```
 
 On each instance:
 
 ```bash
-SLICE=slice_aa bash md/vast_worker.sh     # slice_ab on vast-2, slice_ac on vast-3
+SLICE=slice_01.txt bash md/vast_worker.sh   # slice_02 on vast-2, slice_03 on vast-3
 ```
 
 A slice is independent of the others, so an instance that dies takes only its own
 remainder with it. Restarting that one slice is enough, and `vast_worker.sh` skips the
 runs whose descriptors already came back.
 
-Pull the results back, then extract the descriptors:
+Pull the results back, then extract the descriptors, again in the project environment:
 
 ```bash
 bash md/pull_vast.sh
-python scripts/rung4_descriptors.py
+conda run -n qsar-md python scripts/rung4_descriptors.py
 ```
 
 ## Two things to hold to

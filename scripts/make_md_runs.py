@@ -29,6 +29,8 @@ ap.add_argument("--manifest", default="13_md_ligands.csv",
                 help="ligand manifest under results/")
 ap.add_argument("--out", default="14_md_runs.csv",
                 help="run list to write under results/")
+ap.add_argument("--slices", type=int, default=0,
+                help="also write md/slice_NN.txt, one per instance")
 a = ap.parse_args()
 manifest = pd.read_csv(RES/a.manifest)
 RUNS.mkdir(parents=True, exist_ok=True)
@@ -70,8 +72,26 @@ df = pd.DataFrame(rows)
 df.to_csv(RES/a.out, index=False)
 print(f"sistem hilang        : {len(missing)}" + (f"  {missing[:5]}" if missing else ""))
 print(f"direktori run dibuat : {len(df)}")
+if df.empty:
+    raise SystemExit(
+        "\nTidak ada sistem yang ditemukan. Jalankan build_md_systems.py lebih dulu,\n"
+        "dari lingkungan qsar-md dan bukan dari base:\n"
+        f"    conda run -n qsar-md python scripts/build_md_systems.py --manifest {a.manifest}")
 print(f"  replika 1 saja     : {int((df.n_replicates==1).sum())}")
 print(f"  bagian dari 3      : {int((df.n_replicates==3).sum())}")
 print(f"ligan unik           : {df.molecule_chembl_id.nunique()}")
+
+# 2. splitting the list into per-instance slices used to be a shell step, with
+#    `split -n l/N`, which only GNU split understands; macOS rejects it outright.
+if a.slices:
+    import math
+    per = math.ceil(len(df) / a.slices)
+    for i in range(a.slices):
+        chunk = df.run.iloc[i*per:(i+1)*per]
+        if chunk.empty:
+            continue
+        f = RUNS.parent/f"slice_{i+1:02d}.txt"
+        f.write_text("\n".join(chunk) + "\n")
+        print(f"  {f.relative_to(ROOT)}: {len(chunk)} run")
 print(f"seed unik            : {df.gen_seed.nunique()} / {len(df)}")
 print(f"ns total @ 50 ns     : {len(df)*50:,}")
