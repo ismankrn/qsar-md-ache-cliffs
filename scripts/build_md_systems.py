@@ -111,9 +111,11 @@ ap.add_argument("--index", type=int, default=0)
 ap.add_argument("--total", type=int, default=1)
 ap.add_argument("--only", type=str, default=None)
 ap.add_argument("--force", action="store_true")
+ap.add_argument("--manifest", default="13_md_ligands.csv",
+                help="ligand manifest under results/, e.g. 13b_md_ligands_test.csv")
 a = ap.parse_args()
 
-manifest = pd.read_csv(RES/"13_md_ligands.csv")
+manifest = pd.read_csv(RES/a.manifest)
 if a.only:
     manifest = manifest[manifest.molecule_chembl_id == a.only]
 else:

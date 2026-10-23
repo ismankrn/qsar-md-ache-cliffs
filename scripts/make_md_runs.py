@@ -14,6 +14,7 @@ Seeds are derived deterministically from the ligand id, the replicate index and 
 seed, then written into the manifest. A random `gen-seed = -1` would make the
 reproducibility test unreproducible, which defeats it.
 """
+import argparse
 import hashlib, json
 from pathlib import Path
 import pandas as pd
@@ -23,7 +24,13 @@ RES, MD = ROOT/"results", ROOT/"md"
 SYS, RUNS, MDP = MD/"systems", MD/"runs", MD/"mdp"
 BASE_SEED = 20260902          # the project's frozen-split seed, reused for traceability
 
-manifest = pd.read_csv(RES/"13_md_ligands.csv")
+ap = argparse.ArgumentParser()
+ap.add_argument("--manifest", default="13_md_ligands.csv",
+                help="ligand manifest under results/")
+ap.add_argument("--out", default="14_md_runs.csv",
+                help="run list to write under results/")
+a = ap.parse_args()
+manifest = pd.read_csv(RES/a.manifest)
 RUNS.mkdir(parents=True, exist_ok=True)
 
 def seed_for(cid, rep):
@@ -60,7 +67,7 @@ for _, r in manifest.iterrows():
                      "in_cliff_pair": bool(r.in_cliff_pair)})
 
 df = pd.DataFrame(rows)
-df.to_csv(RES/"14_md_runs.csv", index=False)
+df.to_csv(RES/a.out, index=False)
 print(f"sistem hilang        : {len(missing)}" + (f"  {missing[:5]}" if missing else ""))
 print(f"direktori run dibuat : {len(df)}")
 print(f"  replika 1 saja     : {int((df.n_replicates==1).sum())}")
