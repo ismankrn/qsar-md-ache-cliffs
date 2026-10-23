@@ -15,8 +15,8 @@ The 97 runs in `md/logs_vast/` took a median of **2.30 h** each on one RTX 3090,
 | GPUs | wall clock | runs per GPU |
 |---|---|---|
 | 1 | 124 h (5.2 d) | 54 |
-| **2** | **62 h (2.6 d)** | **27** |
-| 4 | 31 h (1.3 d) | 14 |
+| 2 | 62 h (2.6 d) | 27 |
+| **4** | **31 h (1.3 d)** | **14, 14, 13, 13** |
 
 Total 124 GPU-hours. Reduced archives come back at about 15 MB each, so 0.9 GB for all
 54; the full trajectory during a run is around 2 GB and `vast_worker.sh` deletes it once
@@ -31,7 +31,7 @@ What the previous runs used, and what to ask for again:
 - **Disk 250 GB.** A run needs its own 2 GB trajectory plus the system files while it
   works, and the worker deletes as it goes, so this is comfortable rather than tight.
 - **4 CPU threads per GPU**, which is what `NTOMP` was set to.
-- Two instances, 27 runs each.
+- Four instances, 14 runs on two of them and 13 on the other two.
 
 ## Sequence
 
@@ -42,19 +42,26 @@ python scripts/build_md_systems.py --manifest 13b_md_ligands_test.csv
 python scripts/make_md_runs.py --manifest 13b_md_ligands_test.csv --out 14m_md_runs_test.csv
 ```
 
-Split the run list in two and stage each half:
+Split the run list four ways and stage each quarter:
 
 ```bash
-tail -n +2 results/14m_md_runs_test.csv | cut -d, -f1 | split -n l/2 - slice_
+tail -n +2 results/14m_md_runs_test.csv | cut -d, -f1 | split -n l/4 - slice_
+wc -l slice_a*            # expect 14, 14, 13, 13
 bash md/stage_vast.sh <instance-1>   # takes slice_aa
 bash md/stage_vast.sh <instance-2>   # takes slice_ab
+bash md/stage_vast.sh <instance-3>   # takes slice_ac
+bash md/stage_vast.sh <instance-4>   # takes slice_ad
 ```
 
 On each instance:
 
 ```bash
-SLICE=slice_aa bash md/vast_worker.sh
+SLICE=slice_aa bash md/vast_worker.sh     # slice_ab, slice_ac, slice_ad on the others
 ```
+
+A slice is independent of the others, so an instance that dies takes only its own
+remainder with it. Restarting that one slice is enough, and `vast_worker.sh` skips the
+runs whose descriptors already came back.
 
 Pull the results back, then extract the descriptors:
 
