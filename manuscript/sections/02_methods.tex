@@ -475,18 +475,25 @@ histogram-based gradient boosting \citep{gbm}, all as implemented in
 scikit-learn~1.9.0 \citep{sklearn}. A linear model, a latent-variable model, an instance-based one, a
 kernel method and two ensembles between them cover the shapes a structure-activity
 relationship is usually assumed to take, so a rung that fails on all six has not simply
-been given the wrong model. We fixed the hyperparameters before any rung was scored and
-used the same values at every rung, with a ridge penalty of 10, five latent components,
-five neighbours, a kernel penalty of 10 and 500 trees, the remaining values being the
-library defaults. We ran no inner search over them, because tuning each rung separately
-would let a comparison between representations absorb a difference in how hard each one
-had been tuned.
+been given the wrong model. We fixed the hyperparameters before any
+rung was scored and used the same values at every rung, which
+Table~\ref{tab:algorithms} gives beside the estimator each family uses. We ran no inner
+search over them, because tuning each rung separately would let a comparison between
+representations absorb a difference in how hard each one had been tuned.
 
-Framing~C carried five classification families, namely logistic regression, the same
-$k$-nearest neighbours, the same support vector machine with probability estimates
-enabled, a random forest and histogram-based gradient boosting. The suite is one
-smaller than the regression suite because partial least squares has no classification
-counterpart, so it is missing there rather than having been tried and failed. Every
+\begin{table}[tb]
+  \centering
+  \small
+  \caption{\textbf{The learning algorithms and their settings.} The estimator each
+    family uses on the regression and on the classification framings, every value that
+    differs from the library default, and whether the features reach it standardised.}
+  \label{tab:algorithms}
+  \input{../results/39\_algorithms.tex}
+\end{table}
+
+Framing~C carried five classification families, one fewer than the regression suite
+because partial least squares has no classification counterpart, so it is missing there
+rather than having been tried and failed. Every
 rung met the same families in the same framings, which is what allows a difference
 between two rungs to be read as a difference between their descriptors. A family
 appearing in both suites kept its hyperparameters, so the regression and the

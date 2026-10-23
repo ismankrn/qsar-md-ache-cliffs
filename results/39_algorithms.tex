@@ -1,0 +1,13 @@
+\begin{tabular}{l l l l c}
+\toprule
+Family & \framingA{} and \framingB{} & \framingC{} & Settings & Scaled \\
+\midrule
+Ridge (linear) & Ridge & --- & alpha $=$ 10 & yes \\
+Logistic regression & --- & LogisticRegression & max.\ iter $=$ 3000 & yes \\
+PLS & PLSRegression & --- & components $=$ 5 & yes \\
+$k$-nearest neighbours & KNeighborsRegressor & KNeighborsClassifier & neighbours $=$ 5 & yes \\
+SVM (RBF) & SVR & SVC & C $=$ 10, probability estimates $=$ on (clf.) & yes \\
+Random Forest & RandomForestRegressor & RandomForestClassifier & trees $=$ 500 & no \\
+Gradient Boosting & HistGradientBoostingRegressor & HistGradientBoostingClassifier & library defaults & no \\
+\bottomrule
+\end{tabular}
