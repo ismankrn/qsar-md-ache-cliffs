@@ -407,54 +407,48 @@ every ligand carries the same record. Fifty-six runs of the first batch were con
 to \SI{50}{\nano\second}, and they enter this work only as the evidence that
 \SI{20}{\nano\second} of analysed trajectory is not too short.
 
-Thirty-two descriptors were computed from each trajectory, and they fall into the
-three design classes of Figure~\ref{fig:mdflow}. Persistence quantities measure the
-fraction of the analysed window over which a contact or a position is held,
-fluctuation quantities the amplitude of motion, and event counts the rate at which
-something happens. None of them is a frame-averaged version of a rung-2 quantity, since
-averaging a pose descriptor over a trajectory would test the averaging rather than the
-dynamics. The fluctuation class rests on the root-mean-square fluctuation of an atom
-about its own mean position, which is the quantity a trajectory supplies and a single
-structure cannot \citep{mdfluct,rmsf_bfactor}, taken over the ligand atoms and over the
-gorge-lining side chains. The Tyr337 side chain is followed separately, since its
-rotation gates the gorge \citep{gating1998,gorge2017} and it occupies the position of
-Phe330 in the Torpedo enzyme where that gating was characterised. The spread of its
-$\chi_1$ dihedral is a fluctuation quantity and the number of times that dihedral
-crosses between rotamer wells is an event count. One further quantity counts
-the water molecules hydrogen bonding to ligand and protein at the same time, since a
-bridging water participates in recognition rather than being displaced by it
-\citep{water_ladbury,water_levy}. They are computed on the same fourteen gorge-lining
+Thirty-two descriptors were computed from each trajectory, falling into the three
+design classes of Figure~\ref{fig:mdflow}. Persistence quantities measure the fraction
+of the analysed window over which a contact or a position is held, fluctuation
+quantities the amplitude of motion, and event counts the rate at which something
+happens. None is a frame-averaged rung-2 quantity, since averaging a pose descriptor
+over a trajectory would test the averaging rather than the dynamics. The
+fluctuation class rests on the root-mean-square fluctuation of an atom about its own
+mean position, which a trajectory supplies and a single structure cannot
+\citep{mdfluct,rmsf_bfactor}, taken over the ligand atoms and the gorge-lining side
+chains. The Tyr337 side chain is followed separately, since its rotation gates the
+gorge \citep{gating1998,gorge2017}, contributing the spread of its $\chi_1$ dihedral as
+a fluctuation quantity and the crossings between rotamer wells as an event count. One
+further quantity counts the waters hydrogen bonding to ligand and protein at once
+\citep{water_ladbury,water_levy}. All are computed on the same fourteen gorge-lining
 residues, with Trp86 at the CAS, Trp286 at the PAS and Tyr337 as the gate, and the
-heavy-atom count is carried beside them as a size covariate rather than as one of
-the 32. Extracting them requires
-the periodic boundary to be handled before anything is measured. Each molecule is made
-whole along its bonds, prevented from jumping between consecutive frames and placed in
-the periodic image of the first frame, and only then is the receptor superposed by the
-Kabsch algorithm, all of it through MDAnalysis~2.10.0 \citep{mdanalysis}. An earlier version did none of this and compared coordinates against
-a frozen reference, which absorbed the rotation and the diffusion of the complex and
-left molecules cut by box faces. Re-extracting one raw trajectory under both
-treatments changed 19 of the 32 descriptors, with the ligand RMSD falling from 26.70
-to \SI{3.14}{\angstrom} and the gorge fluctuation from 37.09 to \SI{0.93}{\angstrom}.
-The contact occupancies moved as well, and every one of them upward, since a contact
-whose partner was written into another periodic image is a contact that was missed.
-
-Which of the 32 descriptors can carry a pair endpoint was decided by a replicate
-pilot, and the rule was fixed before any replicate had been scored. A descriptor
+heavy-atom count is carried beside them as a size covariate rather than as one of the
+32. Extraction requires the periodic boundary to be handled first, so each molecule is
+made whole along its bonds, prevented from jumping between consecutive frames and
+placed in the periodic image of the first frame. Only then is the receptor superposed
+by the Kabsch algorithm, all of it through MDAnalysis~2.10.0 \citep{mdanalysis}. An
+earlier version compared coordinates against a frozen reference instead, and
+re-extracting one raw trajectory under both treatments changed 19 of the 32
+descriptors, the ligand RMSD falling from 26.70 to \SI{3.14}{\angstrom} and the gorge
+fluctuation from 37.09 to \SI{0.93}{\angstrom}. Every contact occupancy moved upward,
+since a contact whose partner was written into another periodic image is a contact that
+was missed. Which of the 32 can carry a pair endpoint was decided by a
+replicate pilot under a rule fixed before any replicate had been scored. A descriptor
 qualifies only when the spread between ligands is at least twice the spread between
 replicates of the same ligand, which is the reliability
 $\sigma^2_{\mathrm{lig}}/(\sigma^2_{\mathrm{lig}} + 2\sigma^2_{\mathrm{rep}})$ written
-as a ratio of standard deviations. The factor of two is a judgement, but it was made
-blind, and the pair endpoint justifies it, because a difference between two ligands
-carries the replicate noise twice over. The replicate spread rests on six ligands simulated three times each, which is a
-narrow basis and is stated here as such, while the spread between ligands is taken
-over all 217. Of the 160 combinations of descriptor and analysis window that were
-tested, 100 are dominated by the velocity seed rather than by the ligand. At the
-\SI{20}{\nano\second} window 11 of the 32 descriptors pass, and 9 of those are contact
-occupancies, so of the three design classes only persistence survives in quantity. A duration ablation could not
-have answered this question, since a quantity can be flat within every individual run
-and still differ between seeds. The Tyr337 gate flips about once in three
-trajectories, so a run that begins in one rotamer reports that rotamer with a flat
-RMSD and no drift, and looks converged while being stuck.
+as a ratio of standard deviations. The factor of two is a judgement made blind, and the
+pair endpoint justifies it, because a difference between two ligands carries the
+replicate noise twice over. The replicate spread rests on six ligands simulated three
+times each, a narrow basis stated here as such, while the spread between ligands is
+taken over all 217. Of the 160 combinations of descriptor and analysis window tested,
+100 are dominated by the velocity seed rather than by the ligand, and at the
+\SI{20}{\nano\second} window 11 of the 32 pass, 9 of them contact occupancies, so of
+the three design classes only persistence survives in quantity. A duration ablation
+could not have answered this, since a quantity can be flat within every individual run
+and still differ between seeds. The Tyr337 gate flips about once in three trajectories,
+so a run that begins in one rotamer reports that rotamer with a flat RMSD and no drift,
+and looks converged while being stuck.
 
 \begin{figure}[p]
   \centering
