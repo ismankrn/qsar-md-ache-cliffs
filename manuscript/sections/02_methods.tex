@@ -139,10 +139,13 @@ A comparison between descriptor sets has no single answer, as what counts as an
 improvement depends on what is being predicted. Activity cliffs are the standard
 counter-example to QSAR for exactly this reason, since models that predict potency
 well across a series are reported to fail on the near-identical pairs within it
-\citep{vantilborg2022, dablander2023}. The three framings are different functions of the same descriptors, so a result on one does not determine a result on
-another, and separating cliff pairs from control pairs does not require predicting the
-size of the difference within a pair. Three framings were therefore scored for every
-descriptor set, on the folds of Section~\ref{sec:dataset} and with the same algorithms, which are
+\citep{vantilborg2022, dablander2023}. We therefore scored every descriptor set on
+three framings of the same data, namely the potency of a single ligand, the signed
+difference in potency within a pair, and whether a pair is a cliff or a matched
+control. They are different functions of the same descriptors, so a result on one does
+not determine a result on another, and separating cliff pairs from control pairs does
+not require predicting the size of the difference within a pair. All three were scored
+on the folds of Section~\ref{sec:dataset} and with the same algorithms, which are
 described in Section~\ref{sec:algo}, so that the three results differ in the question
 being asked and in nothing else. Table~\ref{tab:framings} sets them side by side, with $\mathbf{d}_a$ and
 $\mathbf{d}_b$ being the descriptor vectors of the two ligands of a pair and the
