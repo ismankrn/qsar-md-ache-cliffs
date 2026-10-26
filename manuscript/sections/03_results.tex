@@ -311,10 +311,13 @@ beside their development values.
 
 \begin{table}[tb]
   \centering
-  \caption{\textbf{The held-out split against the development split.} Gap against the
-    rung-1 fingerprints on the same test units, with the 95\% interval from 20{,}000
-    bootstrap replicates over pairs, the Holm- and Benjamini-Hochberg-adjusted $p$
-    across all twelve gaps, and the corresponding development gap. An asterisk
+  \caption{\textbf{The held-out split against the development split.} The score each
+    rung reaches on the test units, the gap against the rung-1 fingerprints on those
+    same units, the 95\% interval from 20{,}000 bootstrap replicates over pairs, the
+    Holm- and Benjamini-Hochberg-adjusted $p$ across all twelve gaps, and the
+    corresponding development gap. Rung~1 is the baseline the gaps are measured from,
+    so it carries a score and no gap. The metric is $R^2$ on framings~A and~B and the
+    area under the receiver operating characteristic curve on \framingC{}. An asterisk
     marks a gap that survives the Holm correction.}
   \label{tab:testsplit}
   \input{../results/28_test_split_gaps.tex}

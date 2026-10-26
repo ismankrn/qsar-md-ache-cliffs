@@ -483,21 +483,30 @@ def main():
     # ---- the manuscript table -------------------------------------------------------
     # Written from the same objects that were just printed, so the table cannot drift from
     # the numbers in the text the way a hand-copied one does.
-    jkmap = {(r.framing, r.key): r for r in jkd.itertuples()} if len(jkd) else {}
-    RUNG = {"r2": "Rung 2 pose", "r2e": "Rung 2 ensemble",
+    # The baseline carries a row of its own. Reporting only gaps leaves rung 1 invisible,
+    # since its gap against itself is zero, and a reader then cannot see what the
+    # fingerprint actually scored on the held-out pairs -- which is the number every other
+    # row is measured from. Its score is given, and the gap columns are left empty.
+    RUNG = {"r1": "Rung 1 2D", "r2": "Rung 2 pose", "r2e": "Rung 2 ensemble",
             "r3": "Rung 3 MM/GBSA", "r4": "Rung 4 MD"}
-    order = [(f, k) for f in ("A", "B", "C") for k in ("r2", "r2e", "r3", "r4")]
+    order = [(f, k) for f in ("A", "B", "C") for k in ("r1", "r2", "r2e", "r3", "r4")]
     gi = g.set_index(["framing", "key"])
-    lines = [r"\begin{tabular}{llr@{\,}lrrr}", r"\hline",
-             r"Framing & Rung & \multicolumn{2}{c}{Test gap (95\% CI)} "
+    ti = df.set_index(["framing", "key"])
+    lines = [r"\begin{tabular}{llrr@{\,}lrrr}", r"\hline",
+             r"Framing & Rung & Test & \multicolumn{2}{c}{Gap vs rung 1 (95\% CI)} "
              r"& $p_{\text{Holm}}$ & $p_{\text{BH}}$ & Dev.\ gap \\", r"\hline"]
     for f, k in order:
-        if (f, k) not in gi.index:
+        if (f, k) not in ti.index:
+            continue
+        tv = ti.loc[(f, k), "test_value"]
+        if k == "r1":
+            lines.append(f"{f} & {RUNG[k]} & ${tv:.3f}$ & \\multicolumn{{5}}{{c}}{{"
+                         f"\\emph{{baseline}}}} \\\\")
             continue
         r = gi.loc[(f, k)]
         star = r"^{*}" if r.p_holm < 0.05 else ""
         lines.append(
-            f"{f} & {RUNG[k]} & ${r.test_gap:+.3f}{star}$ & "
+            f"{f} & {RUNG[k]} & ${tv:.3f}$ & ${r.test_gap:+.3f}{star}$ & "
             f"$[{r.ci_lo:+.3f}, {r.ci_hi:+.3f}]$ & "
             f"{r.p_holm:.3f} & {r.p_bh:.3f} & ${r.dev_gap:+.3f}$ \\\\")
     lines += [r"\hline", r"\end{tabular}"]
