@@ -1,6 +1,6 @@
 \begin{tabular}{llrr@{\,}lrrr}
 \hline
-Framing & Rung & Test & \multicolumn{2}{c}{Gap vs rung 1 (95\% CI)} & $p_{\text{Holm}}$ & $p_{\text{BH}}$ & Dev.\ gap (scores) \\
+Framing & Rung & Test & \multicolumn{2}{c}{Gap vs rung 1 (95\% CI)} & $p_{\text{Holm}}$ & $p_{\text{BH}}$ & Dev.\ gap \\
 \hline
 A & Rung 1 2D & $0.114$ & \multicolumn{5}{c}{\emph{baseline}} \\
 A & Rung 2 pose & $0.091$ & $-0.023$ & $[-0.413, +0.397]$ & 1.000 & 0.971 & $-0.339$ \\
@@ -19,3 +19,5 @@ C & Rung 3 MM/GBSA & $0.919$ & $+0.018$ & $[-0.051, +0.102]$ & 1.000 & 0.971 & $
 C & Rung 4 MD & $0.900$ & $-0.001$ & $[-0.077, +0.071]$ & 1.000 & 0.971 & $-0.010$ \\
 \hline
 \end{tabular}
+\\[0.5em]
+\begin{minipage}{0.95\textwidth}\footnotesize Bootstrap development gaps, which re-select the arm and the family inside every replicate. This work resamples the rung-4 gap and no other: $-0.375$ $[-0.596, -0.184]$ on framing~A; $-0.093$ $[-0.319, +0.127]$ on framing~B; $+0.003$ $[-0.102, +0.103]$ on framing~C.\end{minipage}
