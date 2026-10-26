@@ -289,16 +289,12 @@ removes the reading that there was nothing there to find.
 
 \subsection{The held-out split}\label{sec:testsplit}
 
-Everything to this point was measured on the development split, which also chose the
-descriptor arm, the algorithm family and the reliability filter for every rung. A
-separate 54 ligands and 38 pairs, which are 20 cliffs against 18 matched controls, were
-sealed at the outset and never scored. All five rungs cover them, the dynamic
-descriptors included, so the split can test the whole ladder and not the four rungs
-that need no trajectory. We opened it once, under rules fixed in advance. The
-replicate filter was not recomputed, and no model was retrained or reselected. Each rung kept the arm and the family that
-won on development, refitted on all 217 development ligands and scored a single time.
-
-On \framingC{} nothing changes. All four gaps against the fingerprint baseline
+A separate 54 ligands and 38 pairs, which are 20 cliffs against 18 matched controls,
+were sealed at the outset and opened once, after every descriptor arm, algorithm family
+and reliability filter had been fixed on the development split. All five rungs cover
+them, and each kept what won there, refitted on all 217 development ligands and scored
+a single time with the replicate filter left as it was. On \framingC{} nothing
+changes. All four gaps against the fingerprint baseline
 contain zero on the held-out pairs, as they do on development. On \framingA{} all four
 contain zero as well, but that is a departure rather than an agreement. Development
 resolved one of them, with the dynamics descriptors falling $0.375$ below the
