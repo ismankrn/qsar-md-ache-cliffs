@@ -332,23 +332,26 @@ $-0.102$ to $+0.103$.
   \input{../results/28_test_split_gaps.tex}
 \end{table}
 
-We checked three things before reading anything into that reversal. First, the two splits share no
-ligands and no connected components, so neither the pairs nor the scaffolds behind them
-cross the boundary and the difference is not leakage from the way the pairs were
-assembled. Second, twelve gaps were tested at once, which would be expected to produce
-about 0.6 false positives at a five per cent threshold. Both surviving gaps clear a
-Holm correction and a Benjamini--Hochberg correction across all twelve. The twelve
-tests share the same 38 pairs and the two structure-based rungs share pose information,
-so Holm is conservative here rather than exact. Third, we dropped each test pair in
-turn. This moves the rung-4 gap only within $[+0.280, +0.365]$, and no single pair
-brings it to zero, so the gap does not rest on a handful of extreme observations.
+Three things could make that reversal an artefact rather than a result, and we tested
+each. First, the two splits share no ligands and no connected components, so neither
+the pairs nor the scaffolds behind them cross the boundary and the difference is not
+leakage from the way the pairs were assembled. Second, twelve gaps were tested at
+once, which would be expected to produce about 0.6 false positives at a five per cent
+threshold. Both surviving gaps clear a Holm correction and a Benjamini--Hochberg
+correction across all twelve. The twelve tests share the same 38 pairs and the two
+structure-based rungs share pose information, so Holm is conservative here rather than
+exact. Third, we dropped each test pair in turn. This moves the rung-4 gap only within
+$[+0.280, +0.365]$, and no single pair brings it to zero, so the gap does not rest on
+a handful of extreme observations. None of the three disposes of the reversal, which
+therefore has to be read as a measurement rather than an artefact, and what remains in
+question is how much weight it carries.
 
 The levels are not comparable across the two splits, which is why only the gaps are
 reported. Every rung scores higher on the test pairs than on the development folds.
 The fingerprints move from the $+0.200$ of Table~\ref{tab:benchmark} to $+0.362$ and
 MM/GBSA from $-0.056$ to $+0.506$, which says that these 38 pairs are easier rather
 than that the ladder has begun to work. Only the difference between two rungs measured on the same pairs is insensitive
-to that shift, and it is the difference that was corrected and resampled. Both
+to that shift, and it is the difference that was corrected and resampled. That leaves the bound itself. Both
 surviving gaps are about $0.3$, which is the resolution this design was measured to
 have before any of it was scored. Neither result therefore contradicts that bound,
 because on the signed pair difference the development split saw nothing of that size
