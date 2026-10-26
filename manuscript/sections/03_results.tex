@@ -370,7 +370,7 @@ Figure~\ref{fig:reliability}(a) shows the ratio it measures for every descriptor
 every analysis window. Of the 160 combinations of descriptor and window, 60 clear the
 threshold of 2 and 100 do not, and the failures are not spread evenly over the three
 design classes. Persistence quantities clear it in 53 of 100 combinations, fluctuation
-quantities in 3 of 35, and event counts in 4 of 20. Panel~(b) gives this as the
+quantities in 3 of 35, and event counts in 4 of 20. Panel~(b) gives that breakdown as the
 composition of verdicts at each window. The remaining five combinations are the
 receptor backbone RMSD, which is carried as a quality-control quantity rather than as a
 member of any design class and never clears the threshold. The fraction of the window
@@ -406,12 +406,13 @@ pass, and 9 of those are contact occupancies. That concentration is the practica
 finding of this subsection and the one least tied to this target. Anyone building
 descriptors from trajectories of this length should expect persistence-type observables
 to survive a replicate test and fluctuation-type observables not to, and should measure
-that rather than assume it. The filter also earns its place within this study rather
-than remaining a diagnostic. The filtered set reaches $+0.152$ on \framingB{} against
-$-0.054$ for the unfiltered one, and $0.796$ on \framingC{} against $0.721$. Removing
-the descriptors that measure the seed therefore improves what remains on both pair
-endpoints, which is what a filter of this kind is supposed to do and is not guaranteed
-to achieve.
+that rather than assume it. The filtered set also scores higher than the unfiltered one on both pair endpoints,
+reaching $+0.152$ on \framingB{} against $-0.054$ and $0.796$ on \framingC{} against
+$0.721$. Removing the descriptors that measure the seed therefore moves the score in
+the direction a filter of this kind is meant to move it, which is not guaranteed.
+Neither difference is one this design can resolve, at $0.207$ and $0.075$ against a
+limit of $0.3$, so the filter is kept on the reliability argument it was built from
+and not on these two numbers.
 
 % ---------------------------------------------------------------------------
 \subsection{Interpretation of the distance-based contact occupancies}\label{sec:typed}
