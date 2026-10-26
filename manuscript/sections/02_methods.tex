@@ -379,7 +379,7 @@ in a cubic box of \SI{100.1}{\angstrom} per side, giving between 96{,}220 and
 minimum and the maximum across systems and a single value means every system shares it.
 Two quantities were checked for every system instead of being assumed. The first is the
 net charge after counterions, which is at most $2.8\times10^{-13}\,e$ across all 217
-systems. The second is the shortest receptor--ligand heavy-atom distance at build time,
+development systems. The second is the shortest receptor--ligand heavy-atom distance at build time,
 which runs from 1.67 to \SI{2.64}{\angstrom}. The lower end of that range is a tight
 contact, which we state openly, and what resolves it is the minimisation and
 equilibration that follow.
@@ -387,7 +387,7 @@ equilibration that follow.
 \begin{table}[tb]
   \centering
   \caption{\textbf{Simulated system composition.} Atom counts, box size, charges and
-    force fields, over all 217 built systems.}
+    force fields, over the 217 development systems. The 54 test systems were built by the same procedure.}
   \label{tab:system}
   \input{../results/27_system_composition.tex}
 \end{table}
@@ -406,9 +406,10 @@ by the c-rescale barostat at \SI{1}{\bar}, isotropic, with a coupling time of
 \SI{2}{\pico\second} and a compressibility of $4.5\times10^{-5}$~\si{\per\bar}.
 Coordinates were written to disk every \SI{10}{\pico\second}. We ran the simulations by
 using the GPU-resident mdrun of GROMACS~2023 \citep{gromacs}, which keeps the whole
-step on the accelerator. We completed 229 production runs over the 217 ligands, of
-which 211 were simulated once and 6 three times for the replicate pilot, amounting to
-6{,}965~ns. Production was \SI{25}{\nano\second} per ligand. The first
+step on the accelerator. We completed 283 production runs over the 271
+ligands, amounting to 8{,}315~ns. The 217 development ligands account for 229 of these
+runs, of which 211 were simulated once and 6 three times for the replicate pilot, and
+each of the 54 test ligands carries one run. Production was \SI{25}{\nano\second} per ligand. The first
 \SI{5}{\nano\second} was discarded and the \SI{20}{\nano\second} that follows supplied
 every descriptor, so every ligand carries the same record. Fifty-six runs of the first
 batch were continued to \SI{50}{\nano\second}, and they enter this work only as the

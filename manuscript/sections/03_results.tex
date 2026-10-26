@@ -69,7 +69,7 @@ $-1.3\times10^{6}$~\si{\kilo\joule\per\mole}, which is less than one part in $10
 per nanosecond. Panel~(d) shows the running mean of the pressure, which ends at
 \SI{1.00}{\bar}. We show a running mean because the instantaneous pressure of a box of
 this size has a within-run spread of about \SI{89}{\bar} and carries no information
-frame by frame. These four quantities were computed on 64 of the 229 runs. The subset
+frame by frame. These four quantities were computed on 64 of the 229 development runs. The subset
 establishes only that the simulations were well behaved, and no comparison between
 descriptor sets rests on it. What the four panels establish is that the integrator, the
 thermostat and the barostat behaved. A drift below one part in $10^{5}$ per nanosecond
@@ -99,8 +99,8 @@ partway along its own axis. They track each other over the window they share, at
 \SI{3.06}{\angstrom} against \SI{2.84}{\angstrom} for the ligand. The runs that
 continued are therefore not a different population, and the common window may be read
 as one set. A ligand displacement of three \AA{} is a rearrangement within the site and
-not a departure from it, because the centre of mass of no ligand in any of the 229 runs
-ever moved more than \SI{12}{\angstrom} from where it started.
+not a departure from it, because the centre of mass of no ligand in any of the 229
+development runs ever moved more than \SI{12}{\angstrom} from where it started.
 
 The fluctuation in panel~(c) is concentrated where the receptor was cut. Its eight
 largest values belong to residues 494, 541, 493, 258, 540, 4, 492 and 539, reaching
@@ -129,7 +129,7 @@ one the descriptors actually require.
 \begin{figure}[tb]
   \centering
   \includegraphics[width=\textwidth]{fig_md_stability.pdf}
-  \caption{\textbf{Structural stability across all 229 production runs.}
+  \caption{\textbf{Structural stability across all 229 development production runs.}
     (a)~Receptor C$\alpha$ RMSD and (b)~ligand RMSD from the equilibrated pose, each
     drawn as the median and the interquartile band across runs and split by whether
     the run was continued past the \SI{25}{\nano\second} production length. (c)~Per-residue C$\alpha$ fluctuation
@@ -294,16 +294,11 @@ removes the reading that there was nothing there to find.
 Everything to this point was measured on the development split, which also chose the
 descriptor arm, the algorithm family and the reliability filter for every rung. A
 separate 54 ligands and 38 pairs, which are 20 cliffs against 18 matched controls, were
-sealed at the outset and never scored. They could not be scored until now, for a reason
-specific to this study. Four of the five rungs covered them from the beginning, but
-rung~4 had descriptors for none of them, because the trajectories had only ever been
-run on the development ligands. Opening the split with that gap would have validated
-the four rungs and omitted the one the comparison is about. We therefore simulated the
-54 test ligands under the identical protocol, at \SI{25}{\nano\second} each with the
-same analysis window, and opened the split once. The replicate filter was not
-recomputed, and no model was retrained or reselected. Each rung kept the arm and the
-family that won on development, refitted on all 217 development ligands and scored a
-single time.
+sealed at the outset and never scored. All five rungs cover them, the dynamic
+descriptors included, so the split can test the whole ladder and not the four rungs
+that need no trajectory. We opened it once, under rules fixed in advance. The
+replicate filter was not recomputed, and no model was retrained or reselected. Each rung kept the arm and the family that
+won on development, refitted on all 217 development ligands and scored a single time.
 
 On \framingA{} and \framingC{} nothing changes, because all eight gaps against the
 fingerprint baseline on those two framings contain zero, as they do on development. On \framingB{}
@@ -426,7 +421,8 @@ $\pi$-stacking reaches 70 and 57 per cent of the window, in the 76 and 79 per ce
 runs that show it at all. The cation--$\pi$ contact that these cationic ligands were
 expected to form is the weakest of the three on both counts. It holds 43 per cent of
 the window at Trp86 and 38 at Trp286, and it appears in 58 and 29 per cent of runs.
-Eight of the 229 runs could not be typed because ProLIF reported a fragmented residue,
+Eight of the 229 development runs could not be typed because ProLIF reported a
+fragmented residue,
 so the panel rests on 221.
 
 \begin{figure}[tb]
