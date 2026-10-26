@@ -406,13 +406,15 @@ by the c-rescale barostat at \SI{1}{\bar}, isotropic, with a coupling time of
 Coordinates were written to disk every \SI{10}{\pico\second}. We ran the simulations by
 using the GPU-resident mdrun of GROMACS~2023 \citep{gromacs}, which keeps the whole
 step on the accelerator. We completed 283 production runs over the 271
-ligands, amounting to 8{,}315~ns. The 217 development ligands account for 229 of these
+ligands, amounting to 8{,}319~ns. The 217 development ligands account for 229 of these
 runs, of which 211 were simulated once and 6 three times for the replicate pilot, and
 each of the 54 test ligands carries one run. Production was \SI{25}{\nano\second} per ligand. The first
 \SI{5}{\nano\second} was discarded and the \SI{20}{\nano\second} that follows supplied
 every descriptor, so every ligand carries the same record. Fifty-six runs of the first
-batch were continued to \SI{50}{\nano\second}, and they enter this work only as the
-evidence that \SI{20}{\nano\second} of analysed trajectory is not too short.
+batch were continued past \SI{25}{\nano\second}, 39 of them to \SI{50}{\nano\second} and
+the rest to between 34 and \SI{45}{\nano\second}. They enter this work only as the
+evidence that \SI{20}{\nano\second} of analysed trajectory is not too short, and 55 of
+them run long enough to supply a \SI{30}{\nano\second} window.
 
 Thirty-two descriptors were computed from each trajectory, falling into the three
 design classes of Figure~\ref{fig:mdflow}. Persistence quantities measure the fraction

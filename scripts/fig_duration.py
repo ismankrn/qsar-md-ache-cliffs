@@ -83,8 +83,9 @@ def main() -> None:
     # whether the curve is still rising past 20 ns.
     sub_ids = sorted(set(load_md("30").index) & set(dev_ids))
 
-    # The descriptor set the replicate filter selects changes with the window -- 14, 14 and
-    # 12 descriptors at 5, 10 and 20 ns, and not the same ones. Scoring each window with its own set confounds two
+    # The descriptor set the replicate filter selects changes with the window -- 13, 13 and
+    # 11 descriptors at 5, 10 and 20 ns, which with the heavy-atom covariate make 14, 14
+    # and 12 features, and not the same ones. Scoring each window with its own set confounds two
     # things: how much trajectory the descriptors saw, and which descriptors were chosen. The
     # first draft of this figure reported a clean monotone rise and was titled accordingly;
     # holding the set fixed at the 20 ns selection flattens framing A entirely and makes

@@ -497,7 +497,7 @@ computed and no potency value enters the figure at all. We leave it as a questio
 
 We tested whether \SI{20}{\nano\second} is longer than the descriptors need by
 recomputing them on the first 5, 10, 20 and \SI{30}{\nano\second} of each trajectory
-and scoring each window on the frozen folds. Two series are drawn in
+and scoring each window on the frozen folds. Two series are drawn in each panel of
 Figure~\ref{fig:duration}, because the replicate filter selects a different set at each
 window. It passes 13 descriptors at 5 and \SI{10}{\nano\second} against 11 at 20, which
 with the heavy-atom covariate make 14 features against 12. Letting it vary would
@@ -514,18 +514,23 @@ can resolve.
   \includegraphics[width=\textwidth]{fig5\_duration.pdf}
   \caption{\textbf{Trajectory length is not the limiting factor between 5 and
     20~ns.} (a)~\framingA{}, (b)~\framingB{} and (c)~\framingC{}, with descriptors
-    recomputed on the first 5, 10, 20 and 30~ns. The fixed series holds the 20~ns
-    selection at every window; the per-window series lets the filter choose afresh.
-    Only the 45 ligands whose runs were continued reach 30~ns.}
+    recomputed on the first 5, 10 and 20~ns. The fixed series holds the 20~ns selection
+    at every window; the per-window series lets the filter choose afresh. Only 45
+    ligands reach 30~ns, too few for a pair framing, so that window appears in
+    panel~(a) alone as a third series on those ligands.}
   \label{fig:duration}
 \end{figure}
 
-The \SI{30}{\nano\second} point is drawn apart because only the 45 development ligands
-whose runs were continued reach it, and on \framingA{} it rests on 11 pairs rather than
-145. We show it so that the curve does not appear to stop for want of data. It should
+Panel~(a) carries a third series, and the \SI{30}{\nano\second} point belongs to it
+alone. Only 55 of the 283 runs were continued far enough to supply a
+\SI{30}{\nano\second} window, and those cover 45 development ligands, which yield 11 of
+the 145 development pairs. Eleven pairs cannot support \framingB{} or \framingC{}, so
+those two panels stop at \SI{20}{\nano\second}, and the \framingA{} point at
+\SI{30}{\nano\second} rests on 45 ligands rather than 217. We show it so that the curve
+does not appear to stop for want of data. It should
 not be read as a fall at longer trajectories, because the sample changes with it. Those
-45 are the ligands whose runs happened to be continued rather than a random draw from
-the 217, so the two series are not interchangeable even at the windows they share.
+45 come from the first batch of the campaign rather than from a random draw over the
+217, so the two series are not interchangeable even at the windows they share.
 Nothing in the three panels supports the view that the simulations were too short,
 which is the first objection a null result from molecular dynamics attracts. What they
 establish between them is that trajectory length is not the lever. The descriptors are
