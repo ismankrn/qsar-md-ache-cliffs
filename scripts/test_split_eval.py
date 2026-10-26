@@ -506,9 +506,13 @@ def main():
     order = [(f, k) for f in ("A", "B", "C") for k in ("r1", "r2", "r2e", "r3", "r4")]
     gi = g.set_index(["framing", "key"])
     ti = df.set_index(["framing", "key"])
+    # Two header rows, because the two gap columns differ only in which split they were
+    # measured on, and a single row of labels never said so.
     lines = [r"\begin{tabular}{llrr@{\,}lrrr}", r"\hline",
-             r"Framing & Rung & Test & \multicolumn{2}{c}{Gap vs rung 1 (95\% CI)} "
-             r"& $p_{\text{Holm}}$ & $p_{\text{BH}}$ & Dev.\ gap \\", r"\hline"]
+             r"& & \multicolumn{5}{c}{Held-out split} & Development \\",
+             r"\cline{3-7}\cline{8-8}",
+             r"Framing & Rung & Score & \multicolumn{2}{c}{Gap vs rung 1 (95\% CI)} "
+             r"& $p_{\text{Holm}}$ & $p_{\text{BH}}$ & gap \\", r"\hline"]
     for f, k in order:
         if (f, k) not in ti.index:
             continue
