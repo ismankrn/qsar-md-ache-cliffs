@@ -1,28 +1,52 @@
 \section{Conclusions}
 
-This study measures what escalating physical detail buys on activity cliffs, with a
-ligand-based baseline scored on the same frozen splits and a detection limit fixed
-before anything had been compared, which is the combination the existing evidence on
-this question lacks. Across 145 pairs of human acetylcholinesterase, 77 activity
-cliffs against 68 matched controls, and three framings of the endpoint, none of the four structure-based
-representations is resolvably better than a two-dimensional fingerprint, and on
-per-ligand potency the molecular dynamics descriptors are resolvably worse. That is a
-result with a direction rather than an absence of one. The two readings that would make
-it uninteresting are excluded by measurement rather than by argument, since the
-variance the ladder leaves unexplained is far beyond what assay reproducibility can
-account for, and the scores do not move with trajectory length once the descriptor set
-is held fixed.
+In this study we measure what escalating physical detail buys on activity cliffs. The
+comparison carries a ligand-based baseline scored on the same frozen splits and a
+detection limit fixed before anything had been compared, which is the combination the
+existing evidence on this question lacks. The design separates two coefficients of
+determination about $0.3$ apart and not less, and that bound was measured in advance
+rather than inferred from the outcome.
 
-Three findings transfer beyond this target. A replicate test separates the three
-design classes sharply, persistence quantities clearing it in 53 of 100 combinations of
-descriptor and analysis window, fluctuation quantities in 3 of 35 and the rate of
-discrete events in 4 of 20. Persistence is therefore what a trajectory of affordable
-length can be asked for, and amplitude largely is not. A descriptor filter refitted at every
-trajectory length manufactures a rise that disappears once a single selection is
-carried across the windows, which exposes any study that re-selects features at each
-value of a parameter it is varying. The descriptors that survive the reproducibility
-criterion are available from \SI{15}{\nano\second} of simulation rather
-than the 50 the original design called for, which answers the cost objection with a
-measurement rather than an argument. What this design cannot see is a modest advantage,
-and the quantity that would settle that is the number of pairs and of targets rather
-than the nanoseconds spent on each.
+The two halves of the frozen split do not give the same answer. The development split carries 145 pairs
+of human acetylcholinesterase, 77 activity cliffs against 68 matched controls, and
+three framings of the endpoint. On it, none of the four structure-based representations
+is resolvably better than a two-dimensional fingerprint, and on per-ligand potency the
+molecular dynamics descriptors are resolvably worse. On the
+sealed test split, opened once after every descriptor set and algorithm had been fixed,
+the signed pair difference runs the other way. The receptor ensemble and the dynamics
+descriptors lead the fingerprint by $+0.283$ and $+0.311$, and both gaps survive a
+correction for the twelve comparisons made and a leave-one-pair-out check.
+
+We report that disagreement rather than either half of it. Thirty-eight held-out pairs
+against 145 development pairs cannot settle which reading is right, and the candidate
+explanations cannot be separated at this size. A held-out sample that happens to suit
+low-dimensional descriptors would produce the pattern, and so would the difference
+between a cross-validated score and a single refit. What we can say is that both
+surviving gaps are about $0.3$, which is exactly the resolution the design was measured
+to have, so neither half contradicts that bound. The development split saw nothing of
+that size and the held-out split saw something of it.
+
+The instability is itself a result, and it is the one we would carry furthest. A single
+frozen split of this size, assembled with connected-component separation and scored
+without reselection, can return opposite answers on its two halves on the endpoint that
+defines the problem. Benchmarks of activity-cliff prediction are routinely built on one
+split of comparable size, and the weight their conclusions can carry is bounded by what
+this disagreement shows. That bound applies to the negative result reported here as
+much as to any positive one reported elsewhere.
+
+Three further findings transfer beyond this target. First, a replicate test separates
+the three design classes sharply. Persistence quantities clear it in 53 of 100
+combinations of descriptor and analysis window, fluctuation quantities in 3 of 35, and
+the rate of discrete events in 4 of 20. Persistence is therefore what a trajectory of
+affordable length can be asked for, and amplitude largely is not. Second, a descriptor
+filter refitted at every trajectory length manufactures a rise that disappears once a
+single selection is carried across the windows. This exposes any study that re-selects
+features at each value of a parameter it is varying. Third, the descriptors that
+survive the reproducibility criterion are available from \SI{15}{\nano\second} of
+simulation rather than the 50 the original design called for, which answers the cost
+objection with a measurement rather than an argument.
+
+What would settle the question this study leaves open is not the length of the
+trajectories. The resolution follows from the number of pairs, so more pairs and more
+targets are the only things that would narrow it, and they are also what would decide
+which half of the split to believe.

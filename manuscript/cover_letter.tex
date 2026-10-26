@@ -2,10 +2,10 @@
 \documentclass[11pt,letterpaper]{article}
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
-\usepackage[margin=0.9in,top=0.7in,bottom=0.7in]{geometry}
+\usepackage[margin=0.9in,top=0.65in,bottom=0.5in]{geometry}
 \usepackage[colorlinks=true,allcolors=blue]{hyperref}
 \usepackage{parskip}
-\setlength{\parskip}{0.55em}
+\setlength{\parskip}{0.36em}
 \pagestyle{empty}
 
 \begin{document}
@@ -29,51 +29,60 @@ We submit for your consideration an Article entitled \textbf{``Activity cliffs o
 acetylcholinesterase: a pre-specified descriptor escalation''}.
 
 It is widely held that two-dimensional fingerprints fail on activity cliffs because
-they cannot see the three-dimensional detail separating the two members of a pair, and
-that supplying that detail should help. We tested that directly, escalating four
+they cannot see the detail separating the two members of a pair, and that supplying it
+should help. We tested that directly by escalating four
 structure-based representations against the same fingerprint baseline on the same
-frozen splits, and measured in advance how large a difference the design could have
-resolved. None was resolvably better on any of three framings of the endpoint, and on
-per-ligand potency the molecular dynamics descriptors were resolvably worse. The result
-is bounded rather than open, which is what separates it from an underpowered null.
+frozen splits, and we measured in advance what difference the design could resolve. On the development split none was resolvably better on any of three framings
+of the endpoint, and on per-ligand potency the molecular dynamics descriptors were
+resolvably worse. The result is bounded rather than open, which is what separates it
+from an underpowered null.
 
-Three findings carry beyond this target. A replicate test separates persistence from
-amplitude sharply, so a trajectory of affordable length reproduces how long a contact
-is held and not how far things move. A descriptor filter refitted at each value of a
-varied parameter manufactures a trend that a single fixed selection removes, which
-exposes any study that re-selects features as it varies a parameter. And the
-descriptors that survive reproducibility are available from 15 ns of simulation rather
-than the 50 the original design called for.
+We also opened the sealed test split, once, after every descriptor set and algorithm
+had been fixed, and it does not reproduce that result. On the signed pair difference the
+receptor ensemble and the dynamics descriptors both lead the fingerprints there by
+about 0.3 in the coefficient of determination, and both gaps survive a correction for
+the twelve comparisons made and a leave-one-pair-out check. We report the disagreement
+rather than either half of it, because 38 held-out pairs against 145 development pairs
+cannot settle which reading is right. We would rather the Editors meet it here than
+find it in Section~3.5.
+
+Three findings carry beyond this target. First, a replicate test separates persistence
+from amplitude sharply, so a trajectory of affordable length reproduces how long a
+contact is held and not how far things move. Second, a descriptor filter refitted at
+each value of a varied parameter manufactures a trend that a single fixed selection
+removes. This exposes any study that re-selects features as it varies a parameter.
+Third, the descriptors that survive reproducibility are available from 15 ns of
+simulation rather than the 50 the original design called for.
 
 We would like to address three points of the Journal's guidance on QSAR submissions
 before a reader reaches them. First, this is not a docking study against a single
-target: the docking serves a comparison between representations, and the quantity under
-test is what physical detail adds to a matched ligand-based baseline. Second, the
-high ratio of descriptors to data points sits in the fingerprint baseline, scored as a
-practitioner would score it, and we report a matched-dimensionality arm alongside it
-precisely so that feature count can be separated from representation. Third, we are not
-proposing new descriptors and claim no superiority for them; what is offered is the
+target. The docking serves a comparison between representations, and the quantity under
+test is what physical detail adds to a matched ligand-based baseline. Second, the high
+ratio of descriptors to data points sits in the fingerprint baseline, scored as a
+practitioner would score it. We report a matched-dimensionality arm alongside it so
+that feature count can be separated from representation. Third, we are not
+proposing new descriptors and claim no superiority for them. What is offered is the
 comparison and the detection limit that makes its outcome readable, and the descriptor
 machinery is standard and attributed as such.
 
-Acetylcholinesterase was chosen because the question needs a target supplying activity
+We chose acetylcholinesterase because the question needs a target supplying activity
 cliffs in quantity and a crystallographic human receptor, and because its gorge gates
-conformationally on evidence predating this work. A comparison that finds no advantage
-where one is most expected says more than one that finds none where none was expected.
+conformationally on evidence predating this work, so it is favourable to the
+hypothesis under test.
 
-All molecular structures appear in the Supporting Information, and all analysis code
-and derived data are in a public repository archived with a DOI, sufficient to
+All molecular structures appear in the Supporting Information. All analysis code and
+derived data are in a public repository archived with a DOI, which is sufficient to
 reproduce every number without rerunning a simulation.
 
 The manuscript is original, is not under consideration elsewhere, and has been approved
 by all authors. The authors declare no competing financial interest, and the work
 received no external funding.
 
-\medskip
+\smallskip
 \noindent
 Yours sincerely,
 
-\medskip
+\smallskip
 \noindent
 Isman Kurniawan, on behalf of all authors
 

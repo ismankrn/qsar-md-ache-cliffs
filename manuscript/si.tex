@@ -35,7 +35,7 @@
 
 \title{Supporting Information\\
   Activity cliffs on human acetylcholinesterase:
-  a pre-specified escalation from 2D descriptors to molecular dynamics}
+  a pre-specified descriptor escalation}
 \author{Isman Kurniawan, Lela Lailatul Khumaisah, Muhamad Salman Fareza}
 \date{}
 
@@ -43,9 +43,9 @@
 
 \maketitle
 
-Table~\ref{tab:sistructures} lists every molecular structure the study used, which the
-journal's guidance on QSAR submissions asks to be reported here rather than only
-deposited. Each ligand appears with both of the forms it was carried in, with its
+Table~\ref{tab:sistructures} lists every molecular structure the study used. The
+journal's guidance on QSAR submissions asks for these to be reported here rather than
+only deposited. Each ligand appears with both of the forms it was carried in, with its
 measured potency, and with the split and fold it was frozen into before any descriptor
 was computed.
 
@@ -55,29 +55,30 @@ was computed.
 
 \clearpage
 
-Each descriptor is named here as it appears in the deposited descriptor tables, so a
-quantity discussed in the main text can be traced to the column it was computed in.
-Rungs~2, 2e, 3 and~4 share one panel of fourteen gorge-lining residues and compute a
-per-residue quantity for each of them, which is why all three of these tables end with
-a block of fourteen entries. What that quantity is differs between them, being a
-contact count on one docked pose, the same count taken as a median over eight receptor
-conformations, a Coulomb and Lennard-Jones sum over the atoms of the residue, and the
-fraction of simulated frames in which the contact was present. The residue numbering is
-that of the mature human enzyme as deposited in 4EY7, and the names were read from the
-receptor used in the calculations rather than assigned by hand. The
+Each descriptor is named here as it appears in the deposited descriptor tables. A
+quantity discussed in the main text can therefore be traced to the column it was
+computed in. Rungs~2, 2e, 3 and~4 share one panel of fourteen gorge-lining residues and
+compute a per-residue quantity for each of them, which is why all three of these tables
+end with a block of fourteen entries. What that quantity is differs between them. It is
+a contact count on one docked pose, the same count taken as a median over eight
+receptor conformations, a Coulomb and Lennard-Jones sum over the atoms of the residue,
+and the fraction of simulated frames in which the contact was present. The residue
+numbering is that of the mature human enzyme as deposited in 4EY7. We read the names
+from the receptor used in the calculations rather than assigning them by hand. The
 \SI{4.5}{\angstrom} cutoff that defines a contact is the same at rungs~2, 2e and~4, so
 a per-residue contact entry means the same geometric thing wherever it appears.
 
-Five of the rung-2 descriptors measure the ligand's position along the axis between the
-two anionic sites, and they are defined against the single 4EY7 geometry, so the
+Five of the rung-2 descriptors measure the ligand's position along the axis between
+the two anionic sites. They are defined against the single 4EY7 geometry, so the
 ensemble carries the remaining 29 and not those five. The rung-4 table carries two
-further columns, namely the spread of a descriptor between ligands divided by its spread
-between replicate simulations of one ligand, and the verdict that ratio produced at a
-threshold of two. A descriptor whose replicate spread was zero has no ratio, and that
-case splits in two, as a quantity that never varies at all carries no information while
-one that is almost always zero is reproducible only by its own sparsity. The heavy-atom
-count appears in the same table because it is carried beside either feature set as a
-size covariate, and it is not a dynamic quantity and was not put to the filter.
+further columns. The first is the spread of a descriptor between ligands divided by its
+spread between replicate simulations of one ligand. The second is the verdict that
+ratio produced at a threshold of two. A descriptor whose replicate spread was zero has
+no ratio, and that case splits in two. A quantity that never varies at all carries no
+information, while one that is almost always zero is reproducible only by its own
+sparsity. The heavy-atom count appears in the same table because it is carried beside
+either feature set as a size covariate. It is not a dynamic quantity and was not put to
+the filter.
 
 \begin{table}[htbp]
   \centering
@@ -94,7 +95,7 @@ size covariate, and it is not a dynamic quantity and was not put to the filter.
   \footnotesize
   \caption{\textbf{Rung~3 descriptors.} The 22 MM/GBSA quantities, computed on the
     rung~2 pose after minimisation of the ligand hydrogens. Differences within a matched
-    pair are what the models see, as the absolute values are not interpretable.}
+    pair are what the models see, because the absolute values are not interpretable.}
   \label{tab:sirung3}
   \input{../results/37_si_rung3.tex}
 \end{table}
@@ -115,13 +116,13 @@ Tables~\ref{tab:benchreg} and~\ref{tab:benchclf} hold the full grid of scores th
 ladder summarises, with every rung crossed against every descriptor arm and every
 algorithm family. The headline comparison takes the best value a rung reached over its
 arms and its families, which is one number drawn from a block of them, and these two
-tables are that block. They are split because the regression and the classification
-framings do not share a model suite, as Ridge and PLS have no classification counterpart
-and are absent from the second rather than having failed in it. Reading down a column
-shows how much of a rung's score is the descriptors and how much is the choice of
-algorithm, which the single best value conceals. The arms are the alternative feature
-sets of the main text, namely the two fingerprint variants of rung~1 and the filtered
-and unfiltered sets of rung~4, while rungs~2, 2e and~3 carry one arm each.
+tables are that block. They are split because the regression and the classification framings
+do not share a model suite. Ridge and PLS have no classification counterpart and are
+absent from the second rather than having failed in it. Reading down a column shows how
+much of a rung's score is the descriptors and how much is the choice of algorithm,
+which the single best value conceals. The arms are the alternative feature sets of the
+main text. These are the two fingerprint variants of rung~1 and the filtered and
+unfiltered sets of rung~4, while rungs~2, 2e and~3 carry one arm each.
 
 \begin{table}[tb]
   \centering

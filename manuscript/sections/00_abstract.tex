@@ -1,26 +1,25 @@
 \begin{abstract}
 \noindent
-Activity cliffs, pairs of near-identical compounds separated by orders of magnitude in
-potency, are the standard counter-example to quantitative structure-activity
-relationships, and the usual response is to add physical detail a fingerprint cannot
-see. Adding it is rarely tested against a ligand-based baseline on the same data, and
-no study reports how large a difference its design could detect. What is
-new here is that comparison and that limit, not the descriptors, which are standard. We
-escalated four structure-based representations against one fingerprint baseline on
-human acetylcholinesterase, from a docked pose through an eight-member receptor
-ensemble and an implicit-solvent energy to descriptors from
-\SI{25}{\nano\second} molecular dynamics trajectories. The ladder was scored on 217
-ligands and 145 pairs, 77 constitutional cliffs against 68 matched controls, on three
-framings of the endpoint, with splits frozen and the detection limit measured in advance. No
-structure-based representation was resolvably better than the fingerprint on any
-framing, the design separating coefficients of determination about $0.3$ apart. On
-per-ligand potency the dynamics descriptors were resolvably worse, the gap being
-$-0.375$ with a 95 per cent interval of $[-0.596, -0.184]$, while both pair endpoints
-gave intervals containing zero. The unexplained variance lies far beyond assay
-reproducibility and does not move with trajectory length, placing the limitation in the
-descriptors. A replicate test separates persistence from
-amplitude, which clear it in 53 of 100 and 3 of 35 descriptor-window combinations. What would settle the question left open
-is more pairs and targets, not more nanoseconds.
+Activity cliffs are pairs of near-identical compounds separated by orders of magnitude
+in potency. They are the standard counter-example to quantitative structure-activity
+relationships, and the usual response is to add physical detail that a fingerprint
+cannot see. However, it is rarely tested against a ligand-based baseline on the same
+data, and no study reports what difference its design can detect. In this study,
+we escalate four structure-based representations against one fingerprint baseline on
+human acetylcholinesterase: a docked pose, an eight-member receptor ensemble, an
+implicit-solvent energy, and descriptors from \SI{25}{\nano\second} molecular dynamics
+trajectories. The ladder is scored on 217 ligands and 145 pairs, 77 constitutional
+cliffs against 68 matched controls, on three endpoint framings. Splits are frozen and
+the detection limit measured in advance, at $R^2$ about $0.3$. On the development split
+we find that no structure-based representation is resolvably better than the
+fingerprint on any framing, and that the dynamics descriptors are resolvably worse on
+per-ligand potency. We then opened the sealed test split once, and it does not agree. On the signed pair
+difference the receptor ensemble and the dynamics descriptors lead the
+fingerprint by $+0.283$ and $+0.311$, and both gaps survive a correction for twelve
+comparisons and a leave-one-pair-out check. Thirty-eight held-out pairs against 145 cannot settle which reading is right. That instability is itself the
+result, and it bounds what any single frozen split of this size can establish about
+activity cliffs. What would settle the question is more pairs and targets, not more
+nanoseconds.
 \end{abstract}
 
 \section*{Keywords}

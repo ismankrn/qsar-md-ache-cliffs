@@ -2,15 +2,15 @@
 
 \subsection{Validation of the docking protocol}\label{sec:dockval}
 
-We validated the protocol by redocking donepezil into 4EY7, the structure from which
-its crystallographic pose is taken, since a docked pose can only be scored against a
-crystallographic answer and no ligand of the dataset has one. Donepezil spans both ends
+We validated the protocol by redocking donepezil into 4EY7, which is the structure from
+which its crystallographic pose is taken. A docked pose can only be scored against a
+crystallographic answer, and no ligand of the dataset has one. Donepezil spans both ends
 of the gorge, so the validation covers a pose that engages the catalytic and the
 peripheral anionic site at once rather than one site alone. It was docked with five
 independent seeds, and a pose was counted as successful below \SI{2.0}{\angstrom} RMSD
-from the crystal pose, which is the conventional criterion. The crystal pose was
-recovered at $0.745 \pm 0.009$~\AA{} in five of five runs, as Figure~\ref{fig:redock}
-shows, clearing that criterion by nearly a factor of three. The spread of
+from the crystal pose, which is the conventional criterion. We recovered the crystal
+pose at $0.745 \pm 0.009$~\AA{} in five of five runs, as Figure~\ref{fig:redock} shows.
+This clears the criterion by nearly a factor of three. The spread of
 \SI{0.009}{\angstrom} across the five seeds shows the recovery to be a property of the
 protocol rather than a fortunate draw.
 
@@ -23,27 +23,28 @@ protocol rather than a fortunate draw.
 \end{figure}
 
 The pose-geometry and molecular-dynamics descriptors are defined in terms of residue
-contacts and not of RMSD, so we validated the protocol a second time at the level of
-interactions. Interaction fingerprints were computed for the crystal
-pose and the redocked pose of donepezil by using ProLIF \citep{prolif2021}, with bond orders
+contacts and not of RMSD. We therefore validated the protocol a second time at the
+level of interactions. Interaction fingerprints were computed for the crystal pose and
+the redocked pose of donepezil by using ProLIF \citep{prolif2021}, with bond orders
 transferred from the docked structure so that the two poses carry identical chemistry
 and differ only in their coordinates. The crystal binding mode is shown in
 Figure~\ref{fig:interactions}(a), and Figure~\ref{fig:interactions}(b) sets the two
 fingerprints side by side, with every interaction placed by the residue it involves and
-by its type. Counting residues alone understates what changes, since a residue
+by its type. Counting residues alone understates what changes, because a residue
 contacted in both poses can still gain or lose an interaction, as Tyr341 does. Counted
-interaction by interaction, the crystal pose carries 18 and the redocked pose 14, of
-which 11 are common, 7 appear only in the crystal pose and 3 only in the docked one.
+interaction by interaction, the crystal pose carries 18 and the redocked pose 14. Of
+these, 11 are common, 7 appear only in the crystal pose and 3 only in the docked one.
 Ten of the 18 crystal interactions are typed rather than bare van der Waals contact,
 and 8 of those 10 are recovered. Among them are the hydrophobic and $\pi$-stacking
 contacts at Trp86 and at Trp286 and the cation--$\pi$ and hydrophobic contacts at
-Tyr337, which are the six that fall at the three sites the descriptors use. The two typed
-interactions that are lost are a hydrogen-bond acceptor contact with Phe295 and a
+Tyr337, which are the six that fall at the three sites the descriptors use. The two
+typed interactions that are lost are a hydrogen-bond acceptor contact with Phe295 and a
 hydrophobic contact with Phe297, and neither lies at one of the three named sites.
 Every remaining difference is van der Waals contact, lost at Tyr72, Trp286, Ser203,
 Ser293 and His447 and gained at Tyr124, Tyr341 and Gly448. Every typed interaction at
 the three sites on which the descriptors of this work rest is therefore reproduced, and
-the disagreement is confined to the weakest class of contact. We used the typing for validation only, and it enters no descriptor set.
+the disagreement is confined to the weakest class of contact. We used the typing for
+validation only, and it enters no descriptor set.
 
 \begin{figure}[tb]
   \centering
@@ -59,20 +60,20 @@ the disagreement is confined to the weakest class of contact. We used the typing
 \subsection{Stability and thermodynamic state of the simulations}\label{sec:simqc}
 
 The production ensembles ran at the thermodynamic state they were set to, as shown in
-Figure~\ref{fig:thermo}. The temperature in panel~(a) averages \SI{300.00}{\kelvin} with a run-to-run spread of
-\SI{0.02}{\kelvin}, and the density in panel~(b) averages
+Figure~\ref{fig:thermo}. The temperature in panel~(a) averages \SI{300.00}{\kelvin}
+with a run-to-run spread of \SI{0.02}{\kelvin}. The density in panel~(b) averages
 \SI{1018.9}{\kilo\gram\per\metre\cubed} with a spread of
 \SI{0.12}{\kilo\gram\per\metre\cubed}. The potential energy in panel~(c) drifts by
 \SI{-10.5}{\kilo\joule\per\mole\per\nano\second} at the median, against a total near
 $-1.3\times10^{6}$~\si{\kilo\joule\per\mole}, which is less than one part in $10^{5}$
 per nanosecond. Panel~(d) shows the running mean of the pressure, which ends at
-\SI{1.00}{\bar}, since the instantaneous pressure of a box of this size has a
-within-run spread of about \SI{89}{\bar} and carries no information frame by frame.
-These four quantities were computed on 64 of the 229 runs, and the subset establishes
-only that the simulations were well behaved, no comparison between descriptor sets
-resting on it. What the four panels establish is that the integrator, the thermostat
-and the barostat behaved, and a drift below one part in $10^{5}$ per nanosecond rules
-out a systematic leak of energy.
+\SI{1.00}{\bar}. We show a running mean because the instantaneous pressure of a box of
+this size has a within-run spread of about \SI{89}{\bar} and carries no information
+frame by frame. These four quantities were computed on 64 of the 229 runs. The subset
+establishes only that the simulations were well behaved, and no comparison between
+descriptor sets rests on it. What the four panels establish is that the integrator, the
+thermostat and the barostat behaved. A drift below one part in $10^{5}$ per nanosecond
+also rules out a systematic leak of energy.
 
 \begin{figure}[tb]
   \centering
@@ -85,41 +86,40 @@ out a systematic leak of energy.
   \label{fig:thermo}
 \end{figure}
 
-Structural stability across the campaign is shown in Figure~\ref{fig:stability}, where
-the receptor C$\alpha$ RMSD in panel~(a) has a median of \SI{1.42}{\angstrom} across
-runs, and no frame of any run exceeds \SI{2.20}{\angstrom}. The steep rise in that panel is
+Structural stability across the campaign is shown in Figure~\ref{fig:stability}. The
+receptor C$\alpha$ RMSD in panel~(a) has a median of \SI{1.42}{\angstrom} across runs,
+and no frame of any run exceeds \SI{2.20}{\angstrom}. The steep rise in that panel is
 complete within the five nanoseconds that are discarded, and the curve creeps only
-slowly over the window that is analysed, so the descriptors are not measured on a
-system still finding its equilibrium. The ligand RMSD from its equilibrated pose in
-panel~(b) has a median of \SI{2.99}{\angstrom}, and the two production designs are
-drawn separately instead of being averaged into a single band whose composition would
-change partway along its own axis. They track each other over the window they share,
-at \SI{1.41}{\angstrom} against \SI{1.44}{\angstrom} for the receptor and
-\SI{3.06}{\angstrom} against \SI{2.84}{\angstrom} for the ligand, so the runs that
-continued are not a different population and the common window may be read as one set.
-A ligand displacement of three \AA{} is a rearrangement within the site and not a
-departure from it, as the centre of mass of no ligand in any of the 229 runs ever moved
-more than \SI{12}{\angstrom} from where it started.
+slowly over the window that is analysed. The descriptors are therefore not measured on
+a system still finding its equilibrium. The ligand RMSD from its equilibrated pose in
+panel~(b) has a median of \SI{2.99}{\angstrom}. We drew the two production designs
+separately instead of averaging them into a single band whose composition would change
+partway along its own axis. They track each other over the window they share, at
+\SI{1.41}{\angstrom} against \SI{1.44}{\angstrom} for the receptor and
+\SI{3.06}{\angstrom} against \SI{2.84}{\angstrom} for the ligand. The runs that
+continued are therefore not a different population, and the common window may be read
+as one set. A ligand displacement of three \AA{} is a rearrangement within the site and
+not a departure from it, because the centre of mass of no ligand in any of the 229 runs
+ever moved more than \SI{12}{\angstrom} from where it started.
 
 The fluctuation in panel~(c) is concentrated where the receptor was cut. Its eight
 largest values belong to residues 494, 541, 493, 258, 540, 4, 492 and 539, reaching
-\SI{4.53}{\angstrom} at residue 494, and every one of them is a capped segment
-terminus or its immediate neighbour. That is the expected behaviour of a free chain
-end and it is confined to the surface, since the fourteen gorge-lining residues
-fluctuate by a median of \SI{0.49}{\angstrom} and by no more than
-\SI{0.75}{\angstrom}. Splitting the chain into three segments therefore left the
-binding site as rigid as the rest of the fold, which is the condition the contact
-descriptors depend on. All three panels were computed after the same periodic-boundary
-treatment that the descriptors receive.
+\SI{4.53}{\angstrom} at residue 494, and every one of them is a capped segment terminus
+or its immediate neighbour. That is the expected behaviour of a free chain end, and it
+is confined to the surface. The fourteen gorge-lining residues fluctuate by a median of
+\SI{0.49}{\angstrom} and by no more than \SI{0.75}{\angstrom}. Splitting the chain into
+three segments therefore left the binding site as rigid as the rest of the fold, which
+is the condition the contact descriptors depend on. All three panels were computed
+after the same periodic-boundary treatment that the descriptors receive.
 
-Taken together the two figures establish that the systems are equilibrated and
+Taken together, the two figures establish that the systems are equilibrated and
 structurally stable over the window that is analysed, which is the condition the
-descriptors need, and they do not establish that the sampling has converged. A
-temperature and a density settle within picoseconds of any production run, and an RMSD
-plateaus just as convincingly for a ligand that entered one basin early and stayed in
-it. The replicate pilot measures that directly, by running the same ligand again under a
+descriptors need. They do not establish that the sampling has converged. A temperature
+and a density settle within picoseconds of any production run, and an RMSD plateaus
+just as convincingly for a ligand that entered one basin early and stayed in it. The
+replicate pilot measures that directly, by running the same ligand again under a
 different velocity seed. The share of descriptors whose seed-to-seed spread swamps
-their spread between ligands does not fall as the window lengthens, standing at 19 of
+their spread between ligands does not fall as the window lengthens. It stands at 19 of
 32 at \SI{5}{\nano\second}, 21 at \SI{20}{\nano\second} and 20 at
 \SI{45}{\nano\second}. A converging simulation would show that share shrinking, and it
 does not. What these two figures rule out is therefore a system that is drifting,
@@ -140,18 +140,19 @@ one the descriptors actually require.
 \subsection{Comparison of the five descriptor sets}\label{sec:ladder}
 
 Table~\ref{tab:benchmark} gives the best score each rung reached on each framing,
-together with the algorithm family that reached it. On \framingA{} the 2D
-fingerprints lead at $+0.386$, with the
-receptor ensemble second at $+0.215$, MM/GBSA at $+0.118$, molecular dynamics at
-$+0.068$ and the single rigid pose last at $+0.046$. On \framingB{}, the endpoint that defines a cliff, the order changes, as the receptor ensemble reaches $+0.274$ against
-$+0.200$ for the fingerprints, molecular dynamics reaches $+0.152$, pose geometry
-$+0.167$ and MM/GBSA falls below zero at $-0.056$. On \framingC{} every rung separates cliff pairs from controls better than chance, the fingerprints leading at $0.805$ and
-molecular dynamics close behind at $0.796$, with MM/GBSA at $0.753$, the ensemble at
-$0.705$ and the single pose at $0.684$. Every rung was scored on all 217 development
-ligands and all 145 development pairs, so no rung is helped by an easier subset of the
-data, and the winning algorithm family differs between cells rather than one family
-carrying a rung throughout, which Tables~\ref{tab:benchreg} and~\ref{tab:benchclf}
-show in full.
+together with the algorithm family that reached it. On \framingA{} the 2D fingerprints
+lead at $+0.386$. The receptor ensemble is second at $+0.215$, MM/GBSA reaches
+$+0.118$, molecular dynamics $+0.068$ and the single rigid pose $+0.046$. On
+\framingB{}, which is the endpoint that defines a cliff, the order changes. The
+receptor ensemble reaches $+0.274$ against $+0.200$ for the fingerprints, molecular
+dynamics reaches $+0.152$, pose geometry $+0.167$, and MM/GBSA falls below zero at
+$-0.056$. On \framingC{} every rung separates cliff pairs from controls better than
+chance. The fingerprints lead at $0.805$ and molecular dynamics follows closely at
+$0.796$, with MM/GBSA at $0.753$, the ensemble at $0.705$ and the single pose at
+$0.684$. Every rung was scored on all 217 development ligands and all 145 development
+pairs, so no rung is helped by an easier subset of the data. The winning algorithm
+family also differs between cells rather than one family carrying a rung throughout,
+which Tables~\ref{tab:benchreg} and~\ref{tab:benchclf} show in full.
 
 \begin{table}[tb]
   \centering
@@ -162,57 +163,58 @@ show in full.
   \input{../results/22_benchmark_main.tex}
 \end{table}
 
-No rung is resolvably ahead of any other on any framing, and the ordering above should
-be read with that in mind. The largest advantage any structure-based rung holds over
-the fingerprints anywhere is the $0.074$ by which the receptor ensemble leads on
-\framingB{}, and the largest lead the fingerprints hold over the best structure-based
-rung is $0.171$ on \framingA{} and $0.010$ on \framingC{}. All three are well inside
-the resolution of about $0.3$ that this design can claim, so none of them is a
-difference it can see. The claim is therefore not that two-dimensional
-fingerprints win everywhere, since on \framingB{} the ensemble is numerically ahead of
-them, but that no rung is separated from any other by more than the noise. The one
-comparison that does separate is the gap between rung~4 and the fingerprints on
+No rung is resolvably ahead of any other on any framing of the development split, and
+the ordering above should be read with that in mind. The largest advantage any
+structure-based rung holds over the fingerprints anywhere is the $0.074$ by which the
+receptor ensemble leads on \framingB{}. The largest lead the fingerprints hold over the
+best structure-based rung is $0.171$ on \framingA{} and $0.010$ on \framingC{}. All
+three are well inside the resolution of about $0.3$ that this design can claim, so none
+of them is a difference it can see. The claim is therefore not that two-dimensional
+fingerprints win everywhere, because on \framingB{} the ensemble is numerically ahead
+of them. The claim is that no rung is separated from any other by more than the noise.
+The one comparison that does separate is the gap between rung~4 and the fingerprints on
 \framingA{}, and it runs against rung~4.
 
-The headline comparison gives rung~1 thousands of features and rung~4 twelve, so the
-obvious objection is that the fingerprint wins on width rather than on content. We
-therefore scored an arm in which the fingerprint is cut to the width of rung~4 by a
+The headline comparison gives rung~1 thousands of features and rung~4 twelve. The
+obvious objection is therefore that the fingerprint wins on width rather than on
+content. We scored an arm in which the fingerprint is cut to the width of rung~4 by a
 univariate filter fitted inside each training fold. The width is twelve features on
 framings~A and~B and twenty-four on \framingC{}, where each pair contributes a
 concatenation of two vectors. The control does not settle the question in one
-direction, as it reverses the ordering on two framings and leaves it standing on the
+direction. It reverses the ordering on two framings and leaves it standing on the
 third. On \framingB{} the handicapped fingerprint falls to $-0.128$ from $+0.200$ and
-so drops below the $+0.152$ of rung~4, and on \framingC{} it falls to $0.713$ from
-$0.805$ and below the $0.796$ of rung~4. On \framingA{} it falls only to $+0.165$ from
-$+0.386$ and remains well above the $+0.068$ of rung~4. The two framings whose ordering changes are
-the two the design cannot resolve, and the one framing it can resolve is the one left
-unchanged.
+so drops below the $+0.152$ of rung~4. On \framingC{} it falls to $0.713$ from $0.805$
+and below the $0.796$ of rung~4. On \framingA{} it falls only to $+0.165$ from $+0.386$
+and remains well above the $+0.068$ of rung~4. Meanwhile, the two framings whose
+ordering changes are the two the design cannot resolve, and the one framing it can
+resolve is the one left unchanged.
 
 We read that as a statement about the control rather than as evidence for rung~4,
 because the two sides are not handicapped symmetrically. The twelve rung-4 features are
-what a reliability criterion left of a set designed for this target, whereas the twelve
+what a reliability criterion left of a set designed for this target. The twelve
 fingerprint bits are what a univariate filter left of two thousand that carry their
 information in combination rather than singly. Cutting a fingerprint to twelve bits
-does not produce a smaller fingerprint, it produces a different and much poorer
+does not produce a smaller fingerprint. It produces a different and much poorer
 descriptor. The arm therefore shows that feature count is not the quantity on which
 this comparison turns, which is worth establishing but is not a result about molecular
-dynamics. The comparison that matters is therefore against rung~1 as it would
-actually be used, with every feature it has and the feature set re-selected inside each
+dynamics. The comparison that matters is therefore against rung~1 as it would actually
+be used, with every feature it has and the feature set re-selected inside each
 bootstrap replicate.
 
-Against that unhandicapped baseline, and as Figure~\ref{fig:gapforest} shows, the
-bootstrap over units puts the gap at $-0.375$ on \framingA{} with a 95 per cent interval of $[-0.596, -0.184]$, at $-0.093$ on
-\framingB{} with $[-0.319, +0.127]$, and at $+0.003$ on \framingC{} with $[-0.102,
-+0.103]$. Only \framingA{} is resolved, and it is resolved against rung~4 rather than for it.
-That interval is the only one in this study that excludes zero, and its sign matters as much
-as its width, since it does not report rung~4 as unproven but as worse than a
-fingerprint on per-ligand potency. On the two pair framings the gap is small and the
-interval contains zero in both, so neither supports a claim in either direction, and
-the figure colours the three accordingly. The baseline throughout is rung~1 with every
-feature it has, its feature set re-selected inside each replicate, so the gap is not
-measured against a weakened fingerprint. The
-molecular-dynamics descriptors therefore fail to improve on a 2D baseline where the
-design can see, and leave the question open where it cannot.
+Figure~\ref{fig:gapforest} shows the gap against that unhandicapped baseline. The
+bootstrap over units puts it at $-0.375$ on \framingA{}, with a 95 per cent interval of
+$[-0.596, -0.184]$. It puts the gap at $-0.093$ on \framingB{} with $[-0.319, +0.127]$,
+and at $+0.003$ on \framingC{} with $[-0.102, +0.103]$. Only \framingA{} is resolved, and
+it is resolved against rung~4 rather than for it. That interval is the only one on the
+development split that excludes zero. Its sign matters as much as its width, because it
+does not report rung~4 as unproven but as worse than a fingerprint on per-ligand
+potency. On the two pair framings the gap is small and the interval contains zero in
+both, so neither supports a claim in either direction, and the figure colours the three
+accordingly. The baseline throughout is rung~1 with every feature it has, its feature
+set re-selected inside each replicate, so the gap is not measured against a weakened
+fingerprint. On the development split the molecular-dynamics descriptors therefore fail
+to improve on a 2D baseline where the design can see, and leave the question open where
+it cannot.
 
 \begin{figure}[tb]
   \centering
@@ -226,18 +228,19 @@ design can see, and leave the question open where it cannot.
 % ---------------------------------------------------------------------------
 \subsection{Statistical power of the comparison}\label{sec:power}
 
-The resolution of the comparison was measured on synthetic descriptor matrices pushed
+We measured the resolution of the comparison on synthetic descriptor matrices pushed
 through the same support vector machine and the same frozen folds, on the pair endpoint
-of \framingB{}. The baseline in that simulation is itself synthetic, built by tuning
-the signal strength of a descriptor block until its out-of-fold coefficient of
+of \framingB{}. The baseline in that simulation is itself synthetic. We built it by
+tuning the signal strength of a descriptor block until its out-of-fold coefficient of
 determination matched the $0.200$ that rung~1 reaches, which the tuning met at $0.209$.
 Figure~\ref{fig:power}(a) gives, against that baseline, the share of simulations in
 which a candidate of a given strength is called the better of the two. A candidate
 scoring $0.335$ is called better in 36 per cent of them and one scoring $0.479$ in 90
 per cent, while 80 per cent power arrives only at about $0.45$. The curve runs along
-the bottom until roughly $0.3$ and climbs steeply after it, so the design is not merely
-less sensitive to a small advantage but close to blind to one. The dash-dotted line
-marks where rung~4 landed, to the left of the baseline and inside that flat stretch.
+the bottom until roughly $0.3$ and climbs steeply after it. The design is therefore not
+merely less sensitive to a small advantage but close to blind to one. The dash-dotted
+line marks where rung~4 landed, which is to the left of the baseline and inside that
+flat stretch.
 
 \begin{figure}[tb]
   \centering
@@ -256,43 +259,112 @@ Panel~(b) carries the same limit as a width rather than as a probability. The 95
 cent interval on the gap is $0.32$ wide on average and stays between $0.28$ and $0.34$
 across every candidate tested, so the limit barely depends on how strong the candidate
 is. The portable statement is therefore that this study separates two values of the
-coefficient of determination about $0.3$ apart, and not less. That number was fixed before the comparison it bounds had been scored, so it describes
-the design rather than the outcome. It bounds the null rather than leaving it open, and
-both halves of the bound deserve stating. Differences larger than about $0.3$ are excluded, so the claim
-that molecular dynamics adds a large advantage over fingerprints is ruled out on this
-dataset. Differences smaller than that are not addressed at all, so a modest advantage
-remains possible and this study cannot speak to it. What would change the bound is the
-number of pairs rather than the length of the trajectories, since the width follows
-from 145 pairs.
+coefficient of determination about $0.3$ apart, and not less. That number was fixed
+before the comparison it bounds had been scored, so it describes the design rather than
+the outcome. It also bounds the null rather than leaving it open, and both halves of
+the bound deserve stating. Differences larger than about $0.3$ are excluded, so the
+claim that molecular dynamics adds a large advantage over fingerprints is ruled out on
+this dataset. Differences smaller than that are not addressed at all, so a modest
+advantage remains possible and this study cannot speak to it. What would change the
+bound is the number of pairs rather than the length of the trajectories, because the
+width follows from 145 pairs.
 
 Panel~(c) closes the one remaining way of reading the result, which is that the
 endpoint itself is too noisy to predict. A model cannot explain more of the variance
-than the measurement reproduces, and we estimated that ceiling from the 336 of 5609
+than the measurement reproduces. We estimated that ceiling from the 336 of 5609
 compounds carrying a repeat assay. Each compound's spread across its repeats gives a
 noise variance, and the ceiling is the share of the observed variance that a perfect
-model could still account for. The panel draws that ceiling for three readings of the spread, whose median is
-$0.06$ log units, whose mean is $0.18$ and whose upper decile is $0.56$, and shades
-the variance above it as unreachable. Even the pessimistic reading taken from the
-upper decile leaves every rung of the ladder far below the shaded band. The variance the ladder fails
-to explain is therefore real signal and not assay noise, which places the limitation in
-the descriptors rather than in the data, and removes the reading that there was nothing
-there to find.
+model could still account for. The panel draws that ceiling for three readings of the
+spread, whose median is $0.06$ log units, whose mean is $0.18$ and whose upper decile
+is $0.56$, and shades the variance above it as unreachable. Even the pessimistic
+reading taken from the upper decile leaves every rung of the ladder far below the
+shaded band. The variance the ladder fails to explain is therefore real signal and not
+assay noise. This places the limitation in the descriptors rather than in the data, and
+removes the reading that there was nothing there to find.
 
-% ---------------------------------------------------------------------------
+\subsection{The held-out split}\label{sec:testsplit}
+
+Everything to this point was measured on the development split, which also chose the
+descriptor arm, the algorithm family and the reliability filter for every rung. A
+separate 54 ligands and 38 pairs, which are 20 cliffs against 18 matched controls, were
+sealed at the outset and never scored. They could not be scored until now, for a reason
+specific to this study. Four of the five rungs covered them from the beginning, but
+rung~4 had descriptors for none of them, because the trajectories had only ever been
+run on the development ligands. Opening the split with that gap would have validated
+the four rungs and omitted the one the comparison is about. We therefore simulated the
+54 test ligands under the identical protocol, at \SI{25}{\nano\second} each with the
+same analysis window, and opened the split once. The replicate filter was not
+recomputed, and no model was retrained or reselected. Each rung kept the arm and the
+family that won on development, refitted on all 217 development ligands and scored a
+single time.
+
+On \framingA{} and \framingC{} nothing changes, because all eight gaps against the
+fingerprint baseline on those two framings contain zero, as they do on development. On \framingB{}
+the result runs the other way. The receptor ensemble leads the fingerprints by $+0.283$
+with a 95 per cent interval of $[+0.107, +0.462]$, and molecular dynamics leads them by
+$+0.311$ with an interval of $[+0.114, +0.500]$, and both intervals exclude zero. On
+development the same two gaps were $+0.074$ and $-0.048$, neither of them resolvable,
+and the second ran against rung~4. Table~\ref{tab:testsplit} gives all twelve gaps
+beside their development values.
+
+\begin{table}[tb]
+  \centering
+  \caption{\textbf{The held-out split against the development split.} Gap against the
+    rung-1 fingerprints on the same test units, with the 95\% interval from 20{,}000
+    bootstrap replicates over pairs, the Holm- and Benjamini-Hochberg-adjusted $p$
+    across all twelve gaps, and the corresponding development gap. An asterisk
+    marks a gap that survives the Holm correction.}
+  \label{tab:testsplit}
+  \input{../results/28_test_split_gaps.tex}
+\end{table}
+
+We checked three things before reading anything into this. First, the splits share no
+ligands, no ligands between the pairs of one split and the pairs of the other, and no
+connected components, so the difference is not leakage from the way the pairs were
+assembled. Second, twelve gaps were tested at once, which would be expected to produce
+about 0.6 false positives at a five per cent threshold. Both surviving gaps clear a
+Holm correction and a Benjamini--Hochberg correction across all twelve. The twelve
+tests share the same 38 pairs and the two structure-based rungs share pose information,
+so Holm is conservative here rather than exact. Third, we dropped each test pair in
+turn. This moves the rung-4 gap only within $[+0.280, +0.365]$, and no single pair
+brings it to zero, so the gap does not rest on a handful of extreme observations.
+
+What the test split does not do is overturn the development result, and the reason is
+visible in the levels rather than the gaps. Every rung scores higher on the test pairs
+than on the development folds. The fingerprints move from $+0.200$ to $+0.362$ and
+MM/GBSA from $-0.056$ to $+0.506$, which says that these 38 pairs are easier rather
+than that the ladder has begun to work. Only the difference between two rungs measured
+on the same pairs is insensitive to that shift. That is why we report the difference,
+and why it is the difference that was corrected and resampled. Both surviving gaps are
+about $0.3$, which is the resolution this design was measured to have before any of it
+was scored. Neither result therefore contradicts that bound, because the development split saw
+nothing of that size and the test split saw something of exactly that size.
+
+The two splits therefore disagree, on one design and one scoring path, and 38 pairs
+against 145 cannot settle which reading is right. A test sample that happens to suit
+low-dimensional descriptors would produce this pattern, and so would the difference
+between a cross-validated score and a single refit. Neither can be separated from a
+real advantage with a held-out set of this size. We report the disagreement rather than
+either half of it. What it does change is the confidence with which the development
+result can be stated. A negative finding that the held-out data point away from is a
+weaker negative finding, and the quantity that would resolve it is the same one that
+bounds everything else here, which is the number of pairs.
+
 \subsection{Reliability of the dynamic descriptors}\label{sec:reliability}
-Which descriptors a trajectory can carry at all was settled by the replicate pilot, and
+
+Which descriptors a trajectory can carry at all was settled by the replicate pilot.
 Figure~\ref{fig:reliability}(a) shows the ratio it measures for every descriptor at
 every analysis window. Of the 160 combinations of descriptor and window, 60 clear the
 threshold of 2 and 100 do not, and the failures are not spread evenly over the three
 design classes. Persistence quantities clear it in 53 of 100 combinations, fluctuation
-quantities in 3 of 35, and event counts in 4 of 20, which panel~(b) gives as the
+quantities in 3 of 35, and event counts in 4 of 20. Panel~(b) gives this as the
 composition of verdicts at each window. The remaining five combinations are the
-receptor backbone RMSD, which is carried as a quality-control quantity rather than as
-a member of any design class and never clears the threshold. The fraction of the window over which a
-contact is held is therefore reproducible across velocity seeds, while the amplitude of
-motion within that window, at this trajectory length, largely is not. The threshold itself was
-fixed before any replicate had been scored, so the division is not a line drawn around
-the answer.
+receptor backbone RMSD, which is carried as a quality-control quantity rather than as a
+member of any design class and never clears the threshold. The fraction of the window
+over which a contact is held is therefore reproducible across velocity seeds. Meanwhile
+the amplitude of motion within that window, at this trajectory length, largely is not.
+The threshold itself was fixed before any replicate had been scored, so the division is
+not a line drawn around the answer.
 
 \begin{figure}[tb]
   \centering
@@ -308,13 +380,13 @@ the answer.
 The event counts behave as a class only in the sense that three of their four members
 never survive. Every one of the four combinations that does is the rate of bridging
 episodes, which clears the threshold at 5, 10, 20 and \SI{45}{\nano\second}. It fails
-only at \SI{30}{\nano\second}, the one window where the between-ligand spread rests on
-45 ligands rather than on all 217, so that failure reflects the sample rather than the
-descriptor. The longest bridging episode is dominated by the seed at every length, the
-Tyr337 rotamer count is either too sparse to assess or seed-dominated, and whether the
-ligand left the gorge is constant because no ligand ever did. A rate can therefore
-survive a replicate test, but only where the events it counts are frequent enough to be
-counted reliably in the window available.
+only at \SI{30}{\nano\second}, which is the one window where the between-ligand spread
+rests on 45 ligands rather than on all 217. That failure therefore reflects the sample
+rather than the descriptor. The longest bridging episode is dominated by the seed at
+every length. The Tyr337 rotamer count is either too sparse to assess or
+seed-dominated, and whether the ligand left the gorge is constant because no ligand
+ever did. A rate can therefore survive a replicate test, but only where the events it
+counts are frequent enough to be counted reliably in the window available.
 
 At the \SI{20}{\nano\second} window that production uses, 11 of the 32 descriptors
 pass, and 9 of those are contact occupancies. That concentration is the practical
@@ -322,32 +394,33 @@ finding of this subsection and the one least tied to this target. Anyone buildin
 descriptors from trajectories of this length should expect persistence-type observables
 to survive a replicate test and fluctuation-type observables not to, and should measure
 that rather than assume it. The filter also earns its place within this study rather
-than remaining a diagnostic, since the filtered set reaches $+0.152$ on \framingB{}
-against $-0.054$ for the unfiltered one and $0.796$ on \framingC{} against $0.721$.
-Removing the descriptors that measure the seed therefore improves what remains on both
-pair endpoints, which is what a filter of this kind is supposed to do and is not
-guaranteed to achieve.
+than remaining a diagnostic. The filtered set reaches $+0.152$ on \framingB{} against
+$-0.054$ for the unfiltered one, and $0.796$ on \framingC{} against $0.721$. Removing
+the descriptors that measure the seed therefore improves what remains on both pair
+endpoints, which is what a filter of this kind is supposed to do and is not guaranteed
+to achieve.
 
 % ---------------------------------------------------------------------------
 \subsection{Interpretation of the distance-based contact occupancies}\label{sec:typed}
 
-Two of the eleven descriptors that survive the replicate test are \texttt{occ\_cas}
-and \texttt{occ\_pas}, which count the fraction of frames in which a ligand heavy atom
-lies within \SI{4.5}{\angstrom} of Trp86 or Trp286. That criterion is geometric and
-says nothing about whether a chemical interaction is present, so we recomputed typed
-interaction fingerprints over the trajectories with ProLIF \citep{prolif2021} and
+Two of the eleven descriptors that survive the replicate test are \texttt{occ\_cas} and
+\texttt{occ\_pas}. These count the fraction of frames in which a ligand heavy atom lies
+within \SI{4.5}{\angstrom} of Trp86 or Trp286. That criterion is geometric and says
+nothing about whether a chemical interaction is present. We therefore recomputed typed
+interaction fingerprints over the trajectories by using ProLIF \citep{prolif2021} and
 compared the two. Figure~\ref{fig:dyninteractions}(a) gives the median occupancy of
-each type at each gorge-lining residue. Each cell is a median over the runs in which that
-interaction is detected, so it describes how persistent an interaction is when it forms
-rather than how often it forms. The typing was computed on 21 frames of each run, which
-resolves an occupancy to about five percentage points, so differences smaller than that
-should not be read. Hydrophobic engagement at Trp86 and at Trp286 occupies
+each type at each gorge-lining residue. Each cell is a median over the runs in which
+that interaction is detected, so it describes how persistent an interaction is when it
+forms rather than how often it forms. The typing was computed on 21 frames of each run,
+which resolves an occupancy to about five percentage points, so differences smaller
+than that should not be read. Hydrophobic engagement at Trp86 and at Trp286 occupies
 the whole window at the median, and it is detected in 91 and 92 per cent of runs.
 $\pi$-stacking reaches 70 and 57 per cent of the window, in the 76 and 79 per cent of
-runs that show it at all. The cation--$\pi$ contact that these cationic ligands were expected
-to form is the weakest of the three on both counts, holding 43 per cent of the window
-at Trp86 and 38 at Trp286, and appearing in 58 and 29 per cent of runs. Eight of the 229 runs could not be typed because
-ProLIF reported a fragmented residue, so the panel rests on 221.
+runs that show it at all. The cation--$\pi$ contact that these cationic ligands were
+expected to form is the weakest of the three on both counts. It holds 43 per cent of
+the window at Trp86 and 38 at Trp286, and it appears in 58 and 29 per cent of runs.
+Eight of the 229 runs could not be typed because ProLIF reported a fragmented residue,
+so the panel rests on 221.
 
 \begin{figure}[tb]
   \centering
@@ -365,51 +438,53 @@ ProLIF reported a fragmented residue, so the panel rests on 221.
 \end{figure}
 
 Panel~(b) places the typed occupancy against the distance-only one, run by run. The two
-are not computed on the same frames, since the distance-only occupancy uses all 2000
-frames of the window while the typing uses 21, so a small disagreement in either
-direction is expected and a few points sit above the diagonal. The Spearman coefficients of $0.61$ at
-Trp86 and $0.55$ at Trp286 overstate the agreement, because both measures sit at 100
-per cent for 77 per cent of runs at Trp86 and 56 per cent at Trp286, so most of the
-coefficient is ties. Recomputed on the runs where at least one measure is below
-saturation, they fall to $0.39$ and $0.22$. The informative statistic is the signed
-difference, which has a median of zero but reaches $+75$ and $+77$ percentage points.
-There are therefore runs in which the ligand sits within \SI{4.5}{\angstrom} of the
-tryptophan for nearly every frame while ProLIF recognises no interaction there at all.
+are not computed on the same frames. The distance-only occupancy uses all 2000 frames
+of the window while the typing uses 21, so a small disagreement in either direction is
+expected and a few points sit above the diagonal. The Spearman coefficients of $0.61$
+at Trp86 and $0.55$ at Trp286 overstate the agreement, because both measures sit at 100
+per cent for 77 per cent of runs at Trp86 and 56 per cent at Trp286. Most of the
+coefficient is therefore ties. Recomputed on the runs where at least one measure is
+below saturation, they fall to $0.39$ and $0.22$. The informative statistic is the
+signed difference, which has a median of zero but reaches $+75$ and $+77$ percentage
+points. There are therefore runs in which the ligand sits within \SI{4.5}{\angstrom} of
+the tryptophan for nearly every frame while ProLIF recognises no interaction there at
+all.
 
-The disagreement is not evidence that one measure is right and the other wrong, since
+The disagreement is not evidence that one measure is right and the other wrong, because
 neither is a ground truth and the typed criteria are thresholds of their own. The
 distance-only descriptors measure what they are defined to measure, which is proximity,
-and they measure it reproducibly. What the panel shows is that proximity saturates,
-so for the ligands that are not simply pinned against the site, which are exactly the
-ones a cliff comparison turns on, the descriptor returns the same value whatever the
-chemistry is doing. That bears on the replicate test, because a quantity
-sitting at 100 per cent in most runs is reproducible for a reason that has nothing to
-do with its usefulness. A reliability filter will therefore
-favour a saturated quantity over a discriminating one, which is a property of that
-filter worth stating rather than a fault in these descriptors.
+and they measure it reproducibly. What the panel shows is that proximity saturates. For
+the ligands that are not simply pinned against the site, which are exactly the ones a
+cliff comparison turns on, the descriptor therefore returns the same value whatever the
+chemistry is doing. That bears on the replicate test, because a quantity sitting at 100
+per cent in most runs is reproducible for a reason that has nothing to do with its
+usefulness. A reliability filter will therefore favour a saturated quantity over a
+discriminating one, which is a property of that filter worth stating rather than a
+fault in these descriptors.
 
 The typed occupancy is not a ready replacement for it either, and the same replicate
-test says why. Put through that test, it gives a ratio of $2.63$ at Trp86 and $1.05$ at Trp286, against $103$ and $52$
-for the distance-only descriptors, so one of the two would not clear the threshold of
-two at all. Part of that noise is the coarser sampling, and
-a typing computed on every frame might fare better. The exchange is therefore
-discrimination against reproducibility rather than chemistry against geometry, and
-this work has tested neither side of it as a predictor. Nothing in this subsection
-enters any model, since a typed descriptor family introduced after the ladder had been
-scored would be post hoc, so it is left as a question for a later study.
+test says why. Put through that test, it gives a ratio of $2.63$ at Trp86 and $1.05$ at
+Trp286, against $103$ and $52$ for the distance-only descriptors. One of the two would
+therefore not clear the threshold of two at all. Part of that noise is the coarser
+sampling, and a typing computed on every frame might fare better. The exchange is
+therefore discrimination against reproducibility rather than chemistry against
+geometry, and this work has tested neither side of it as a predictor. Nothing in this
+subsection enters any model, because a typed descriptor family introduced after the
+ladder had been scored would be post hoc. We leave it as a question for a later study.
 
 \subsection{Dependence on trajectory length}\label{sec:duration}
 
-Whether \SI{20}{\nano\second} is longer than the descriptors need was tested by
+We tested whether \SI{20}{\nano\second} is longer than the descriptors need by
 recomputing them on the first 5, 10, 20 and \SI{30}{\nano\second} of each trajectory
 and scoring each window on the frozen folds. Two series are drawn in
 Figure~\ref{fig:duration}, because the replicate filter selects a different set at each
 window. It passes 13 descriptors at 5 and \SI{10}{\nano\second} against 11 at 20, which
-with the heavy-atom covariate make 14 features against 12, and letting it vary would
-confound how much trajectory a descriptor saw with which descriptors were chosen. The fixed series holds the \SI{20}{\nano\second} selection at every window and
-is the one that isolates length. On it, \framingA{} in panel~(a) moves between $+0.030$ and
-$+0.044$, \framingB{} in panel~(b) between $+0.149$ and $+0.196$, and \framingC{} in
-panel~(c) between $0.748$ and $0.796$. Each of those spreads is smaller than the
+with the heavy-atom covariate make 14 features against 12. Letting it vary would
+therefore confound how much trajectory a descriptor saw with which descriptors were
+chosen. The fixed series holds the \SI{20}{\nano\second} selection at every window and
+is the one that isolates length. On it, \framingA{} in panel~(a) moves between $+0.030$
+and $+0.044$, \framingB{} in panel~(b) between $+0.149$ and $+0.196$, and \framingC{}
+in panel~(c) between $0.748$ and $0.796$. Each of those spreads is smaller than the
 interval the corresponding framing carries, so none of them is a dependence this design
 can resolve.
 
@@ -431,23 +506,24 @@ can resolve.
 
 The \SI{30}{\nano\second} point is drawn apart because only the 45 development ligands
 whose runs were continued reach it, and on \framingA{} it rests on 11 pairs rather than
-145. It is shown so that the curve does not appear to stop for want of data, and it
-should not be read as a fall at longer trajectories, since the sample changes with it.
-Those 45 are the ligands whose runs happened to be continued rather than a random draw
-from the 217, so the two series are not interchangeable even at the windows they share. Nothing in the three panels supports the
-view that the simulations were too short, which is the first objection a null result
-from molecular dynamics attracts. What they establish between them is that trajectory
-length is not the lever. The descriptors are no better
-at \SI{20}{\nano\second} than at 10, and the practical reading is that they can be
-computed from \SI{15}{\nano\second} of simulation rather than the 50 the original design
-called for, which answers the cost objection with a measurement rather than an argument.
+145. We show it so that the curve does not appear to stop for want of data. It should
+not be read as a fall at longer trajectories, because the sample changes with it. Those
+45 are the ligands whose runs happened to be continued rather than a random draw from
+the 217, so the two series are not interchangeable even at the windows they share.
+Nothing in the three panels supports the view that the simulations were too short,
+which is the first objection a null result from molecular dynamics attracts. What they
+establish between them is that trajectory length is not the lever. The descriptors are
+no better at \SI{20}{\nano\second} than at 10. The practical reading is that they can
+be computed from \SI{15}{\nano\second} of simulation rather than the 50 the original
+design called for, which answers the cost objection with a measurement rather than an
+argument.
 
 One number in these panels should not be quoted on its own. The $+0.196$ that
-\framingB{} reaches at \SI{10}{\nano\second} is the best of six cells computed together,
-and reporting it as the performance of molecular dynamics at 10 nanoseconds would be
-exactly the selection this paper exists to warn against. The spread across the three
-windows is the quantity to read, not its maximum. What would move the result is
-not the length of the trajectories but the number of pairs, since the resolution of
+\framingB{} reaches at \SI{10}{\nano\second} is the best of six cells computed
+together, and reporting it as the performance of molecular dynamics at 10 nanoseconds
+would be exactly the selection this paper exists to warn against. The spread across the
+three windows is the quantity to read, not its maximum. What would move the result is
+not the length of the trajectories but the number of pairs, because the resolution of
 about $0.3$ follows from 145 of them. More nanoseconds do not change it, and more pairs
 or more targets are the only things that would.
 
@@ -455,63 +531,66 @@ or more targets are the only things that would.
 \subsection{Scope of the comparison}
 \label{sec:synthesis}
 
-Five descriptor sets were carried up a ladder of physical detail, from two-dimensional
+We carried five descriptor sets up a ladder of physical detail, from two-dimensional
 fingerprints through the geometry of a docked pose, the same geometry over a receptor
 ensemble, an implicit-solvent energy and finally a molecular dynamics trajectory. Each
-met three framings of the same data on the same frozen splits, 217 development ligands
-and 145 development pairs of one well-characterised target. What the design can see was
-fixed before any of it was scored, and it held. The 95 per cent interval on a gap is
-$0.32$ wide on average and lies between $0.28$ and $0.34$ whatever the strength of the
-candidate, so this study separates two coefficients of determination about $0.3$ apart
-and not less.
+met three framings of the same data on the same frozen splits, which are 217
+development ligands and 145 development pairs of one well-characterised target. What
+the design can see was fixed before any of it was scored, and it held. The 95 per cent
+interval on a gap is $0.32$ wide on average and lies between $0.28$ and $0.34$ whatever
+the strength of the candidate. This study therefore separates two coefficients of
+determination about $0.3$ apart and not less.
 
-Within that limit the answer is uniform. The largest advantage any structure-based rung
-holds over the fingerprints anywhere is the $0.074$ by which the receptor ensemble leads
-on the signed pair difference. That is a quarter of what the design can resolve, so no
-rung of the ladder is resolvably better than a fingerprint on any of the three framings.
-The one comparison that does resolve runs the other way. On per-ligand potency the gap
-between the trajectory descriptors and the fingerprints is $-0.375$ with an interval of
-$[-0.596, -0.184]$, the only interval in this study that excludes zero. Its sign carries
-as much as its width, because it reports the dynamic descriptors not as unproven but as
-worse. On the two pair framings the intervals contain zero and support no claim in
-either direction.
+Within that limit the answer on the development split is uniform. The largest advantage
+any structure-based rung holds over the fingerprints anywhere is the $0.074$ by which
+the receptor ensemble leads on the signed pair difference. That is a quarter of what
+the design can resolve, so on the development split no rung of the ladder is resolvably
+better than a fingerprint on any of the three framings. The one comparison that does
+resolve runs the other way. On per-ligand potency the gap between the trajectory
+descriptors and the fingerprints is $-0.375$ with an interval of $[-0.596, -0.184]$,
+which is the only interval on the development split that excludes zero. Its sign
+carries as much as its width, because it reports the dynamic descriptors not as
+unproven but as worse. On the two pair framings the intervals contain zero and support
+no claim in either direction. The held-out split of Section~\ref{sec:testsplit} does
+not reproduce that uniformity, and we report the disagreement there rather than
+resolving it here.
 
 Two readings would make that result uninteresting, and neither survives. The first is
 that the endpoint is too noisy to predict, and the 336 of 5{,}609 compounds carrying a
-repeat assay answer it. Even the pessimistic reading of their spread, the upper decile at
-$0.56$ log units, leaves every rung of the ladder far below the variance that assay
-reproducibility puts out of reach. The variance the ladder fails to explain is signal
-and not noise, which places the limitation in the descriptors rather than in the data.
-The second reading is that the simulations were too short. Holding the descriptor set
-fixed and varying only the trajectory, per-ligand potency moves between $+0.030$ and
-$+0.044$, the signed pair difference between $+0.149$ and $+0.196$ and the
-classification between $0.748$ and $0.796$. Every one of those spreads is smaller than
-the interval its framing carries, so none is a dependence this design can resolve, and
-nothing in them suggests a curve still climbing at the point it was cut.
+repeat assay answer it. Even the pessimistic reading of their spread, which is the
+upper decile at $0.56$ log units, leaves every rung of the ladder far below the
+variance that assay reproducibility puts out of reach. The variance the ladder fails to
+explain is signal and not noise, which places the limitation in the descriptors rather
+than in the data. The second reading is that the simulations were too short. Holding
+the descriptor set fixed and varying only the trajectory, per-ligand potency moves
+between $+0.030$ and $+0.044$, the signed pair difference between $+0.149$ and $+0.196$
+and the classification between $0.748$ and $0.796$. Every one of those spreads is
+smaller than the interval its framing carries, so none is a dependence this design can
+resolve, and nothing in them suggests a curve still climbing at the point it was cut.
 
-What a trajectory can carry at all was settled separately and constrains how the null
-should be read. Of 160 combinations of descriptor and analysis window put to a
+What a trajectory can carry at all was settled separately, and it constrains how the
+null should be read. Of 160 combinations of descriptor and analysis window put to a
 replicate test, 60 clear the threshold and 100 do not, and the failures fall by design
 class rather than at random. Persistence quantities clear in 53 of 100 combinations,
 fluctuation quantities in 3 of 35 and event counts in 4 of 20. How long a contact is
-held reproduces across velocity seeds; how far things move, at this trajectory length,
-largely does not. The null therefore applies to a trajectory read for persistence, which
-is most of what survives a reproducibility criterion, rather than to every quantity a
-trajectory could in principle supply.
+held reproduces across velocity seeds, while how far things move, at this trajectory
+length, largely does not. The null therefore applies to a trajectory read for
+persistence, which is most of what survives a reproducibility criterion, rather than to
+every quantity a trajectory could in principle supply.
 
 One measurement artefact quantified along the way generalises past this target and past
 molecular dynamics. A descriptor filter re-fitted at each trajectory length selects
 fourteen quantities at the shortest window and twelve at the longest, and not the same
-ones, so a curve built that way confounds how much trajectory a descriptor saw with
-which descriptors were chosen. Read that way the ladder appears to rise monotonically
-with trajectory length; held to one selection it is flat. Any study that varies a
-parameter and re-selects features at each of its values is exposed to this, and the
-remedy costs nothing beyond fixing the selection once and carrying it across.
+ones. A curve built that way therefore confounds how much trajectory a descriptor saw
+with which descriptors were chosen. Read that way the ladder appears to rise
+monotonically with trajectory length. Held to one selection it is flat. Any study that
+varies a parameter and re-selects features at each of its values is exposed to this,
+and the remedy costs nothing beyond fixing the selection once and carrying it across.
 
 These results occupy a gap in the existing evidence rather than contradicting it.
 \citet{husby2015} reports that structure-based methods predict activity cliffs
-accurately, and the figure behind that claim comes from template docking onto the
-crystal pose of the stronger ligand together with a pocket ensemble selected using the
+accurately. The figure behind that claim comes from template docking onto the crystal
+pose of the stronger ligand, together with a pocket ensemble selected by using the
 cliff labels, which those authors describe as retrospective. Their prospective arm,
 cross-docking, sits at a median of 53 per cent. This study is the prospective case run
 with a matched ligand-based baseline and a stated detection limit, and its answer is
@@ -524,14 +603,17 @@ more pairs and more targets are the only things that would narrow it.
 
 The central limitation is the number of pairs. One target supplies 145 development
 pairs, and from them follows a 95 per cent interval about $0.3$ wide on the coefficient
-of determination, so this study excludes a large advantage for the structure-based
-descriptors and says nothing about a modest one. A single target also cannot separate a
-property of these descriptors from a property of this binding site, and whether the
-result holds elsewhere is not addressed here.
+of determination. On the development split this study therefore excludes a large
+advantage for the structure-based descriptors and says nothing about a modest one. The
+held-out split carries 38 pairs and a wider interval still, which is why
+Section~\ref{sec:testsplit} reports a disagreement between the two rather than a
+revision of the first. A single target also cannot separate a property of these
+descriptors from a property of this binding site, and whether the result holds elsewhere
+is not addressed here.
 
 Each ligand carries one production run, so there are no production replicates and no
 error bar on an individual ligand's descriptor. What the replicate test measures comes
-instead from a pilot of six ligands simulated three times each, and six ligands are a
+instead from a pilot of six ligands simulated three times each. Six ligands are a
 narrow basis for a criterion then applied to 32 descriptors across four analysis
 windows. The threshold was fixed before any replicate had been scored, which protects
 the division from being drawn around the answer but not from being imprecise.
@@ -542,26 +624,26 @@ did not equalise them. The arm that cuts the fingerprint to the width of rung~4
 reverses the ordering on the two framings the design cannot resolve and leaves the
 third standing, but it is a robustness check rather than a controlled experiment.
 Cutting a fingerprint to twelve bits does not yield a narrower fingerprint so much as a
-different and much poorer descriptor, so the arm bounds the influence of feature count
-without isolating it.
+different and much poorer descriptor. The arm therefore bounds the influence of feature
+count without isolating it.
 
-The bootstrap resamples units inside the frozen folds, which places duplicates of the
+The bootstrap resamples units inside the frozen folds. This places duplicates of the
 same unit on both sides of a fold boundary and inflates the absolute level of every
 score it reports. That inflation applies to both sides of a gap and largely cancels
-there, so the intervals on the gaps are usable, but the medians are not performance
-estimates and should not be quoted as such.
+there, so the intervals on the gaps are usable. The medians, however, are not
+performance estimates and should not be quoted as such.
 
 The dynamic contact descriptors are distance-only. Where a ligand sits within the
 cutoff of a residue without forming a typed interaction, the occupancy credits an
 engagement that a chemical reading would not, and the two disagree by as much as 77
 percentage points on individual residues. Those descriptors are reproducible across
 velocity seeds, which is what they were filtered for, but reproducible is not
-interpretable, and the per-residue quantities should not be read as a chemical account
-of binding.
+interpretable. The per-residue quantities should therefore not be read as a chemical
+account of binding.
 
 Cliff and control pairs differ in molecular size, which could separate the two groups
-through a descriptor that measures nothing but size. Nineteen pose-geometry and energy
-descriptors were tested against that confound. Four separated the groups in a raw test
+through a descriptor that measures nothing but size. We tested nineteen pose-geometry
+and energy descriptors against that confound. Four separated the groups in a raw test,
 and none of those four survived either stratification on size or adjustment for size as
 a covariate, so the confound is controlled rather than ignored. The same 145 pairs
 bound that test as well, and it would not detect a small residual effect.

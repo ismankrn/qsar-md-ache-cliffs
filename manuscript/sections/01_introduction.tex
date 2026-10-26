@@ -2,134 +2,137 @@
 
 An activity cliff is a pair of compounds that a chemist would call near-identical and
 an assay separates by orders of magnitude in potency \citep{maggiora2006}. Such pairs
-are the standard counter-example to quantitative structure-activity relationships,
-since a model built on molecular similarity predicts similar potencies for similar
-structures and a cliff is the case where that inference fails by construction. They are
-neither rare nor confined to awkward corners of chemical space, being distributed
-across target families and compound series in a way that makes them a structural
-feature of bioactivity data rather than a curation problem \citep{stumpfe2012}. The failure they cause is documented rather
-than anecdotal. \citet{vantilborg2022} scored 24 machine-learning methods over 30
-targets and found descriptor-based models outperforming deep learning on cliff pairs,
-while \citet{dablander2023} examined nine QSAR models on three targets and reported
-that they fail on cliffs often enough to matter, with the extended-connectivity
-fingerprint remaining the strongest representation tested.
+are the standard counter-example to quantitative structure-activity relationships. A
+model built on molecular similarity predicts similar potencies for similar structures,
+and a cliff is the case where that inference fails by construction. These pairs are
+neither rare nor confined to awkward corners of chemical space. They are distributed
+across target families and compound series, which makes them a structural feature of
+bioactivity data rather than a curation problem \citep{stumpfe2012}. The failure they
+cause is documented rather than anecdotal. \citet{vantilborg2022} have scored 24
+machine-learning methods over 30 targets. They found that descriptor-based models
+outperform deep learning on cliff pairs. \citet{dablander2023} have examined nine QSAR
+models on three targets. They reported that these models fail on cliffs often enough to
+matter, and that the extended-connectivity fingerprint remains the strongest
+representation tested.
 
-Predicting them matters more than their frequency alone would suggest, because a cliff
-is where a medicinal chemistry programme spends its effort. A small substitution that
-multiplies potency is exactly the move lead optimisation exists to find, so the pairs a
-model handles worst are the pairs a project cares about most \citep{stumpfe2019}. The
-same pairs carry the most structure-activity information per atom changed, which makes
-them the informative cases rather than the awkward ones \citep{cruzmonteagudo2014}.
-Failure on them is also quiet. A model scored over a whole dataset can report a
-respectable average while being wrong on every cliff in it, since cliffs are a minority
-of pairs and an aggregate metric hides them, so a method can be adopted on a benchmark
-that never tested the case it will be used for.
+Predicting cliffs matters more than their frequency alone would suggest, because a
+cliff is where a medicinal chemistry programme spends its effort. A small substitution
+that multiplies potency is exactly the move lead optimisation exists to find. Thus the
+pairs a model handles worst are the pairs a project cares about most
+\citep{stumpfe2019}. The same pairs also carry the most structure-activity information
+per atom changed, which makes them the informative cases rather than the awkward ones
+\citep{cruzmonteagudo2014}. Meanwhile, failure on them is quiet. A model scored over a
+whole dataset can report a respectable average while being wrong on every cliff in it,
+since cliffs are a minority of pairs and an aggregate metric hides them. A method can
+therefore be adopted on a benchmark that never tested the case it will be used for.
 
-The standard explanation for that failure is representational. An extended-connectivity
-fingerprint encodes which circular substructures a molecule contains
-\citep{rogers2010}, so two molecules differing by a single substituent share almost all
-of their bits, and whatever that substituent does to the three-dimensional fit, to the
-hydrogen bonding or to how long a contact is held is invisible to it. The response
-that follows is equally standard, which is to replace or augment the fingerprint with a
-representation that carries the physics. Docked pose geometry, receptor ensembles,
-implicit-solvent energies and molecular dynamics are each proposed in that spirit, and
-each is more expensive than the fingerprint it is meant to improve upon.
+The standard explanation for that failure is representational. An
+extended-connectivity fingerprint encodes which circular substructures a molecule
+contains \citep{rogers2010}. Two molecules differing by a single substituent thus share
+almost all of their bits, and whatever that substituent does to the three-dimensional
+fit, to the hydrogen bonding or to how long a contact is held is invisible to it. The
+response that follows is equally standard, which is to replace or augment the
+fingerprint with a representation that carries the physics. Docked pose geometry,
+receptor ensembles, implicit-solvent energies and molecular dynamics are each proposed
+in that spirit, and each is more expensive than the fingerprint it is meant to improve
+upon.
 
-Most of the effort has gone elsewhere, and its trajectory is worth stating because it
-sets what remains untried. Work on cliff prediction has run almost entirely within the
-two-dimensional representation, and it has escalated in model complexity rather than in
-physical content. \citet{tamura2023} took that escalation to its conclusion, scoring
-machine and deep learning methods of increasing complexity at scale, and found the added
-complexity did not buy accuracy on cliffs. \citet{acgcn2022} applied graph convolution
-directly to matched molecular pairs, and \citet{elaiwat2025} brought deep learning to
-cliffs within a single target family. The benchmarks agree on an uncomfortable result,
-since the fingerprint keeps winning \citep{vantilborg2022,dablander2023,tamura2023}. More recently the field has changed tack, pursuing
-better training objectives instead of larger models. \citet{cui2026} report that making
-a graph network aware of cliffs during training, through a contrastive objective,
-improves on both fingerprint and graph baselines across 52 datasets. That is the current
-state of the art, and the trend it completes is one of extracting more from the same
-representation. Every method named here still sees a molecule as a two-dimensional
-object.
+Most of the effort has gone elsewhere. Work on cliff prediction has run almost entirely
+within the two-dimensional representation, and it has escalated in model complexity
+rather than in physical content. \citet{tamura2023} have taken that escalation to its
+conclusion by scoring machine and deep learning methods of increasing complexity at
+scale. They found that the added complexity does not buy accuracy on cliffs.
+\citet{acgcn2022} have applied graph convolution directly to matched molecular pairs,
+and \citet{elaiwat2025} have brought deep learning to cliffs within a single target
+family. The benchmarks agree on an uncomfortable result, since the fingerprint keeps
+winning \citep{vantilborg2022,dablander2023,tamura2023}. Recently, the field has
+changed tack and has pursued better training objectives instead of larger models.
+\citet{cui2026} have made a graph network aware of cliffs during training through a
+contrastive objective. They report an improvement on both fingerprint and graph
+baselines across 52 datasets. That is the current state of the art, and the trend it
+completes is one of extracting more from the same representation. Every method named
+here still sees a molecule as a two-dimensional object.
 
-Where a structure-based representation has been tested on cliffs, it has been tested
-in a setting more generous than the one it would be used in. \citet{husby2015} reports that activity
-cliffs can be predicted accurately by advanced structure-based methods, and the numbers
-behind that statement repay reading. Template docking reaches a median accuracy of 90
-per cent, using the crystallographic pose of the more potent member of the pair. A
-pocket ensemble selected with the cliff labels themselves reaches 71 to 100 per cent,
-which those authors describe as a purely retrospective exercise. The prospective arm,
-cross-docking, sits at a median of 53 per cent on a two-way ranking task. Both members
-of every pair in that benchmark carry a crystal structure, the endpoint is pairwise
-ranking rather than a signed difference, and no ligand-based comparison is run anywhere
-in the paper.
+On the other hand, where a structure-based representation has been tested on cliffs, it
+has been tested in a setting more generous than the one it would be used in.
+\citet{husby2015} reports that activity cliffs can be predicted accurately by advanced
+structure-based methods. The numbers behind that statement are worth stating. Template
+docking reaches a median accuracy of 90 per cent by using the crystallographic pose of
+the more potent member of the pair. A pocket ensemble selected with the cliff labels
+themselves reaches 71 to 100 per cent, which those authors describe as a purely
+retrospective exercise. The prospective arm, cross-docking, sits at a median of 53 per
+cent on a two-way ranking task. In addition, both members of every pair in that
+benchmark carry a crystal structure, the endpoint is pairwise ranking rather than a
+signed difference, and no ligand-based comparison is run anywhere in the paper.
 
 Molecular dynamics has been brought to a cliff-infested target before, in a different
 role. \citet{abudayah2022} extracts pharmacophore models from trajectory frames of a
-potent binder and selects among them with a genetic-algorithm QSAR, then uses the
+potent binder and selects among them by using a genetic-algorithm QSAR, then uses the
 result to screen a compound collection. The trajectory there supplies the hypothesis
 that a screening model is built from, and the question asked of it is whether actives
 can be retrieved.
 
 Three gaps follow, and they are gaps in the state of the art rather than oversights in
-any one study. The first is representational. Work on cliff prediction has varied
-the model and left the molecule two-dimensional, so the explanation everyone
-offers for why cliffs are hard, that the fingerprint cannot see what separates the pair,
-has never been tested by supplying what it says is missing. The second is the
+any one study. The first is representational. Work on cliff prediction has varied the
+model and has left the molecule two-dimensional. The explanation everyone offers for
+why cliffs are hard, that the fingerprint cannot see what separates the pair, has
+therefore never been tested by supplying what it says is missing. The second is the
 comparison itself. The structure-based work that exists runs no ligand-based baseline,
-and the ligand-based work runs no structure-based one, so the two lines of evidence have
-never met on the same compounds and the same splits. The third is the detection limit.
-No study on either side reports how large a difference its design could have resolved,
-which leaves every negative result indistinguishable from an underpowered one and every
-positive result unbounded. Together these mean the field has a well-supported
-observation, that fingerprints are hard to beat on cliffs, and no measurement of what
-physical detail would add to them.
+and the ligand-based work runs no structure-based one, so the two lines of evidence
+have never met on the same compounds and the same splits. The third is the detection
+limit. No study on either side reports how large a difference its design could have
+resolved, which leaves every negative result indistinguishable from an underpowered one
+and every positive result unbounded. Together these mean that the field has a
+well-supported observation, that fingerprints are hard to beat on cliffs, and no
+measurement of what physical detail would add to them.
 
 Closing those gaps calls for a particular shape of experiment rather than one more
 comparison. A single contest between molecular dynamics and a fingerprint cannot
-distinguish physical detail failing to help from one implementation of it failing, so
-the representations are better arranged as a ladder in which each rung adds one kind of
-information to the one below it, since the rung at which an advantage appears, if any
-does, identifies what supplied it. The baseline must be the fingerprint as it would
-actually be used and scored on the same data, because a handicapped baseline turns a
-comparison of representations into a comparison of feature counts. The detection limit
-must be fixed before the comparison is scored, because a null without one reports the
-size of the study rather than the size of the effect. Each of these answers one of the
-three gaps directly.
+distinguish physical detail failing to help from one implementation of it failing. The
+representations are therefore better arranged as a ladder, in which each rung adds one
+kind of information to the one below it. The rung at which an advantage appears, if any
+does, then identifies what supplied it. The baseline must also be the fingerprint as it
+would actually be used and scored on the same data, because a handicapped baseline
+turns a comparison of representations into a comparison of feature counts. In addition,
+the detection limit must be fixed before the comparison is scored, because a null
+without one reports the size of the study rather than the size of the effect. Each of
+these answers one of the three gaps directly.
 
-The objectives of this study follow from that shape. The first is to measure whether
-structure-based representations of increasing physical detail predict activity-cliff
-behaviour better than a two-dimensional fingerprint, against a matched baseline. The
-second is to establish what difference such a design could have detected, so that the
-outcome bounds the question rather than merely failing to answer it. The third is to
-determine which dynamic quantities a trajectory of affordable length can supply
-reproducibly, since a descriptor that does not survive a change of velocity seed cannot
-carry an endpoint whatever its physical appeal. The fourth is to quantify a measurement
-artefact met along the way, in which re-selecting descriptors at each setting of a
-varied parameter manufactures a trend that a single fixed selection removes.
+The aim of this study is to measure what escalating physical detail adds to the
+prediction of activity cliffs. In particular, we address four objectives. The first is
+to measure whether structure-based representations of increasing physical detail
+predict activity-cliff behaviour better than a two-dimensional fingerprint, against a
+matched baseline. The second is to establish what difference such a design could have
+detected, so that the outcome bounds the question rather than merely failing to answer
+it. The third is to determine which dynamic quantities a trajectory of affordable
+length can supply reproducibly, since a descriptor that does not survive a change of
+velocity seed cannot carry an endpoint whatever its physical appeal. The fourth is to
+quantify a measurement artefact met along the way, in which re-selecting descriptors at
+each setting of a varied parameter manufactures a trend that a single fixed selection
+removes.
 
-Human acetylcholinesterase is the target throughout, and it was chosen for what such a
-comparison needs rather than for being typical. Cliffs are the scarce resource, and this enzyme
-supplies them in quantity, giving 271 ligands and 183 matched pairs of which 97 are
-constitutional cliffs. It is resolved to high resolution in complex with
-pharmacologically important inhibitors \citep{cheung2012}, so the structure-based rungs
-rest on a crystallographic receptor of the human enzyme rather than on a homology model.
-The binding site is the part that matters most for the hypothesis under test. Ligands
-bind down a narrow gorge with an anionic site at each end, and spanning both is an
-established design rationale rather than one invented for this study
-\citep{grabowska2025}, which gives a dynamic descriptor a concrete physical quantity to
-carry. That gorge is also known to gate conformationally \citep{gating1998,gorge2017},
+Human acetylcholinesterase is the target throughout. We chose it for what such a
+comparison needs rather than for being typical. Cliffs are the scarce resource here,
+and this enzyme supplies them in quantity, giving 271 ligands and 183 matched pairs of
+which 97 are constitutional cliffs. It is also resolved to high resolution in complex
+with pharmacologically important inhibitors \citep{cheung2012}, so the structure-based
+rungs rest on a crystallographic receptor of the human enzyme rather than on a homology
+model. The binding site is the part that matters most for the hypothesis under test.
+Ligands bind down a narrow gorge with an anionic site at each end, and spanning both is
+an established design rationale rather than one invented for this study
+\citep{grabowska2025}. This gives a dynamic descriptor a concrete physical quantity to
+carry. The gorge is also known to gate conformationally \citep{gating1998,gorge2017},
 so a single docked pose is a poor description of it on grounds that have nothing to do
 with the present result. The target is therefore favourable to the hypothesis being
-tested, which is what makes the outcome worth reporting, since a comparison that finds
-no advantage where one is most expected says more than one that finds none where none
-was.
+tested, which is what makes the outcome worth reporting. A comparison that finds no
+advantage where one is most expected says more than one that finds none where none was.
 
-The ladder runs from the geometry of a single docked pose, through the same geometry measured over an
-eight-member receptor ensemble \citep{amaro2018}, to an implicit-solvent interaction
-energy \citep{genheden2015}, and finally to descriptors extracted from molecular
-dynamics trajectories of \SI{25}{\nano\second}. Little of that machinery is new and
-this paper does not claim otherwise, since residue-wise interaction fingerprints date
-to \citet{sift2004}, \citet{prolif2021} computes them from molecular dynamics
-trajectories, and \citet{ifp_md_2024} aggregates them over a trajectory into
+The ladder runs from the geometry of a single docked pose, through the same geometry
+measured over an eight-member receptor ensemble \citep{amaro2018}, to an
+implicit-solvent interaction energy \citep{genheden2015}, and finally to descriptors
+extracted from molecular dynamics trajectories of \SI{25}{\nano\second}. Little of that
+machinery is new and this paper does not claim otherwise. Residue-wise interaction
+fingerprints date to \citet{sift2004}, \citet{prolif2021} computes them from molecular
+dynamics trajectories, and \citet{ifp_md_2024} aggregates them over a trajectory into
 occupancies. What is offered here is the comparison these descriptors have not yet been
 put to, together with the detection limit that makes its outcome readable.
