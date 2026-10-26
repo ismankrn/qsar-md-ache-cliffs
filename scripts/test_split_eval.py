@@ -494,7 +494,7 @@ def main():
     ti = df.set_index(["framing", "key"])
     lines = [r"\begin{tabular}{llrr@{\,}lrrr}", r"\hline",
              r"Framing & Rung & Test & \multicolumn{2}{c}{Gap vs rung 1 (95\% CI)} "
-             r"& $p_{\text{Holm}}$ & $p_{\text{BH}}$ & Dev.\ gap \\", r"\hline"]
+             r"& $p_{\text{Holm}}$ & $p_{\text{BH}}$ & Dev.\ gap (scores) \\", r"\hline"]
     for f, k in order:
         if (f, k) not in ti.index:
             continue

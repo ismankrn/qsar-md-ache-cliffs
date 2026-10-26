@@ -307,9 +307,10 @@ $-0.317$.
 
 On \framingA{} all four gaps against the fingerprint baseline contain zero on the
 held-out pairs. Finding nothing there does not confirm the development result, because
-development did find something. It resolved one of these four gaps, with the dynamic
-descriptors falling $0.375$ below the fingerprints on an interval of $[-0.596,
--0.184]$, and the held-out ligands do not reproduce it. On
+development did find something. It resolved one of these four gaps. The bootstrap puts the dynamic descriptors $0.375$
+below the fingerprints there, on an interval of $[-0.596, -0.184]$, where the
+difference of scores that Table~\ref{tab:testsplit} reports is $-0.317$. The held-out
+ligands reproduce neither. On
 \framingB{} the result runs the other way. The receptor ensemble leads the
 fingerprints by $+0.283$ with a 95 per cent interval of $[+0.107, +0.462]$, and
 molecular dynamics leads them by $+0.311$ with an interval of $[+0.114, +0.500]$, and
@@ -326,7 +327,8 @@ $-0.102$ to $+0.103$.
   \centering
   \caption{\textbf{The held-out split against the development split.} The $p$ values
     are Holm- and Benjamini-Hochberg-adjusted across all twelve gaps, and an asterisk
-    marks a gap that survives the Holm correction.}
+    marks a gap that survives the Holm correction. The development gap is a difference
+    of scores, not the bootstrap estimate quoted in the text.}
   \label{tab:testsplit}
   \input{../results/28_test_split_gaps.tex}
 \end{table}
