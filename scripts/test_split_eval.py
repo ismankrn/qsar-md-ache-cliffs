@@ -527,7 +527,8 @@ def main():
             f"{f} & {RUNG[k]} & ${tv:.3f}$ & ${r.test_gap:+.3f}{star}$ & "
             f"$[{r.ci_lo:+.3f}, {r.ci_hi:+.3f}]$ & "
             f"{r.p_holm:.3f} & {r.p_bh:.3f} & ${r.dev_gap:+.3f}$ \\\\")
-    note = ("Bootstrap development gaps, which re-select the arm and the family inside every replicate. This work resamples the rung-4 gap and no other: "
+    note = ("$^{*}$ The gap survives the Holm correction across all twelve. "
+            "Bootstrap development gaps, which re-select the arm and the family inside every replicate. This work resamples the rung-4 gap and no other: "
             + "; ".join(f"${devboot[f][0]:+.3f}$ $[{devboot[f][1]:+.3f}, "
                         f"{devboot[f][2]:+.3f}]$ on framing~{f}"
                         for f in ("A", "B", "C") if f in devboot) + ".")
