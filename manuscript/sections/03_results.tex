@@ -296,14 +296,17 @@ cover them, and each kept what won there, refitted on all 217 development ligand
 scored a single time with the replicate filter left as it was.
 Table~\ref{tab:testsplit} gives every rung's score on the test units beside its gap
 against the fingerprints, with a 95 per cent interval from 20{,}000 bootstrap
-replicates over pairs and the corresponding development gap. Rung~1 is the baseline
-the gaps are measured from, so it carries a score and no gap, and the metric is $R^2$
-on framings~A and~B and the area under the receiver operating characteristic curve on
-\framingC{}.
+replicates over pairs and the corresponding development gap. Rung~1 is the baseline the gaps are measured from, so it carries a score and no gap,
+and the metric is $R^2$ on framings~A and~B and the area under the receiver operating
+characteristic curve on \framingC{}. The development gap in that table is the
+difference between the two best development scores. It is not the bootstrap estimate
+quoted elsewhere in this work, which re-selects the arm and the family inside every
+replicate and therefore puts the rung-4 gap on \framingA{} at $-0.375$ rather than
+$-0.317$.
 
 On \framingA{} all four gaps against the fingerprint baseline contain zero on the
 held-out pairs. Finding nothing there does not confirm the development result, because
-development did find something. It resolved one of these four gaps, with the dynamics
+development did find something. It resolved one of these four gaps, with the dynamic
 descriptors falling $0.375$ below the fingerprints on an interval of $[-0.596,
 -0.184]$, and the held-out ligands do not reproduce it. On
 \framingB{} the result runs the other way. The receptor ensemble leads the
@@ -548,7 +551,7 @@ any structure-based rung holds over the fingerprints anywhere is the $0.074$ by 
 the receptor ensemble leads on the signed pair difference. That is a quarter of what
 the design can resolve, so on the development split no rung of the ladder is resolvably
 better than a fingerprint on any of the three framings. The one comparison that does
-resolve runs the other way. On per-ligand potency the gap between the trajectory
+resolve runs the other way. On per-ligand potency the gap between the dynamic
 descriptors and the fingerprints is $-0.375$ with an interval of $[-0.596, -0.184]$,
 which is the only interval on the development split that excludes zero. Its sign
 carries as much as its width, because it reports the dynamic descriptors not as
@@ -621,7 +624,7 @@ windows. The threshold was fixed before any replicate had been scored, which pro
 the division from being drawn around the answer but not from being imprecise.
 
 The headline comparison is not matched on width. The fingerprints carry 2{,}265
-features at their widest against either 12 or 33 for the trajectory descriptors, and we
+features at their widest against either 12 or 33 for the dynamic descriptors, and we
 did not equalise them. The arm that cuts the fingerprint to the width of rung~4
 reverses the ordering on the two framings the design cannot resolve and leaves the
 third standing, but it is a robustness check rather than a controlled experiment.
