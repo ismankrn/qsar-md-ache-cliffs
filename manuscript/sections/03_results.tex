@@ -311,8 +311,8 @@ fingerprints by $+0.283$ with a 95 per cent interval of $[+0.107, +0.462]$, and
 molecular dynamics leads them by $+0.311$ with an interval of $[+0.114, +0.500]$, and
 both intervals exclude zero. On development the same two gaps were $+0.074$ and
 $-0.048$, neither of them resolvable, and the second ran against rung~4. On
-\framingC{} nothing changes. All four gaps contain zero there as well, and development
-placed no rung resolvably ahead either. The largest lead any rung held over the
+\framingC{} nothing changes, because all four gaps contain zero there as well and
+development placed no rung resolvably ahead either. The largest lead any rung held over the
 fingerprints was $0.010$, far inside the $0.3$ this design can resolve, and the one
 gap for which an interval was computed, rung~4 against the fingerprints, ran from
 $-0.102$ to $+0.103$.
@@ -327,9 +327,9 @@ $-0.102$ to $+0.103$.
   \input{../results/28_test_split_gaps.tex}
 \end{table}
 
-We checked three things before reading anything into this. First, the splits share no
-ligands, no ligands between the pairs of one split and the pairs of the other, and no
-connected components, so the difference is not leakage from the way the pairs were
+We checked three things before reading anything into that reversal. First, the two splits share no
+ligands and no connected components, so neither the pairs nor the scaffolds behind them
+cross the boundary and the difference is not leakage from the way the pairs were
 assembled. Second, twelve gaps were tested at once, which would be expected to produce
 about 0.6 false positives at a five per cent threshold. Both surviving gaps clear a
 Holm correction and a Benjamini--Hochberg correction across all twelve. The twelve
@@ -338,25 +338,24 @@ so Holm is conservative here rather than exact. Third, we dropped each test pair
 turn. This moves the rung-4 gap only within $[+0.280, +0.365]$, and no single pair
 brings it to zero, so the gap does not rest on a handful of extreme observations.
 
-What the test split does not do is overturn the development result, and the reason is
-visible in the levels rather than the gaps. Every rung scores higher on the test pairs
-than on the development folds. The fingerprints move from $+0.200$ to $+0.362$ and
-MM/GBSA from $-0.056$ to $+0.506$, which says that these 38 pairs are easier rather
-than that the ladder has begun to work. Only the difference between two rungs measured
-on the same pairs is insensitive to that shift. That is why we report the difference,
-and why it is the difference that was corrected and resampled. Both surviving gaps are
-about $0.3$, which is the resolution this design was measured to have before any of it
-was scored. Neither result therefore contradicts that bound, because on the signed pair difference
-the development split saw nothing of that size and the held-out split saw something of
-exactly that size.
+The levels are not comparable across the two splits, which is why only the gaps are
+reported. Every rung scores higher on the test pairs than on the development folds.
+The fingerprints move from $+0.200$ to $+0.362$ and MM/GBSA from $-0.056$ to $+0.506$,
+which says that these 38 pairs are easier rather than that the ladder has begun to
+work. Only the difference between two rungs measured on the same pairs is insensitive
+to that shift, and it is the difference that was corrected and resampled. Both
+surviving gaps are about $0.3$, which is the resolution this design was measured to
+have before any of it was scored. Neither result therefore contradicts that bound,
+because on the signed pair difference the development split saw nothing of that size
+and the held-out split saw something of exactly that size.
 
 The two splits therefore disagree, on one design and one scoring path, and 38 pairs
-against 145 cannot settle which reading is right. A test sample that happens to suit
-low-dimensional descriptors would produce this pattern, and so would the difference
-between a cross-validated score and a single refit. Neither can be separated from a
+against 145 cannot settle which reading is right. A held-out sample that happens to suit
+low-dimensional descriptors would produce the same disagreement, and so would the
+difference between a cross-validated score and a single refit. Neither can be separated from a
 real advantage with a held-out set of this size. We report the disagreement rather than
 either half of it. What it does change is the confidence with which the development
-result can be stated. A negative finding that the held-out data point away from is a
+result can be stated. A negative finding that the held-out data argue against is a
 weaker negative finding, and the quantity that would resolve it is the same one that
 bounds everything else here, which is the number of pairs.
 
