@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 """Typed interaction occupancy over the trajectories, and what the rung-4 descriptors miss.
 
-Figure 3 shows the reference ligand's interactions in a single pose. This asks the same
+Figure 5 shows the reference ligand's interactions in a single pose. This asks the same
 question of the dynamics, for every run, with ProLIF's interaction typing: how often is each
 contact present, and of what kind. The rung-4 descriptors are distance-only occupancies --
 `occ_cas`, `occ_pas`, `occ_86` and the rest count frames within 4.5 A with no distinction
@@ -14,7 +14,7 @@ point per run. If they agree, the distance-only descriptor is a
 faithful summary and the typing adds interpretation rather than information. If they diverge,
 the descriptor set has a gap worth naming.
 
-Strictly descriptive, like Figure 3: nothing here enters any model. A typed descriptor family
+Strictly descriptive, like Figure 5: nothing here enters any model. A typed descriptor family
 introduced after the ladder was scored would be post hoc.
 
 Three things the reduced archives force, all of which produce silently wrong answers if
@@ -163,6 +163,35 @@ def figure(d, a) -> None:
         ax.text(0.0, 1.02, "b", transform=ax.transAxes, fontsize=11, fontweight="bold", va="bottom", ha="left")
         ax.legend(fontsize=7.8, frameon=False, loc="lower right")
         P.to_csv(RES/"26b_occupancy_agreement.csv", index=False)
+
+        # The replicate ratio for the typed occupancy, computed exactly as
+        # replicate_pilot.py computes it for the distance-only descriptors: a pooled
+        # within-ligand SD over the six ligands that carry replicates, against the SD of
+        # the per-ligand means over every ligand with a result. Section 3.7 quotes these
+        # two numbers against 103 and 52, and an ad hoc calculation in a terminal is not
+        # a source a reader can check, so they are written out with the figure.
+        tot2 = tot.copy()
+        tot2["ligand"] = [r.rsplit("_", 1)[0] for r in tot2.index]
+        reps = [l for l, grp in tot2.groupby("ligand") if len(grp) >= 3]
+        rr = []
+        for rid, site in ((86, "Trp86"), (286, "Trp286")):
+            v = pd.to_numeric(tot2[rid], errors="coerce")
+            sub = tot2[tot2.ligand.isin(reps)]
+            var_within = pd.to_numeric(sub[rid], errors="coerce").groupby(
+                sub.ligand).var(ddof=1).dropna()
+            sd_rep = float(np.sqrt(var_within.mean()))
+            lig_means = v.groupby(tot2.ligand).mean().dropna()
+            sd_lig = float(lig_means.std(ddof=1))
+            rr.append(dict(site=site, n_ligands=int(lig_means.size),
+                           n_replicate_ligands=len(reps), sd_rep=sd_rep, sd_lig=sd_lig,
+                           ratio=sd_lig/sd_rep if sd_rep > 0 else float("inf")))
+        R = pd.DataFrame(rr)
+        R.to_csv(RES/"26c_typed_replicate_ratio.csv", index=False)
+        print("\n  replicate ratio of the typed occupancy (threshold 2):")
+        for r in R.itertuples():
+            print(f"    {r.site:7s} sd_rep = {r.sd_rep:.4f}  sd_lig = {r.sd_lig:.4f}  "
+                  f"ratio = {r.ratio:.2f}  ({r.n_ligands} ligands, "
+                  f"{r.n_replicate_ligands} with replicates)")
 
         for ax in axes:
             ax.tick_params(labelsize=8)

@@ -427,9 +427,10 @@ interaction fingerprints over the trajectories by using ProLIF \citep{prolif2021
 compared the two. Figure~\ref{fig:dyninteractions}(a) gives the median occupancy of
 each type at each gorge-lining residue. Each cell is a median over the runs in which
 that interaction is detected, so it describes how persistent an interaction is when it
-forms rather than how often it forms. The typing was computed on 21 frames of each run,
-and 46 for the runs that were continued, which resolves an occupancy to about five
-percentage points, so differences smaller than that should not be read. Hydrophobic engagement at Trp86 and at Trp286 occupies
+forms rather than how often it forms. The typing was computed on 21 frames for 167 of the
+runs, and on between 30 and 46 for the 54 that were continued from a checkpoint. The
+coarsest of those samplings resolves an occupancy to about five percentage points, so
+differences smaller than that should not be read. Hydrophobic engagement at Trp86 and at Trp286 occupies
 the whole window at the median, and it is detected in 91 and 92 per cent of runs.
 $\pi$-stacking reaches 70 and 57 per cent of the window, in the 76 and 79 per cent of
 runs that show it at all. The cation--$\pi$ contact that these cationic ligands were
@@ -471,9 +472,10 @@ distance-only descriptors measure what they are defined to measure, which is pro
 and they measure it reproducibly. What the panel shows is that proximity saturates. For
 the ligands that are not simply pinned against the site, which are exactly the ones a
 cliff comparison turns on, the descriptor therefore returns the same value whatever the
-chemistry is doing. That bears on the replicate test, because a quantity sitting at 100
-per cent in most runs is reproducible for a reason that has nothing to do with its
-usefulness. A reliability filter will therefore favour a saturated quantity over a
+chemistry is doing. That bears on the replicate test, because the distance-only
+occupancy is pinned at 100 per cent in 84 per cent of the runs at Trp86 and in 56 per
+cent of them at Trp286. A quantity that constant is reproducible for a reason that has
+nothing to do with its usefulness. A reliability filter will therefore favour a saturated quantity over a
 discriminating one, which is a property of that filter worth stating rather than a
 fault in these descriptors.
 
