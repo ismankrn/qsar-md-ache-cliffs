@@ -170,8 +170,16 @@ def figure(d, a) -> None:
         # the per-ligand means over every ligand with a result. Section 3.7 quotes these
         # two numbers against 103 and 52, and an ad hoc calculation in a terminal is not
         # a source a reader can check, so they are written out with the figure.
+        # Development runs only. The 103 and 52 this is quoted against were computed on
+        # the development ligands, so letting the test ligands widen sd_lig here would
+        # compare two ratios estimated on different populations and flatter the typed
+        # occupancy for a reason that has nothing to do with seed noise.
+        sp = pd.read_csv(RES/"03_splits_ligands_CHEMBL220.csv")
+        dev = set(sp.loc[sp.split.astype(str).str.lower() != "test",
+                         sp.columns[0]].astype(str))
         tot2 = tot.copy()
         tot2["ligand"] = [r.rsplit("_", 1)[0] for r in tot2.index]
+        tot2 = tot2[tot2.ligand.isin(dev)]
         reps = [l for l, grp in tot2.groupby("ligand") if len(grp) >= 3]
         rr = []
         for rid, site in ((86, "Trp86"), (286, "Trp286")):
@@ -218,8 +226,13 @@ def main() -> None:
     ap.add_argument("--limit", type=int, default=0, help="debug: only this many runs")
     ap.add_argument("--from-csv", action="store_true",
                     help="redraw from results/26_dynamic_interactions.csv without rerunning "
-                         "ProLIF. The full pass over 229 trajectories takes about four "
+                         "ProLIF. The full pass over 283 trajectories takes about five "
                          "hours, so a change to the figure must not require repeating it.")
+    ap.add_argument("--missing", action="store_true",
+                    help="type only the runs absent from the existing CSV and merge them "
+                         "in. The test trajectories were simulated after this figure was "
+                         "first drawn, and retyping the 221 runs that already succeeded "
+                         "to add 54 more would cost four hours for an identical answer.")
     a = ap.parse_args()
 
     if a.from_csv:
@@ -231,6 +244,15 @@ def main() -> None:
     dock_ca = mda.Universe(str(ROOT/"docking"/"4ey7_rec_clean.pdb")).select_atoms(
         "protein and name CA")
     xtcs = sorted(RED.glob("*.xtc"))
+    prior = None
+    if a.missing:
+        prior = pd.read_csv(RES/"26_dynamic_interactions.csv")
+        # A run that failed to type leaves no rows, so it is indistinguishable here from
+        # one never attempted and will be retried. That is the cheap direction of the
+        # error: eight such runs cost a few minutes and fail again the same way.
+        done = set(prior.run)
+        xtcs = [x for x in xtcs if x.stem not in done]
+        print(f"  {len(prior)} rows from {prior.run.nunique()} runs already typed")
     if a.limit:
         xtcs = xtcs[:a.limit]
     print(f"  {len(xtcs)} runs, stride {a.stride}")
@@ -261,6 +283,9 @@ def main() -> None:
             print(f"    {i}/{len(xtcs)}")
 
     d = pd.DataFrame(rows)
+    if prior is not None:
+        d = pd.concat([prior, d], ignore_index=True)
+        assert not d.duplicated(["run", "resid_4ey7", "kind"]).any(), "merged rows collide"
     d.to_csv(RES/"26_dynamic_interactions.csv", index=False)
     print(f"\n  -> results/26_dynamic_interactions.csv  ({len(d)} rows, "
           f"{d.run.nunique()} runs)")

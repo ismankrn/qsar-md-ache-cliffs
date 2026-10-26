@@ -424,21 +424,22 @@ Two of the eleven descriptors that survive the replicate test are \texttt{occ\_c
 within \SI{4.5}{\angstrom} of Trp86 or Trp286. That criterion is geometric and says
 nothing about whether a chemical interaction is present. We therefore recomputed typed
 interaction fingerprints over the trajectories by using ProLIF \citep{prolif2021} and
-compared the two. Figure~\ref{fig:dyninteractions}(a) gives the median occupancy of
+compared the two. The typing covers every trajectory in the study, the 229 development
+runs and the 54 held-out ones alike, because it is descriptive and no quantity defined
+here enters a model. Figure~\ref{fig:dyninteractions}(a) gives the median occupancy of
 each type at each gorge-lining residue. Each cell is a median over the runs in which
 that interaction is detected, so it describes how persistent an interaction is when it
-forms rather than how often it forms. The typing was computed on 21 frames for 167 of the
+forms rather than how often it forms. The typing was computed on 21 frames for 219 of the
 runs, and on between 30 and 46 for the 54 that were continued from a checkpoint. The
 coarsest of those samplings resolves an occupancy to about five percentage points, so
 differences smaller than that should not be read. Hydrophobic engagement at Trp86 and at Trp286 occupies
-the whole window at the median, and it is detected in 91 and 92 per cent of runs.
-$\pi$-stacking reaches 70 and 57 per cent of the window, in the 76 and 79 per cent of
-runs that show it at all. The cation--$\pi$ contact that these cationic ligands were
+the whole window at the median, and it is detected in 91 per cent of runs at both.
+$\pi$-stacking reaches 71 and 62 per cent of the window, in the 78 per cent of runs
+that show it at either site. The cation--$\pi$ contact that these cationic ligands were
 expected to form is the weakest of the three on both counts. It holds 43 per cent of
-the window at Trp86 and 38 at Trp286, and it appears in 58 and 29 per cent of runs.
-Eight of the 229 development runs could not be typed because ProLIF reported a
-fragmented residue,
-so the panel rests on 221.
+the window at Trp86 and 38 at Trp286, and it appears in 57 and 32 per cent of runs. Ten
+runs could not be typed because ProLIF reported a fragmented residue, eight of them
+development and two held-out, so the panel rests on 273.
 
 \begin{figure}[tb]
   \centering
@@ -455,12 +456,12 @@ so the panel rests on 221.
 Panel~(b) places the typed occupancy against the distance-only one, run by run. The two
 are not computed on the same frames. The distance-only occupancy uses all 2000 frames
 of the window while the typing uses 21, so a small disagreement in either direction is
-expected and a few points sit above the diagonal. The Spearman coefficients of $0.61$
-at Trp86 and $0.55$ at Trp286 overstate the agreement, because both measures sit at 100
-per cent in 76 per cent of the runs at Trp86 and in 47 per cent of them at Trp286. Three
+expected and a few points sit above the diagonal. The Spearman coefficients of $0.62$
+at Trp86 and $0.56$ at Trp286 overstate the agreement, because both measures sit at 100
+per cent in 75 per cent of the runs at Trp86 and in 47 per cent of them at Trp286. Three
 quarters of the points at Trp86 and nearly half of those at Trp286 are therefore a
 single tied value, and recomputed on the runs where at least one measure is below
-saturation the coefficients fall to $0.35$ and $0.30$. The informative statistic is the
+saturation the coefficients fall to $0.45$ and $0.34$. The informative statistic is the
 signed difference, which has a median of zero but reaches $+75$ and $+77$ percentage
 points. There are therefore runs in which the ligand sits within \SI{4.5}{\angstrom} of
 the tryptophan for nearly every frame while ProLIF types an interaction there in almost
@@ -473,21 +474,24 @@ and they measure it reproducibly. What the panel shows is that proximity saturat
 the ligands that are not simply pinned against the site, which are exactly the ones a
 cliff comparison turns on, the descriptor therefore returns the same value whatever the
 chemistry is doing. That bears on the replicate test, because the distance-only
-occupancy is pinned at 100 per cent in 84 per cent of the runs at Trp86 and in 56 per
+occupancy is pinned at 100 per cent in 84 per cent of the runs at Trp86 and in 55 per
 cent of them at Trp286. A quantity that constant is reproducible for a reason that has
 nothing to do with its usefulness. A reliability filter will therefore favour a saturated quantity over a
 discriminating one, which is a property of that filter worth stating rather than a
 fault in these descriptors.
 
 The typed occupancy is not a ready replacement for it either, and the same replicate
-test says why. Put through that test, it gives a ratio of $2.63$ at Trp86 and $1.05$ at
-Trp286, against $103$ and $52$ for the distance-only descriptors. One of the two would
+test says why. Put through that test on the development runs alone, so that all four
+ratios are estimated on one population, it gives $2.63$ at Trp86 and $1.05$ at Trp286.
+The distance-only descriptors give $103$ and $52$ on the same runs. One of the two would
 therefore not clear the threshold of two at all. Part of that noise is the coarser
 sampling, and a typing computed on every frame might fare better. The exchange is
 therefore discrimination against reproducibility rather than chemistry against
 geometry, and this work has tested neither side of it as a predictor. Nothing in this
 subsection enters any model, because a typed descriptor family introduced after the
-ladder had been scored would be post hoc. We leave it as a question for a later study.
+ladder had been scored would be post hoc. That is also why the held-out trajectories
+can appear in the panel, since the ladder was scored and frozen before any of this was
+computed and no potency value enters the figure at all. We leave it as a question for a later study.
 
 \subsection{Dependence on trajectory length}\label{sec:duration}
 
