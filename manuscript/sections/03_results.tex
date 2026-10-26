@@ -306,18 +306,17 @@ the result runs the other way. The receptor ensemble leads the fingerprints by $
 with a 95 per cent interval of $[+0.107, +0.462]$, and molecular dynamics leads them by
 $+0.311$ with an interval of $[+0.114, +0.500]$, and both intervals exclude zero. On
 development the same two gaps were $+0.074$ and $-0.048$, neither of them resolvable,
-and the second ran against rung~4. Table~\ref{tab:testsplit} gives all twelve gaps
-beside their development values.
+and the second ran against rung~4. Table~\ref{tab:testsplit} gives every rung's score
+on the test units beside its gap against the fingerprints, with a 95 per cent interval
+from 20{,}000 bootstrap replicates over pairs and the corresponding development gap.
+Rung~1 is the baseline the gaps are measured from, so it carries a score and no gap,
+and the metric is $R^2$ on framings~A and~B and the area under the receiver operating
+characteristic curve on \framingC{}.
 
 \begin{table}[tb]
   \centering
-  \caption{\textbf{The held-out split against the development split.} The score each
-    rung reaches on the test units, the gap against the rung-1 fingerprints on those
-    same units, the 95\% interval from 20{,}000 bootstrap replicates over pairs, the
-    Holm- and Benjamini-Hochberg-adjusted $p$ across all twelve gaps, and the
-    corresponding development gap. Rung~1 is the baseline the gaps are measured from,
-    so it carries a score and no gap. The metric is $R^2$ on framings~A and~B and the
-    area under the receiver operating characteristic curve on \framingC{}. An asterisk
+  \caption{\textbf{The held-out split against the development split.} The $p$ values
+    are Holm- and Benjamini-Hochberg-adjusted across all twelve gaps, and an asterisk
     marks a gap that survives the Holm correction.}
   \label{tab:testsplit}
   \input{../results/28_test_split_gaps.tex}
