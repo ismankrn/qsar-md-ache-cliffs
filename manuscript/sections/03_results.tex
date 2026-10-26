@@ -163,15 +163,16 @@ which Tables~\ref{tab:benchreg} and~\ref{tab:benchclf} show in full.
   \input{../results/22_benchmark_main.tex}
 \end{table}
 
-No rung is resolvably ahead of any other on any framing of the development split, and
-the ordering above should be read with that in mind. The largest advantage any
+No structure-based rung is resolvably ahead of the fingerprints on any framing of the
+development split, and the ordering above should be read with that in mind. The largest advantage any
 structure-based rung holds over the fingerprints anywhere is the $0.074$ by which the
 receptor ensemble leads on \framingB{}. The largest lead the fingerprints hold over the
 best structure-based rung is $0.171$ on \framingA{} and $0.010$ on \framingC{}. All
 three are well inside the resolution of about $0.3$ that this design can claim, so none
 of them is a difference it can see. The claim is therefore not that two-dimensional
 fingerprints win everywhere, because on \framingB{} the ensemble is numerically ahead
-of them. The claim is that no rung is separated from any other by more than the noise.
+of them. The claim is that no structure-based rung is separated from the fingerprints by more
+than the noise.
 The one comparison that does separate is the gap between rung~4 and the fingerprints on
 \framingA{}, and it runs against rung~4.
 
@@ -587,8 +588,11 @@ One measurement artefact quantified along the way generalises past this target a
 molecular dynamics. A descriptor filter re-fitted at each trajectory length selects
 fourteen quantities at the shortest window and twelve at the longest, and not the same
 ones. A curve built that way therefore confounds how much trajectory a descriptor saw
-with which descriptors were chosen. Read that way the ladder appears to rise
-monotonically with trajectory length. Held to one selection it is flat. Any study that
+with which descriptors were chosen. On the signed pair difference, read that way the ladder climbs at every window, from
+$+0.057$ at \SI{5}{\nano\second} to $+0.152$ at 20. Held to one selection it moves
+between $+0.149$ and $+0.196$ without a trend. The other two framings show no trend
+either way, so the artefact is visible where the series happens to climb and invisible
+where it does not. Any study that
 varies a parameter and re-selects features at each of its values is exposed to this,
 and the remedy costs nothing beyond fixing the selection once and carrying it across.
 
@@ -599,7 +603,7 @@ pose of the stronger ligand, together with a pocket ensemble selected by using t
 cliff labels, which those authors describe as retrospective. Their prospective arm,
 cross-docking, sits at a median of 53 per cent. This study is the prospective case run
 with a matched ligand-based baseline and a stated detection limit, and its answer is
-consistent with that arm rather than with the abstract. What would move any of this is
+consistent with that arm rather than with that paper's abstract. What would move any of this is
 not more nanoseconds. The width of the interval follows from the number of pairs, so
 more pairs and more targets are the only things that would narrow it.
 
