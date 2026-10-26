@@ -180,14 +180,21 @@ obvious objection is therefore that the fingerprint wins on width rather than on
 content. We scored an arm in which the fingerprint is cut to the width of rung~4 by a
 univariate filter fitted inside each training fold. The width is twelve features on
 framings~A and~B and twenty-four on \framingC{}, where each pair contributes a
-concatenation of two vectors. The control does not settle the question in one
-direction. It reverses the ordering on two framings and leaves it standing on the
-third. On \framingB{} the handicapped fingerprint falls to $-0.128$ from $+0.200$ and
-so drops below the $+0.152$ of rung~4. On \framingC{} it falls to $0.713$ from $0.805$
-and below the $0.796$ of rung~4. On \framingA{} it falls only to $+0.165$ from $+0.386$
-and remains well above the $+0.068$ of rung~4. Meanwhile, the two framings whose
-ordering changes are the two the design cannot resolve, and the one framing it can
-resolve is the one left unchanged.
+concatenation of two vectors. Table~\ref{tab:matcheddim} gives the result. The control
+does not settle the question in one direction. It reverses the ordering on two framings
+and leaves it standing on the third. Meanwhile, the two framings whose ordering changes
+are the two the design cannot resolve, and the one framing it can resolve is the one
+left unchanged.
+
+\begin{table}[tb]
+  \centering
+  \caption{\textbf{The matched-dimensionality control.} Rung~1 at its full width and
+    cut to the width of rung~4 by a univariate filter fitted inside each training fold,
+    against the best rung~4 reaches on the same framing. The last column marks the one
+    framing on which this design can resolve a difference of the size it measures.}
+  \label{tab:matcheddim}
+  \input{../results/29_matched_dim.tex}
+\end{table}
 
 We read that as a statement about the control rather than as evidence for rung~4,
 because the two sides are not handicapped symmetrically. The twelve rung-4 features are
