@@ -445,9 +445,9 @@ so the panel rests on 221.
   \caption{\textbf{Typed occupancy, and what the distance-only descriptors
     summarise.} (a)~Median occupancy of each interaction type at each gorge-lining
     residue, over the runs in which it is detected, with cells blank below a tenth of
-    them. (b)~Typed occupancy of any type at Trp86 and Trp286 against the
-    distance-only \texttt{occ\_cas} and \texttt{occ\_pas}, one point per run, against the
-    diagonal of agreement.}
+    them. (b)~Typed occupancy of the most persistent interaction type at Trp86
+    and Trp286 against the distance-only \texttt{occ\_cas} and \texttt{occ\_pas}, one
+    point per run, against the diagonal of agreement.}
   \label{fig:dyninteractions}
 \end{figure}
 
@@ -456,13 +456,14 @@ are not computed on the same frames. The distance-only occupancy uses all 2000 f
 of the window while the typing uses 21, so a small disagreement in either direction is
 expected and a few points sit above the diagonal. The Spearman coefficients of $0.61$
 at Trp86 and $0.55$ at Trp286 overstate the agreement, because both measures sit at 100
-per cent for 77 per cent of runs at Trp86 and 56 per cent at Trp286. Most of the
-coefficient is therefore ties. Recomputed on the runs where at least one measure is
-below saturation, they fall to $0.39$ and $0.22$. The informative statistic is the
+per cent in 76 per cent of the runs at Trp86 and in 47 per cent of them at Trp286. Three
+quarters of the points at Trp86 and nearly half of those at Trp286 are therefore a
+single tied value, and recomputed on the runs where at least one measure is below
+saturation the coefficients fall to $0.35$ and $0.30$. The informative statistic is the
 signed difference, which has a median of zero but reaches $+75$ and $+77$ percentage
 points. There are therefore runs in which the ligand sits within \SI{4.5}{\angstrom} of
-the tryptophan for nearly every frame while ProLIF recognises no interaction there at
-all.
+the tryptophan for nearly every frame while ProLIF types an interaction there in almost
+none of them.
 
 The disagreement is not evidence that one measure is right and the other wrong, because
 neither is a ground truth and the typed criteria are thresholds of their own. The

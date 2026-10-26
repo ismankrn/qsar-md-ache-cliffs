@@ -8,8 +8,9 @@ contact present, and of what kind. The rung-4 descriptors are distance-only occu
 between a hydrogen bond, a pi-stack and a passing van der Waals brush. This says what that
 simplification keeps and what it discards.
 
-Panel (b) is the point: ProLIF's total occupancy at Trp86 and Trp286 against the project's
-own occ_cas and occ_pas, one point per run. If they agree, the distance-only descriptor is a
+Panel (b) is the point: ProLIF's occupancy at Trp86 and Trp286 -- that of the most
+persistent interaction type there -- against the project's own occ_cas and occ_pas, one
+point per run. If they agree, the distance-only descriptor is a
 faithful summary and the typing adds interpretation rather than information. If they diverge,
 the descriptor set has a gap worth naming.
 
@@ -136,6 +137,10 @@ def figure(d, a) -> None:
             w = (j.get("windows") or {}).get("20")
             if w:
                 own[j["run"]] = (w.get("occ_cas"), w.get("occ_pas"))
+        # The max over interaction types, not their union: a frame may carry two types
+        # at one residue, so this is a lower bound on "an interaction of some kind was
+        # typed". The axis is labelled for what is plotted rather than for the union,
+        # which the per-frame table would be needed to compute.
         tot = (d[d.resid_4ey7.isin([86, 286])]
                .groupby(["run", "resid_4ey7"]).occupancy.max().unstack())
         pts = []
@@ -154,7 +159,7 @@ def figure(d, a) -> None:
                            edgecolors="none", label=f"{lab}  (rho={rho:.2f}, n={len(s)})")
         ax.plot([0, 100], [0, 100], color="0.6", lw=0.9, ls="--")
         ax.set_xlabel("Distance-only occupancy, this study (%)", fontsize=8.5)
-        ax.set_ylabel("ProLIF typed occupancy, any type (%)", fontsize=8.5)
+        ax.set_ylabel("ProLIF typed occupancy, most persistent type (%)", fontsize=8.5)
         ax.text(0.0, 1.02, "b", transform=ax.transAxes, fontsize=11, fontweight="bold", va="bottom", ha="left")
         ax.legend(fontsize=7.8, frameon=False, loc="lower right")
         P.to_csv(RES/"26b_occupancy_agreement.csv", index=False)
