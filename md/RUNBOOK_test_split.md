@@ -41,37 +41,40 @@ to whoever compromises it.
 
 ## Sequence
 
-Everything up to staging runs **on this machine**, not on the instances. The instances
-only run `gmx mdrun`; they build nothing. Use the project environment, since the base
-environment has no OpenMM:
+Each block below says where it runs. Nothing is built on the instances except the
+equilibration; they receive systems and return descriptors.
+
+### On the laptop, in the project environment
+
+The base environment has no OpenMM, which is what fails first if you forget.
 
 ```bash
 conda activate qsar-md
 python scripts/build_md_systems.py --manifest 13b_md_ligands_test.csv
-python scripts/make_md_runs.py --manifest 13b_md_ligands_test.csv \
-       --out 14m_md_runs_test.csv --slices 3
+python scripts/make_md_runs.py --manifest 13b_md_ligands_test.csv --out 14m_md_runs_test.csv
 ```
 
-The second command writes `md/slice_01.txt` through `md/slice_03.txt`, 18 runs each.
-Then stage each slice to its instance:
+### On the laptop, staging
+
+`MANIFEST` is not optional. Left unset it defaults to `14_md_runs_phase1.csv`, the 217
+development runs, and you would stage the wrong campaign without being told.
 
 ```bash
-bash md/stage_vast.sh vast-1   # takes md/slice_01.txt
-bash md/stage_vast.sh vast-2   # takes md/slice_02.txt
-bash md/stage_vast.sh vast-3   # takes md/slice_03.txt
+MANIFEST=results/14m_md_runs_test.csv bash md/stage_vast.sh vast-1 vast-2 vast-3
 ```
 
-On each instance:
+The script cuts the manifest into one disjoint slice per host by stride and writes each
+to `/root/qsar/slice.txt` on its instance. It does its own slicing, so
+`make_md_runs.py --slices` is only for looking at the division beforehand and is not a
+step.
+
+### On each instance
 
 ```bash
-SLICE=slice_01.txt bash md/vast_worker.sh   # slice_02 on vast-2, slice_03 on vast-3
+cd /root/qsar && SLICE=slice.txt bash vast_worker.sh
 ```
 
-A slice is independent of the others, so an instance that dies takes only its own
-remainder with it. Restarting that one slice is enough, and `vast_worker.sh` skips the
-runs whose descriptors already came back.
-
-Pull the results back, then extract the descriptors, again in the project environment:
+### On the laptop, afterwards
 
 ```bash
 bash md/pull_vast.sh

@@ -9,6 +9,10 @@
 # Usage: bash md/stage_vast.sh <host1> [host2 ...]
 #   hosts are ~/.ssh/config aliases; the manifest is split evenly across them.
 set -e
+# A wedged link hangs scp forever, which stalled staging on a 1 KB file. These make
+# a dead connection fail in seconds instead.
+SSHOPT=(-o BatchMode=yes -o ConnectTimeout=15 -o ServerAliveInterval=15
+        -o ServerAliveCountMax=3)
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 MANIFEST=${MANIFEST:-$ROOT/results/14_md_runs_phase1.csv}
 # BRIN is no longer in the chain: grompp runs on the instance, so nothing is
@@ -39,14 +43,28 @@ for i in "${!HOSTS[@]}"; do
   n=$(wc -l < "$SLICE")
   echo "== $H : $n run =="
 
-  ssh -n -o BatchMode=yes "$H" 'mkdir -p /root/qsar/{tpr,systems,mdp,work,out,reduced,logs}'
+  ssh -n "${SSHOPT[@]}" "$H" 'mkdir -p /root/qsar/{tpr,systems,mdp,work,out,reduced,logs}'
   # NSTEPS_PROD rides along deliberately. Without it the worker finds no override, drops
   # -nsteps, and runs the tpr's full 25,000,000 steps: 50 ns instead of the 25 ns the rest
   # of the project used, which would look fine and not be comparable with anything.
-  scp -q "$ROOT/scripts/rung4_descriptors.py" "$ROOT/md/vast_worker.sh" \
+  scp -q "${SSHOPT[@]}" "$ROOT/scripts/rung4_descriptors.py" "$ROOT/md/vast_worker.sh" \
          "$ROOT/md/NSTEPS_PROD" "$ROOT/docking/4ey7_rec_md.pdb" "$SLICE" "$H:/root/qsar/"
-  ssh -n -o BatchMode=yes "$H" "mv /root/qsar/$(basename $SLICE) /root/qsar/slice.txt"
-  scp -q "$ROOT"/md/mdp/{em,npt,prod}.mdp "$H:/root/qsar/mdp/"
+  ssh -n "${SSHOPT[@]}" "$H" "mv /root/qsar/$(basename $SLICE) /root/qsar/slice.txt"
+  scp -q "${SSHOPT[@]}" "$ROOT"/md/mdp/{em,npt,prod}.mdp "$H:/root/qsar/mdp/"
+
+  # Results already in hand go BACK to the instance. The worker skips any run whose JSON
+  # exists, and that is the only thing stopping a freshly staged instance from recomputing
+  # trajectories that have already been paid for. It matters whenever instances are swapped
+  # mid-campaign: on 2026-10-23 three 250 GB instances were replaced by 32 GB ones, and the
+  # slice assignment is a stride over the manifest, so the same runs land on the same slice
+  # index again -- without this they would simply have been run a second time.
+  back=0
+  while read -r R; do
+    J="$ROOT/results/16_rung4_per_run/$R.json"
+    [ -f "$J" ] || continue
+    scp -q "${SSHOPT[@]}" "$J" "$H:/root/qsar/out/" && back=$((back+1))
+  done < "$SLICE"
+  [ "$back" -gt 0 ] && echo "   JSON lama dikirim balik: $back run akan dilewati"
 
   # Systems rather than tprs. grompp happens on the instance, so nothing has to exist on
   # a third machine first; see vast_worker.sh. Only this instance's share is sent.
@@ -55,19 +73,19 @@ for i in "${!HOSTS[@]}"; do
     # ssh -n: without it ssh reads the loop's stdin and swallows the rest of the slice
     # file, so only the first run is ever staged.
     CID=${R%_r*}
-    if ssh -n -o BatchMode=yes "$H" "[ -f /root/qsar/tpr/$R.prod.tpr ] || [ -f /root/qsar/systems/$CID/system.gro ]" 2>/dev/null; then
+    if ssh -n "${SSHOPT[@]}" "$H" "[ -f /root/qsar/tpr/$R.prod.tpr ] || [ -f /root/qsar/systems/$CID/system.gro ]" 2>/dev/null; then
       :
     else
-      ssh -n -o BatchMode=yes "$H" "mkdir -p /root/qsar/systems/$CID" \
-        && scp -q "$ROOT/md/systems/$CID/system.gro" "$ROOT/md/systems/$CID/system.top" \
+      ssh -n "${SSHOPT[@]}" "$H" "mkdir -p /root/qsar/systems/$CID" \
+        && scp -q "${SSHOPT[@]}" "$ROOT/md/systems/$CID/system.gro" "$ROOT/md/systems/$CID/system.top" \
               "$H:/root/qsar/systems/$CID/" \
         || { echo "   ! sistem gagal: $CID"; miss=$((miss+1)); continue; }
     fi
     # the per-run velocity seed lives in nvt.mdp, so it is sent per run and not per ligand
-    scp -q "$ROOT/md/runs/$R/nvt.mdp" "$H:/root/qsar/mdp/$R.nvt.mdp" 2>/dev/null \
+    scp -q "${SSHOPT[@]}" "$ROOT/md/runs/$R/nvt.mdp" "$H:/root/qsar/mdp/$R.nvt.mdp" 2>/dev/null \
       || { echo "   ! nvt.mdp gagal: $R"; miss=$((miss+1)); }
   done < "$SLICE"
-  have=$(ssh -n -o BatchMode=yes "$H" 'ls -d /root/qsar/systems/*/ 2>/dev/null | wc -l')
+  have=$(ssh -n "${SSHOPT[@]}" "$H" 'ls -d /root/qsar/systems/*/ 2>/dev/null | wc -l')
   echo "   sistem di instance: $have / $n   (gagal $miss)"
 done
 echo

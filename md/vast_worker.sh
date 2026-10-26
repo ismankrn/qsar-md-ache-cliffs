@@ -94,13 +94,23 @@ while read -r RUN; do
         break
       fi
     done
-    if [ $eq_ok -ne 1 ]; then fail=$((fail+1)); consec=$((consec+1)); continue; fi
+    if [ $eq_ok -ne 1 ]; then
+      fail=$((fail+1)); consec=$((consec+1))
+      if [ "$consec" -ge 3 ]; then
+        echo "  BERHENTI: $consec kegagalan ekuilibrasi berturut-turut -- kemungkinan"
+        echo "  GROMACS, GPU atau disk, bukan ligan. Run yang tersisa tetap bisa diulang."
+        break
+      fi
+      continue
+    fi
 
     ( cd "$E" && gmx grompp -f prod.mdp -c npt.gro -t npt.cpt -p system.top \
         -o "$TPR" -maxwarn 10 > grompp_prod.log 2>&1 )
     if [ ! -f "$TPR" ]; then
       echo "  $RUN: GROMPP PROD GAGAL"; tail -5 "$E/grompp_prod.log" 2>/dev/null
-      fail=$((fail+1)); consec=$((consec+1)); continue
+      fail=$((fail+1)); consec=$((consec+1))
+      [ "$consec" -ge 3 ] && { echo "  BERHENTI: $consec grompp gagal berturut-turut"; break; }
+      continue
     fi
     echo "  $RUN: ekuilibrasi selesai ($((SECONDS-t_eq))s), tpr dibuat"
   fi
