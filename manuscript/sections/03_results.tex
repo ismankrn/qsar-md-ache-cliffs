@@ -595,7 +595,9 @@ What a trajectory can carry at all was settled separately, and it constrains how
 null should be read. Of 160 combinations of descriptor and analysis window put to a
 replicate test, 60 clear the threshold and 100 do not, and the failures fall by design
 class rather than at random. Persistence quantities clear in 53 of 100 combinations,
-fluctuation quantities in 3 of 35 and event counts in 4 of 20. How long a contact is
+fluctuation quantities in 3 of 35 and event counts in 4 of 20, and the remaining five
+belong to the quality-control quantity of Section~\ref{sec:reliability} and clear
+none. How long a contact is
 held reproduces across velocity seeds, while how far things move, at this trajectory
 length, largely does not. The null therefore applies to a trajectory read for
 persistence, which is most of what survives a reproducibility criterion, rather than to
@@ -603,7 +605,7 @@ every quantity a trajectory could in principle supply.
 
 One measurement artefact quantified along the way generalises past this target and past
 molecular dynamics. A descriptor filter re-fitted at each trajectory length selects
-fourteen quantities at the shortest window and twelve at the longest, and not the same
+thirteen quantities at the shortest window and eleven at the longest, and not the same
 ones. A curve built that way therefore confounds how much trajectory a descriptor saw
 with which descriptors were chosen. On the signed pair difference, read that way the ladder climbs at every window, from
 $+0.057$ at \SI{5}{\nano\second} to $+0.152$ at 20. Held to one selection it moves
@@ -619,8 +621,9 @@ accurately. The figure behind that claim comes from template docking onto the cr
 pose of the stronger ligand, together with a pocket ensemble selected by using the
 cliff labels, which those authors describe as retrospective. Their prospective arm,
 cross-docking, sits at a median of 53 per cent. This study is the prospective case run
-with a matched ligand-based baseline and a stated detection limit, and its answer is
-consistent with that arm rather than with that paper's abstract. What would move any of this is
+with a matched ligand-based baseline and a stated detection limit, and it finds no
+structure-based advantage, which is the modest picture their prospective arm gives
+rather than the one their abstract states. What would move any of this is
 not more nanoseconds. The width of the interval follows from the number of pairs, so
 more pairs and more targets are the only things that would narrow it.
 
@@ -640,7 +643,7 @@ is not addressed here.
 Each ligand carries one production run, so there are no production replicates and no
 error bar on an individual ligand's descriptor. What the replicate test measures comes
 instead from a pilot of six ligands simulated three times each. Six ligands are a
-narrow basis for a criterion then applied to 32 descriptors across four analysis
+narrow basis for a criterion then applied to 32 descriptors across five analysis
 windows. The threshold was fixed before any replicate had been scored, which protects
 the division from being drawn around the answer but not from being imprecise.
 
@@ -659,7 +662,7 @@ score it reports. That inflation applies to both sides of a gap and largely canc
 there, so the intervals on the gaps are usable. The medians, however, are not
 performance estimates and should not be quoted as such.
 
-The dynamic contact descriptors are distance-only. Where a ligand sits within the
+The dynamic contact descriptors are defined by distance alone. Where a ligand sits within the
 cutoff of a residue without forming a typed interaction, the occupancy credits an
 engagement that a chemical reading would not, and the two disagree by as much as 77
 percentage points on individual residues. Those descriptors are reproducible across
