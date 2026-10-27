@@ -9,11 +9,14 @@ neither rare nor confined to awkward corners of chemical space. They are distrib
 across target families and compound series, which makes them a structural feature of
 bioactivity data rather than a curation problem \citep{stumpfe2012}. The failure they
 cause is documented rather than anecdotal. \citet{vantilborg2022} have scored 24
-machine-learning methods over 30 targets. They found that descriptor-based models
-outperform deep learning on cliff pairs. \citet{dablander2023} have examined nine QSAR
-models on three targets. They reported that these models fail on cliffs often enough to
-matter, and that the extended-connectivity fingerprint remains the strongest
-representation tested.
+machine-learning methods over 30 targets, with the compounds that form cliffs as the
+focus. They found that every method struggled on those compounds, and that the models
+built on molecular descriptors outperformed the deep-learning ones.
+\citet{dablander2023} have examined nine QSAR models on three targets. They reported
+that these models fail on cliffs often enough to matter, and that the
+extended-connectivity fingerprint is the strongest of the representations they tested
+at predicting potency. On the narrower task of telling a cliff pair from a non-cliff
+one, graph features matched or beat it.
 
 Predicting cliffs matters more than their frequency alone would suggest, because a
 cliff is where a medicinal chemistry programme spends its effort. A small substitution
@@ -44,8 +47,9 @@ conclusion by scoring machine and deep learning methods of increasing complexity
 scale. They found that the added complexity does not buy accuracy on cliffs.
 \citet{acgcn2022} have applied graph convolution directly to matched molecular pairs,
 and \citet{elaiwat2025} have brought deep learning to cliffs within a single target
-family. The benchmarks agree on an uncomfortable result, since the fingerprint keeps
-winning \citep{vantilborg2022,dablander2023,tamura2023}. Recently, the field has
+family. The benchmarks agree on an uncomfortable result, which is that none
+of the added complexity improves prediction on cliffs
+\citep{vantilborg2022,dablander2023,tamura2023}. Recently, the field has
 changed tack and has pursued better training objectives instead of larger models.
 \citet{cui2026} have made a graph network aware of cliffs during training through a
 contrastive objective. They report an improvement on both fingerprint and graph
