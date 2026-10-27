@@ -5,7 +5,7 @@
 \usepackage[margin=0.9in,top=0.65in,bottom=0.5in]{geometry}
 \usepackage[colorlinks=true,allcolors=blue]{hyperref}
 \usepackage{parskip}
-\setlength{\parskip}{0.36em}
+\setlength{\parskip}{0.30em}
 \pagestyle{empty}
 
 \begin{document}
@@ -28,13 +28,15 @@ Dear Editors,
 We submit for your consideration an Article entitled \textbf{``Activity cliffs on human
 acetylcholinesterase: a pre-specified descriptor escalation''}.
 
-It is widely held that two-dimensional fingerprints fail on activity cliffs because
-they cannot see the detail separating the two members of a pair, and that supplying it
-should help. We tested that directly by escalating four
-structure-based representations against the same fingerprint baseline on the same
-frozen splits, and we measured in advance what difference the design could resolve. On the development split none was resolvably better on any of three framings
-of the endpoint, and on per-ligand potency the molecular dynamics descriptors were
-resolvably worse. The result is bounded rather than open, which is what separates it
+The standard explanation for why two-dimensional fingerprints fail on activity cliffs
+is that they cannot see the detail separating the two members of a pair. That
+explanation has gone untested, because the two lines of evidence have never met on the
+same compounds and neither reports what difference its design could have detected. What
+this paper offers is that test and that bound, not a new descriptor. We escalated four structure-based representations against
+the same fingerprint baseline on the same frozen splits, and we measured in advance
+what difference the design could resolve. On the development split none was resolvably
+better on any of three framings of the endpoint, and on per-ligand potency the
+molecular dynamics descriptors were resolvably worse. The result is bounded rather than open, which is what separates it
 from an underpowered null.
 
 We also opened the sealed test split, once, after every descriptor set and algorithm
@@ -50,7 +52,7 @@ Three findings carry beyond this target. First, a replicate test separates persi
 from amplitude sharply, so a trajectory of affordable length reproduces how long a
 contact is held and not how far things move. Second, a descriptor filter refitted at
 each value of a varied parameter manufactures a trend that a single fixed selection
-removes. This exposes any study that re-selects features as it varies a parameter.
+removes, which exposes any study that re-selects features as it varies one.
 Third, the descriptors that survive reproducibility are available from 15 ns of
 simulation rather than the 50 the original design called for.
 
@@ -60,19 +62,18 @@ target. The docking serves a comparison between representations, and the quantit
 test is what physical detail adds to a matched ligand-based baseline. Second, the high
 ratio of descriptors to data points sits in the fingerprint baseline, scored as a
 practitioner would score it. We report a matched-dimensionality arm alongside it so
-that feature count can be separated from representation. Third, we are not
-proposing new descriptors and claim no superiority for them. What is offered is the
-comparison and the detection limit that makes its outcome readable, and the descriptor
-machinery is standard and attributed as such.
+that feature count can be separated from representation. Third, as above, we propose
+no new descriptors and claim no superiority for any; the machinery is standard
+throughout and attributed as such.
 
 We chose acetylcholinesterase because the question needs a target supplying activity
 cliffs in quantity and a crystallographic human receptor, and because its gorge gates
 conformationally on evidence predating this work, so it is favourable to the
 hypothesis under test.
 
-All molecular structures appear in the Supporting Information. All analysis code and
-derived data are in a public repository archived with a DOI, which is sufficient to
-reproduce every number without rerunning a simulation.
+All molecular structures appear in the Supporting Information, and all analysis code
+and derived data are in a public repository archived with a DOI, which reproduces every
+number without rerunning a simulation.
 
 The manuscript is original, is not under consideration elsewhere, and has been approved
 by all authors. The authors declare no competing financial interest, and the work
