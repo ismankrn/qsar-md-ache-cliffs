@@ -58,8 +58,9 @@ was computed.
 Each descriptor is named here as it appears in the deposited descriptor tables. A
 quantity discussed in the main text can therefore be traced to the column it was
 computed in. Rungs~2, 2e, 3 and~4 share one panel of fourteen gorge-lining residues and
-compute a per-residue quantity for each of them, which is why all three of these tables
-end with a block of fourteen entries. What that quantity is differs between them. It is
+compute a per-residue quantity for each of them. All three of these tables therefore
+carry a block of fourteen entries at the end, followed in the rung-4 table by the
+heavy-atom count alone. What that quantity is differs between them. It is
 a contact count on one docked pose, the same count taken as a median over eight
 receptor conformations, a Coulomb and Lennard-Jones sum over the atoms of the residue,
 and the fraction of simulated frames in which the contact was present. The residue
@@ -83,9 +84,9 @@ the filter.
 \begin{table}[htbp]
   \centering
   \footnotesize
-  \caption{\textbf{Rung~2 and rung~2e descriptors.} The 34 geometric descriptors
-    measured on the docked pose, with the 29 of them that the receptor ensemble carries
-    over to rung~2e.}
+  \caption{\textbf{Rung~2 and rung~2e descriptors.} The 33 geometric quantities
+    measured on the docked pose and the heavy-atom covariate carried beside them, with
+    the 29 of the 34 that the receptor ensemble carries over to rung~2e.}
   \label{tab:sirung2}
   \input{../results/37_si_rung2.tex}
 \end{table}
@@ -117,8 +118,9 @@ ladder summarises, with every rung crossed against every descriptor arm and ever
 algorithm family. The headline comparison takes the best value a rung reached over its
 arms and its families, which is one number drawn from a block of them, and these two
 tables are that block. They are split because the regression and the classification framings
-do not share a model suite. Ridge and PLS have no classification counterpart and are
-absent from the second rather than having failed in it. Reading down a column shows how
+do not share a model suite. Partial least squares has no classification counterpart
+and is absent from the second rather than having failed in it, while the linear model of
+the regression suite appears there as a logistic regression. Reading down a column shows how
 much of a rung's score is the descriptors and how much is the choice of algorithm,
 which the single best value conceals. The arms are the alternative feature sets of the
 main text. These are the two fingerprint variants of rung~1 and the filtered and
@@ -136,8 +138,8 @@ unfiltered sets of rung~4, while rungs~2, 2e and~3 carry one arm each.
 \begin{table}[tb]
   \centering
   \caption{\textbf{Every classification family on \framingC{}.} The families differ
-    from Table~\ref{tab:benchreg} because \framingC{} is a classification; Ridge and
-    PLS have no counterpart here and are absent rather than failed.}
+    from Table~\ref{tab:benchreg} because \framingC{} is a classification; partial least
+    squares has no counterpart here and is absent rather than failed.}
   \label{tab:benchclf}
   \input{../results/22_benchmark_si_clf.tex}
 \end{table}
