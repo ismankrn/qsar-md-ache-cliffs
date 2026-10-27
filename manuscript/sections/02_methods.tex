@@ -378,10 +378,10 @@ in a cubic box of \SI{100.1}{\angstrom} per side, giving between 96{,}220 and
 minimum and the maximum across systems and a single value means every system shares it.
 Two quantities were checked for every system instead of being assumed. The first is the
 net charge after counterions, which is at most $2.8\times10^{-13}\,e$ across all 217
-development systems. The second is the shortest receptor--ligand heavy-atom distance at build time,
-which runs from 1.67 to \SI{2.64}{\angstrom}. The lower end of that range is a tight
-contact, which we state openly, and what resolves it is the minimisation and
-equilibration that follow.
+development systems. The second is the closest receptor--ligand approach at build
+time. Heavy atom against heavy atom this runs from 2.38 to \SI{3.52}{\angstrom} with no
+clash in any system, and the 1.67 to \SI{2.66}{\angstrom} that heavy atoms and
+hydrogens reach is the geometry of a hydrogen bond rather than of an overlap.
 
 \begin{table}[tb]
   \centering
@@ -446,7 +446,7 @@ spread rests on six ligands simulated three times each, which is a narrow basis 
 here as such, while the spread between ligands is taken over all 217. Of the 160
 combinations of descriptor and analysis window tested, 100 are dominated by the
 velocity seed rather than by the ligand. At the \SI{20}{\nano\second} window 11 of the
-32 pass, 9 of them contact occupancies.
+32 pass, 8 of them contact occupancies and a ninth the occupancy of a bridging water.
 
 \begin{figure}[p]
   \centering
