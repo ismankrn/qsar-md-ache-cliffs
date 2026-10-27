@@ -135,7 +135,12 @@ advantage where one is most expected says more than one that finds none where no
 The ladder runs from the geometry of a single docked pose, through the same geometry
 measured over an eight-member receptor ensemble \citep{amaro2018}, to an
 implicit-solvent interaction energy \citep{genheden2015}, and finally to descriptors
-extracted from molecular dynamics trajectories of \SI{25}{\nano\second}. Little of that
+extracted from molecular dynamics trajectories of \SI{25}{\nano\second}. That last
+rung carries a trajectory for every ligand in the set rather than for a representative
+few, which is what lets the dynamic descriptors meet the fingerprints on the same
+ligands and the same pairs as every other rung. The requirement is 283 production runs
+over the 271 ligands and 8{,}319~\si{\nano\second} in all, and it is the cost of a
+commensurable comparison rather than of a long simulation. Little of that
 machinery is new and this paper does not claim otherwise. Residue-wise interaction
 fingerprints date to \citet{sift2004}, \citet{prolif2021} computes them from molecular
 dynamics trajectories, and \citet{ifp_md_2024} aggregates them over a trajectory into

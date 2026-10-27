@@ -4,10 +4,10 @@ Activity cliffs are pairs of near-identical compounds separated by orders of mag
 in potency. They are the standard counter-example to quantitative structure-activity
 relationships, and the usual response is to add physical detail that a fingerprint
 cannot see. However, it is rarely tested against a ligand-based baseline on the same
-data, and no study reports what difference its design can detect. We escalate four structure-based representations against one fingerprint baseline on
+data, and none reports what difference its design can detect. We escalate four structure-based representations against one fingerprint baseline on
 human acetylcholinesterase: a docked pose, an eight-member receptor ensemble, an
-implicit-solvent energy, and descriptors from \SI{25}{\nano\second} molecular dynamics
-trajectories. The ladder is scored on 217 ligands and 145 pairs, 77 constitutional
+implicit-solvent energy, and descriptors from \SI{25}{\nano\second} of molecular dynamics
+run for every ligand. The ladder is scored on 217 ligands and 145 pairs, 77 constitutional
 cliffs against 68 matched controls, on three endpoint framings. Splits are frozen and
 the detection limit measured in advance, at $R^2$ about $0.3$. On the development split
 we find that no structure-based representation is resolvably better than the
@@ -16,8 +16,7 @@ per-ligand potency. We then opened the sealed test split once, and it does not a
 difference the receptor ensemble and the dynamic descriptors lead the
 fingerprint by $+0.283$ and $+0.311$, and both gaps survive a correction for twelve
 comparisons and a leave-one-pair-out check. Thirty-eight held-out pairs against 145 cannot settle which reading is right. That instability is itself the
-result, and it bounds what any single frozen split of this size can establish about
-activity cliffs. What would settle the question is more pairs and targets, not more
+result, and it bounds what any single frozen split of this size can establish. What would settle the question is more pairs and targets, not more
 nanoseconds.
 \end{abstract}
 
